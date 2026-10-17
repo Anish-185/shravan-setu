@@ -128,3 +128,13 @@ git rev-list --all | wc -l                  -> 9 (before this docs commit)
 
 The baseline scan of the old history found 2 leaks with gitleaks (the Firebase API key and the migration false
 positive) and did not detect the Clarifai token or the Django key, which is why the direct value search was added.
+
+### ERR-011: force-push rejected because of a partly invented commit ID
+- Phase / date: Phase 2 / 2026-10-17
+- Symptom: `error: cannot parse expected object name 'efb3c39486'` from `git push --force-with-lease=main:efb3c39486 origin main`. Nothing was pushed.
+- Where: the force-push step of ERR-010
+- Root cause: I typed the lease's expected commit ID from memory: the real 7-character prefix `efb3c39` plus an invented suffix `486`. The real ID was `efb3c39285722616e2556dbcc511f7681162b1fb`. After the local gc the old object no longer existed, so git couldn't resolve even the prefix, and the push failed safely.
+- Fix: re-ran with the full ID read from `git ls-remote origin main`: `git push --force-with-lease=main:efb3c39285722616e2556dbcc511f7681162b1fb origin main` → `+ efb3c39...ca11395 main -> main (forced update)`. Rule added to `CLAUDE.md` (Engineering conventions → Commit IDs).
+- Status: FIXED
+- Verification: `git ls-remote origin main` = `git rev-parse HEAD` = `ca11395a94481ff8cd17cf3cbacee71fd2da6ae5`. Fresh clone from GitHub: 10 commits, gitleaks "no leaks found", `git log --all -- server/db.sqlite3` empty, only author Anish G, 0 hits for all 9 original secret values.
+- Lesson: always get full IDs from `git rev-parse` / `git ls-remote`; never type them from memory.
