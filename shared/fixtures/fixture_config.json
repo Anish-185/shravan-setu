@@ -39,8 +39,15 @@
   },
 
   "noise": {
-    "gate_db_above_baseline": {"value": 10, "source": "PLACEHOLDER: depends on Phase 1 spike results (does mic metering work during playback?)."},
-    "max_replays_per_tone": {"value": 2, "source": "PLACEHOLDER: a tone masked by noise is discarded and replayed at most this many times; then the point is 'too noisy'."}
+    "gating_strategy": {"value": "during_tone", "source": "docs/SPIKE.md §5: metering keeps running during playback (spike step 7) and worn-earphone tone leakage at vol 0.10 stays within the room's own drift (scripts/analyze_spike.py). Allowed: during_tone | between_tones."},
+    "gate_db_above_baseline": {"value": 10, "source": "PLACEHOLDER. Spike (scripts/analyze_spike.py, CLAIMS SPK-03/SPK-04): tone-on medians sit within a few dB of the quiet baseline; quiet vs corridor medians differ by more than 10. Tune from Phase 6 team tests."},
+    "max_replays_per_tone": {"value": 2, "source": "PLACEHOLDER: a tone masked by noise is discarded and replayed at most this many times; then the point is 'too noisy'."},
+    "meter_poll_ms": {"value": 100, "source": "Design choice: same poll rate as the spike, so a 1000 ms tone gets about 10 samples."},
+    "mic_settle_ms": {"value": 1000, "source": "Spike (CLAIMS SPK-01): first sample after mic start was -160 in 13/13 clips, then a start-up hump at ~0.4-0.63 s, settled by ~750 ms. 1000 ms adds margin."},
+    "invalid_at_or_below_db": {"value": -100, "source": "Spike (CLAIMS SPK-01): -160 is a no-data floor (first sample, plug events); the lowest real sample in a quiet room was about -40. Samples at or below this are invalid, never 'quiet'."},
+    "saturated_at_or_above_db": {"value": -1.5, "source": "Spike (CLAIMS SPK-02): metering tops out at about -1.0 (corridor noise, plug clicks). Saturated samples count as too loud."},
+    "plug_guard_ms": {"value": 1000, "source": "PLACEHOLDER: spike step 12 saw -1.0 spikes and -160 dropouts around plug/unplug, duration not measured. Samples within this window of any audio-device change are discarded (the test is paused anyway)."},
+    "min_valid_samples_per_tone": {"value": 5, "source": "PLACEHOLDER: fewer valid samples than this during a tone means noise is unknown, so the tone is replayed."}
   },
 
   "policy_500hz": {
