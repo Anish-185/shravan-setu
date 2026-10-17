@@ -47,13 +47,13 @@ and `makemigrations --check` reports no model changes.
 - Lesson: with the React Compiler on, keep anything time-based or mutable in effects, intervals or handlers, never in render.
 
 ### ERR-005: Original tones have no onset/offset ramp (audible clicks)
-- Phase / date: Phase 1 / 2026-10-17
+- Phase / date: Phase 1 / 2026-10-17 (fixed Phase 3)
 - Symptom: `tone_1000Hz_left_um.wav` reaches full scale (peak 32766/32767) within the first 10 samples and stays there until the last sample.
 - Where: `screener/assets/tones/*.wav` (copied from `audiometer/app/assets/puretones/`)
 - Root cause: the original generator wrote a plain sine with no ramp. Abrupt start and stop make broadband clicks a child may hear and respond to even when the tone itself is inaudible, which would inflate PASS results.
-- Fix (proposed; do it in Phase 3 together with `config/screening.json`, which it depends on — Phase 2 Step 0 should leave it OPEN): add `scripts/make_tones.py` (Python stdlib `wave` + `math`) to generate per-ear tones with raised-cosine ramps. Ramp length, duration, sample rate and peak level go in `config/screening.json` with a `source` field (ramp duration: TODO(source), cite a pure-tone audiometry standard). Add a test that checks the first and last ramp windows rise and fall smoothly.
-- Status: OPEN
-- Verification: (to add) test on the generated WAVs.
+- Fix: `scripts/make_tones.py` (stdlib only) generates per-ear stereo WAVs with raised-cosine ramps into `screener/assets/tones/generated/` (500, 1000, 2000, 4000 Hz x left/right). Duration, ramp, sample rate and peak level come from `config/screening.json` `tone.*` (ramp 25 ms is a PLACEHOLDER with TODO(source)). The original tones stay only for the throwaway spike.
+- Status: FIXED
+- Verification: `scripts/test_make_tones.py`: first/last samples ~0, envelope rises monotonically through the ramp, other channel silent, peak at the configured level, duration correct. Passes; the original WAVs would fail the first-sample check.
 - Lesson: check stimulus files, not just code, when reusing audio assets.
 
 ### ERR-006: pytest could not load settings (`ImportError: Set DJANGO_SECRET_KEY`)
@@ -138,3 +138,23 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: `git ls-remote origin main` = `git rev-parse HEAD` = `ca11395a94481ff8cd17cf3cbacee71fd2da6ae5`. Fresh clone from GitHub: 10 commits, gitleaks "no leaks found", `git log --all -- server/db.sqlite3` empty, only author Anish G, 0 hits for all 9 original secret values.
 - Lesson: always get full IDs from `git rev-parse` / `git ls-remote`; never type them from memory.
+
+### ERR-012: fixture generator crashed on catch trials (`KeyError: 'ear'`)
+- Phase / date: Phase 3 / 2026-10-17
+- Symptom: `KeyError: 'ear'` at `scripts/make_rule_fixtures.py` line 164 while building the "min_hits_per_point" fixtures.
+- Where: two list comprehensions in `scripts/make_rule_fixtures.py` that modify one point's second presentation
+- Root cause: catch trials deliberately have no `ear`/`freq` fields (they're silent and not tied to a point), but the comprehensions indexed `t["ear"]` on every trial.
+- Fix: use `t.get("ear")`; `and` short-circuits, so `t["freq"]` is only read for tone trials of the matching ear.
+- Status: FIXED
+- Verification: generator writes 45 fixtures; pytest and jest both pass all of them; both rule engines already filter on `kind` before reading `ear`.
+- Lesson: when a record type has optional fields, every helper that touches it must handle their absence.
+
+### ERR-013: `tsc` couldn't see jest or Node types in the fixture test
+- Phase / date: Phase 3 / 2026-10-17
+- Symptom: `error TS2593: Cannot find name 'test'`, `TS2591: Cannot find name 'fs'`, `TS2304: Cannot find name '__dirname'` although `@types/jest` was installed.
+- Where: `npx tsc --noEmit` in `screener/`, file `src/rules/__tests__/fixtures.test.ts`
+- Root cause: TypeScript 6.0 changed the default of the `types` compiler option to `[]` ("In TypeScript 6.0, the default `types` value will be `[]`", TypeScript 6.0 release notes), so installed `@types/*` packages are no longer picked up automatically. `@types/node` was also only a transitive dependency.
+- Fix: `screener/tsconfig.json` sets `"types": ["jest", "node"]`; `@types/node@26.6.5` (the version already in the tree, matching Node 26) declared as a dev dependency.
+- Status: FIXED
+- Verification: `npx tsc --noEmit` exits 0; `npx expo lint` exits 0; jest 46 passed; expo-doctor 20/20.
+- Lesson: on a TypeScript major upgrade, list the ambient type packages each project needs explicitly.

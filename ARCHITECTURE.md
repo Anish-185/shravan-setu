@@ -149,3 +149,31 @@ API (`/api/`, all need `Authorization: Token <key>`):
 Design notes: Case `status` is read-only in the API and in sync; it changes only through transitions. Our own
 `Classroom` is used instead of `apigateway.Classroom`, which belongs to the original app's Firebase-based Educator
 model. Facilities come from a local CSV (`manage.py load_facilities [path]`); the repo ships only `SAMPLE-*` rows.
+
+## Screening rule engine (Phase 3, built)
+
+Pure functions, written twice: `server/referrals/rules/__init__.py` (Python reference) and `screener/src/rules/index.ts`
+(JS port, runs offline on the phone). Both are checked against the same 45 fixtures in `shared/fixtures/`
+(`scripts/check_rules_parity.sh`). All thresholds come from `config/screening.json`.
+
+| Function | Input | Output |
+|---|---|---|
+| `reliability_score` | trials | catch trials, false alarms, tone trials, out-of-window taps, score = 1 − (FA + OOW) / all trials |
+| `rescreen_plan` | trials, noise events | `[ear, freq]` points not heard in round 1 (if rescreen is on) |
+| `apply_500hz_policy` | ambient dB re: baseline | include 500 Hz or not, with reason |
+| `decide_outcome` | trials, noise events | PASS / RETEST / REFER, per-ear outcomes, per-point status, reliability, reasons |
+| `triage_route` | yes/no checklist answers | PHC or DEIC, the rule that fired, reason ("Triage, not diagnosis") |
+
+`decide_outcome` order (first match wins):
+
+1. Fewer catch trials than `reliability.min_catch_trials` → RETEST.
+2. False-alarm rate or out-of-window rate above its limit → RETEST. **Unreliable never REFERs.**
+3. Each point (ear × frequency, plus 500 Hz if tested): heard if at least `min_hits_per_point` taps fall inside
+   [`min_response_ms`, `response_window_ms`]. A point missed in round 1 uses its rescreen result
+   (heard on rescreen / not heard, confirmed / too noisy / rescreen missing). A point with no valid presentation
+   because noise discarded them all is "too noisy".
+4. An ear with a confirmed not-heard point → REFER; else any noisy, untested or not-rescreened point → RETEST; else PASS.
+   Overall = worst ear.
+
+Input shapes: a trial is `{round, kind: "tone"|"catch", ear?, freq?, responded, response_ms}`; a noise event is one
+tone presentation discarded because the mic exceeded the noise gate: `{round, ear, freq}`.

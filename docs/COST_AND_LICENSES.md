@@ -46,6 +46,7 @@ no Expo account needed for local development.
 | react-native-gesture-handler, -reanimated, -worklets, -safe-area-context, -screens, -web | template | MIT | 0 | None |
 | typescript (dev) | 6.0.3 | Apache-2.0 | 0 | None |
 | eslint, eslint-config-expo (dev) | 9.39.5 / 58.0.4 | MIT | 0 | None |
+| jest, jest-expo, @types/jest, @types/node (dev) | 30.5.2 / 58.0.11 / 30.0.0 / 26.6.5 | MIT | 0 | None |
 
 **Transitive packages with licences outside our allowlist** (all build or dev tooling pulled in by Expo, Babel or
 ESLint; none added by us; none is GPL-only). Pending owner approval:
@@ -77,5 +78,6 @@ cost model (Phase 6) takes them as inputs.
 | Laptop for the backend | TODO(source) | Often already available at the school or block office |
 | SMS / IVR reminders | TODO(source) | Future cost only; stubbed (logged, not sent) in this version |
 
-npm 11 blocks dependency install scripts by default. One is blocked in `screener/`: `unrs-resolver` (postinstall that
-fetches a fallback native binary for ESLint's import resolver). Left blocked; lint works without it.
+npm 11 blocks dependency install scripts by default. Two are blocked in `screener/`: `unrs-resolver` (postinstall that
+fetches a fallback native binary for ESLint's import resolver) and `@parcel/watcher` (build-from-source fallback; the
+prebuilt binary is used). Both left blocked; lint and jest work without them.

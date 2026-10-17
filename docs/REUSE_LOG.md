@@ -93,3 +93,34 @@ Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state mach
 
 - pytest 9.1.1 (MIT) and pytest-django 4.14.0 (BSD-3) as dev-only dependencies (`server/requirements-dev.txt`).
   Requested by `CLAUDE.md`; well-known; small.
+
+## Phase 3
+
+### Screening decision rules, catch trials, false-alarm scoring
+
+- Queries (GitHub, 2026-10-17): `"catch trials" audiometry`, `"false alarm rate" hearing`, `"play audiometry"`,
+  `"hearing screening" decision`, `"pure tone screening" --sort=stars`, `audiogram classification --language=python`,
+  `audiometry --language=typescript`, `"hughson westlake"`, `audiogram --language=javascript`. The first four returned nothing.
+
+| Repo | Licence | Last push | Notes | Verdict |
+|---|---|---|---|---|
+| Nikolai-hearme/open-audiogram | MIT | 2026-07-27 | `src/screening.js`: Web Audio tone player with raised-cosine ramps and a threshold-seeking (Hughson-Westlake style) session | Different method (threshold search, not fixed-level screening with catch trials), Web Audio only. No code copied; the raised-cosine ramp is a textbook formula we wrote ourselves |
+| nishnarudkar/Aurohear-v2 | MIT | 2026-10-15 | Catch-trial distribution, response-window scoring, Python/TS golden-trace parity (noted in Phase 1) | Same idea as our shared fixtures; no code copied. Web + cloud dependency |
+| cnspica/hearing-self-diagnosis | MIT | 2026-10-14 | Browser threshold audiometry, self-diagnosis framing | Diagnostic framing conflicts with our rules; not used |
+| nikooo777/audiometry | MIT | 2026-06-17 | Small browser hearing test | Nothing reusable for rules |
+| gjenaro/SNRLab | other | 2026-08-30 | iPhone relative pure-tone screening | Licence not on allowlist |
+| several others | none | | No licence file | Rejected |
+
+- Decision: (c) build. `server/referrals/rules/__init__.py` (Python reference, ~150 lines) and
+  `screener/src/rules/index.ts` (JS port). Rules are simple, explainable, and every threshold is in `config/screening.json`.
+- Reason: no candidate implements fixed-level screening with catch trials, per-tone noise discard, a rescreen of
+  failed points and triage routing; all are threshold-seeking web tools. Our logic is the originality claim, so it stays ours.
+
+### Tone generation with ramps (ERR-005)
+
+- Decision: (c) build. `scripts/make_tones.py`, stdlib `wave` + `math`, ~60 lines. No dependency (numpy/scipy not needed).
+
+### JS test runner
+
+- jest 30.5.2 (MIT) with jest-expo 58.0.11 (MIT), the preset Expo documents for SDK 58, plus @types/jest 30.0.0 and
+  @types/node 26.6.5 (MIT). Dev only. Required by `CLAUDE.md` (jest-expo preset).

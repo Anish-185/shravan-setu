@@ -52,6 +52,10 @@ The original Django backend lives in `server/apigateway/`; our changes to `serve
 Filled in per phase.
 
 - (Phase 0) No features yet: cleanup, attribution, architecture.
+- (Phase 3) Screening rule engine, written twice (Python reference `server/referrals/rules/`, JS port
+  `screener/src/rules/`) and checked against the same 45 shared fixtures: PASS/RETEST/REFER with reasons, catch-trial
+  reliability gating, per-tone noise discard, rescreen of failed points only, 500 Hz policy, triage routing (PHC/DEIC).
+  All thresholds in `config/screening.json`. Click-free tone generator `scripts/make_tones.py`.
 - (Phase 2) Referral tracker backend (`server/referrals/`): referral case state machine with append-only history,
   offline sync endpoint (idempotent by client UUID), camp requests with CSV/PDF export, stubbed reminder log,
   facility list from a local CSV, token auth on every endpoint, demo seed command.
