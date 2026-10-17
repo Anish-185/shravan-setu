@@ -80,6 +80,13 @@ class SyncView(APIView):
         return "created"
 
 
+class SchoolViewSet(viewsets.ReadOnlyModelViewSet):
+    """Phone setup: the teacher picks their school once."""
+
+    queryset = models.School.objects.order_by("name")
+    serializer_class = s.SchoolSerializer
+
+
 class CaseViewSet(viewsets.ReadOnlyModelViewSet):
     """List (?status=, ?school=, ?updated_since=ISO-8601) and detail with full status history."""
 

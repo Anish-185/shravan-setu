@@ -33,11 +33,23 @@ def sync_payload(school):
     return {"records": records}, ids
 
 
+def test_schools_list_for_phone_setup(api, school):
+    assert [x["name"] for x in api.get("/api/schools/").json()] == ["Test School (FAKE)"]
+
+
+def test_sync_session_carries_calibration_ambient_and_lr_check(api, school):
+    payload, ids = sync_payload(school)
+    payload["records"][3]["data"].update(calibrated=False, ambient_db_re_reference=-1.5, lr_check_passed=True)
+    api.post("/api/sync/", payload, format="json")
+    sess = models.ScreeningSession.objects.get(pk=ids["session"])
+    assert (sess.calibrated, sess.ambient_db_re_reference, sess.lr_check_passed) == (False, -1.5, True)
+
+
 # --- auth -------------------------------------------------------------------------------------------------------
 
 @pytest.mark.parametrize("method,url", [
     ("get", "/api/cases/"), ("post", "/api/sync/"), ("get", "/api/camp-requests/"), ("post", "/api/camp-requests/"),
-    ("get", "/api/reminders/"),
+    ("get", "/api/reminders/"), ("get", "/api/schools/"),
     # original apigateway endpoints are protected too
     ("get", "/users/"), ("post", "/users/"), ("get", "/classrooms/"), ("get", "/useronlyresults/"),
 ])

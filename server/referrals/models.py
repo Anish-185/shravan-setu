@@ -71,6 +71,11 @@ class ScreeningSession(Base):
     volume_setting = models.CharField(max_length=50, blank=True)
     app_version = models.CharField(max_length=30)
     config_version = models.CharField(max_length=30)
+    calibrated = models.BooleanField(
+        default=False, help_text="False = played at the uncalibrated placeholder volume (config tone.uncalibrated_player_volume).")
+    ambient_db_re_reference = models.FloatField(
+        null=True, blank=True, help_text="Pre-test room noise, relative to config noise.reference_quiet_db (uncalibrated).")
+    lr_check_passed = models.BooleanField(null=True, blank=True, help_text="Left/right earphone check answered correctly.")
 
 
 class ScreeningResult(Base):
