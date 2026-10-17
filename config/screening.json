@@ -20,8 +20,7 @@
     "ramp_ms": {"value": 25, "source": "PLACEHOLDER. TODO(source): rise/fall time from a pure-tone audiometry standard. Purpose: avoid onset/offset clicks (ERR-005)."},
     "sample_rate_hz": {"value": 44100, "source": "Design choice: standard audio rate, same as the original app's tones."},
     "peak_dbfs": {"value": -1, "source": "Design choice: just below full scale to avoid clipping. Loudness is then set by the player volume and calibration."},
-    "uncalibrated_player_volume": {"value": 0.1, "source": "PLACEHOLDER for Phase 4 device trials only: the spike's worn-earphone volume (docs/SPIKE.md §5). Used while screening_level_db_re_team_baseline is null; every such session is marked UNCALIBRATED."},
-    "team_baseline_player_volume": {"value": null, "source": "TODO(source): player volume per frequency at the team's biological baseline threshold (Phase 6, docs/TEAM_TEST_PROTOCOL.md). Map of Hz -> 0..1."}
+    "uncalibrated_player_volume": {"value": 0.1, "source": "PLACEHOLDER for Phase 4 device trials only: the spike's worn-earphone volume (docs/SPIKE.md §5). Used while screening_level_db_re_team_baseline is null; every such session is marked UNCALIBRATED."}
   },
 
   "response": {
