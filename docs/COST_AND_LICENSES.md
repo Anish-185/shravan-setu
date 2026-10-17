@@ -17,6 +17,11 @@ Licences read from each package's installed metadata (Phase 0).
 | sqlparse | 0.6.0 | BSD-3-Clause | 0 | None |
 | tzdata (Windows only) | 2026.5 | Apache-2.0 | 0 | None |
 
+Dev only (`server/requirements-dev.txt`): pytest 9.1.1 (MIT), pytest-django 4.14.0 (BSD-3-Clause), plus their
+dependencies pluggy (MIT), iniconfig (MIT), packaging (Apache-2.0 OR BSD-2-Clause), pygments (BSD-2-Clause). No network calls.
+
+Not added: reportlab (would pull in Pillow, ~26 MB installed). The camp-request PDF uses our own writer, `referrals/pdf.py`.
+
 Removed from the original pins: `pytz` and `typing_extensions` (no longer required by Django 5.2 or our code).
 
 Runtime: Python 3.12 + SQLite on a laptop. No cloud hosting, no database service.

@@ -41,6 +41,9 @@ The original Django backend lives in `server/apigateway/`; our changes to `serve
 Filled in per phase.
 
 - (Phase 0) No features yet: cleanup, attribution, architecture.
+- (Phase 2) Referral tracker backend (`server/referrals/`): referral case state machine with append-only history,
+  offline sync endpoint (idempotent by client UUID), camp requests with CSV/PDF export, stubbed reminder log,
+  facility list from a local CSV, token auth on every endpoint, demo seed command.
 - (Phase 1) Throwaway audio spike only (`screener/src/app/spike.tsx`): tone playback with live mic metering and a JSON log.
 
 ## Third-party code and assets we reuse

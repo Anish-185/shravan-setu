@@ -55,3 +55,43 @@ and `makemigrations --check` reports no model changes.
 - Status: OPEN
 - Verification: (to add) test on the generated WAVs.
 - Lesson: check stimulus files, not just code, when reusing audio assets.
+
+### ERR-006: pytest could not load settings (`ImportError: Set DJANGO_SECRET_KEY`)
+- Phase / date: Phase 2 / 2026-10-17
+- Symptom: `ImportError: Set DJANGO_SECRET_KEY (copy server/.env.example to server/.env).` when running pytest without a `.env`.
+- Where: `server/conftest.py` (first attempt)
+- Root cause: pytest-django imports the settings module during plugin start-up, before the root `conftest.py` that set a test key was executed.
+- Fix: `server/backend/test_settings.py` sets a throwaway key and then imports the real settings; `server/pytest.ini` points `DJANGO_SETTINGS_MODULE` at it. The production rule (no key = refuse to start) is unchanged.
+- Status: FIXED
+- Verification: `env -u DJANGO_SECRET_KEY .venv/bin/python -m pytest` passes with no `server/.env`.
+- Lesson: anything needed at settings-import time must live in the settings module chain, not in conftest.
+
+### ERR-007: camp export URLs returned 301 redirects
+- Phase / date: Phase 2 / 2026-10-17
+- Symptom: `assert (301 == 200)`; redirect to `.../export.csv/`.
+- Where: `referrals/views.py` `@action(url_path="export.csv")`, tests in `referrals/tests/test_api.py`
+- Root cause: DRF's DefaultRouter adds a trailing slash to every route, and Django's `APPEND_SLASH` redirected the slash-less URL.
+- Fix: routes renamed to `/api/camp-requests/<id>/csv/` and `/pdf/` (with the router's slash).
+- Status: FIXED
+- Verification: `test_camp_export_csv`, `test_camp_export_pdf` pass; checked against a live `runserver`.
+- Lesson: let the router own URL shape; don't put file extensions in DRF action paths.
+
+### ERR-008: two API tests encoded wrong expectations
+- Phase / date: Phase 2 / 2026-10-17
+- Symptom: (1) `'not allowed' in 'Case matching query does not exist.'`; (2) CSV first line was `"SCREENING, NOT DIAGNOSIS"` with quotes.
+- Where: `referrals/tests/test_api.py`
+- Root cause: (1) the test broke a consent, which correctly made every dependent record (session, result, case, event) fail too, so the illegal event never reached the state machine. (2) Correct CSV quotes a field that contains a comma; the test compared raw lines.
+- Fix: (1) split into `test_sync_reports_per_record_errors` (mixed batch against an existing case) and a new `test_sync_dependent_records_fail_together` (failure cascades, then succeeds on retry). (2) the test parses with `csv.reader`. Code unchanged in both cases; the tests were wrong.
+- Status: FIXED
+- Verification: 119 passed.
+- Lesson: when a test fails, check whether the expectation or the code is wrong before changing either.
+
+### ERR-009: `pkill -f` / `pgrep -f` killed its own shell (exit 144)
+- Phase / date: Phase 2 / 2026-10-17
+- Symptom: shell exited with code 144 while stopping a test `runserver`.
+- Where: ad-hoc shell command during the end-to-end check
+- Root cause: the `-f` pattern also matched the shell command line that contained the same text.
+- Fix: use a bracket pattern such as `pgrep -f "[r]unserver 127.0.0.1:8765"`.
+- Status: FIXED
+- Verification: server confirmed stopped.
+- Lesson: never `pkill -f` with a pattern that appears literally in your own command.

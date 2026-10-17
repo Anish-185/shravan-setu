@@ -86,3 +86,66 @@ Key decisions:
   batched into camp requests for RBSK/DEIC teams. Reminders are logged, not sent.
 - **Triage routing**, not diagnosis: a yes/no checklist routes a likely treatable cause to a PHC, otherwise to DEIC.
 - **Sound levels** are relative to a biological calibration baseline ("dB re: team baseline").
+
+## Referral tracker backend (Phase 2, built)
+
+`server/referrals/`. Every record has a client-generated UUID primary key. Token auth on every endpoint.
+
+```mermaid
+erDiagram
+    School ||--o{ Classroom : has
+    School ||--o{ Child : enrols
+    Classroom ||--o{ Child : "in class"
+    Child ||--o{ Consent : "consent before any test"
+    Child ||--o{ ScreeningSession : screened
+    Consent ||--o{ ScreeningSession : authorises
+    ScreeningSession ||--|| ScreeningResult : "PASS / RETEST / REFER"
+    Child ||--o{ Case : "REFER opens a case"
+    School ||--o{ Case : owns
+    ScreeningResult |o--o{ Case : "evidence for"
+    Facility |o--o{ Case : "triage route"
+    Case ||--o{ CaseEvent : "append-only history"
+    Case ||--o{ ReminderLog : "stubbed reminders"
+    CampRequest }o--o{ Case : batches
+    School ||--o{ CampRequest : requests
+    Facility |o--o{ CampRequest : "camp at"
+```
+
+Case state machine (`referrals/state.py`, the only way status changes):
+
+```mermaid
+stateDiagram-v2
+    [*] --> screened
+    screened --> referred
+    referred --> camp_scheduled
+    camp_scheduled --> seen
+    camp_scheduled --> missed
+    missed --> rescheduled
+    rescheduled --> camp_scheduled
+    seen --> treated : wax_removed, infection_treated, hearing_aid or further_audiology
+    treated --> closed
+    referred --> closed_lost_to_followup : reason required
+    camp_scheduled --> closed_lost_to_followup
+    missed --> closed_lost_to_followup
+    rescheduled --> closed_lost_to_followup
+    seen --> closed_lost_to_followup
+    closed --> [*]
+    closed_lost_to_followup --> [*]
+```
+
+API (`/api/`, all need `Authorization: Token <key>`):
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /api/token/` | Username + password → token |
+| `POST /api/sync/` | Batch upsert `{"records": [{"type", "id", "data"}]}`; types: school, classroom, child, consent, screening_session, screening_result, case, case_event. Per-record status `created` / `updated` / `duplicate` / `error`. Events go through the state machine; `from_status` detects conflicts |
+| `GET /api/cases/?status=&school=&updated_since=` | Case list (the phone pulls updates with `updated_since`) |
+| `GET /api/cases/<id>/` | Case with full event history |
+| `POST /api/cases/<id>/transition/` | `{to_status, treatment?, reason?, note?}`; illegal → 400 |
+| `GET/POST /api/camp-requests/` | Create from referred/rescheduled cases of one school; moves them to camp_scheduled |
+| `GET /api/camp-requests/<id>/csv/`, `/pdf/` | Export with "SCREENING, NOT DIAGNOSIS" banner |
+| `GET /api/reminders/` | Reminders that WOULD be sent (logged on `missed`; nothing is sent) |
+
+Design notes: Case `status` is read-only in the API and in sync; it changes only through transitions. Our own
+`Classroom` is used instead of `apigateway.Classroom`, which belongs to the original app's Firebase-based Educator
+model. Facilities come from a local CSV (`manage.py load_facilities [path]`); the repo ships only `SAMPLE-*` rows.

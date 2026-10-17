@@ -48,3 +48,48 @@ Format per entry: feature, queries run, candidates (licence, last commit/release
 
 - Decision: no slider package (`@react-native-community/slider`). −/+ buttons showing the exact value, so checklist
   settings are reproducible. Zero dependencies.
+
+## Phase 2
+
+Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state machine" --language=python`,
+`"django offline sync"`, `"drf bulk upsert"`, `"python pdf generation"`; PyPI JSON API for each candidate below.
+
+### Case state machine
+
+| Candidate | Licence | Latest release | Notes |
+|---|---|---|---|
+| django-fsm (kmmbvnr) | MIT | 3.0.1, 2025-10 | Original project; development moved to django-fsm-2 |
+| django-fsm-2 (django-commons) | MIT | 4.2.4, 2026-03 | Maintained. Decorator-based transitions on model fields |
+| django-fsm-log (jazzband) | MIT | 2026-10 push | Adds transition logging on top of django-fsm |
+| python-statemachine | MIT | 3.2.2, 2026-10 | General FSM, 163 KB |
+| transitions (pytransitions) | MIT | 0.9.3, 2025-07 | General FSM, 110 KB |
+
+- Decision: (c) build. `referrals/state.py`: a 9-entry transition dict plus one `transition()` function (~60 lines),
+  which also writes the append-only CaseEvent and the stubbed reminder.
+- Reason: under 100 lines, the whole table is visible in one place (easy to show judges and to port to JS), and
+  offline events from the phone must be replayed through the same check, which is simpler without decorators.
+
+### Camp-request PDF export
+
+| Candidate | Licence | Size | Notes |
+|---|---|---|---|
+| reportlab 5.0.1 | BSD | 1.9 MB wheel, but requires Pillow (MIT-CMU, 6–7 MB wheel, 26 MB installed together) | Over our ~5 MB ask-first limit |
+| fpdf2 2.8.9 | LGPL-3.0 | 333 KB | Rejected: LGPL is outside the allowlist |
+| weasyprint 70.0 | BSD | 321 KB + native Pango/Cairo | Needs system libraries; heavy for a laptop install |
+| xhtml2pdf 0.2.26 | Apache-2.0 | 299 KB | Depends on reportlab, same size problem |
+
+- Decision: (c) build. `referrals/pdf.py`: ~70-line writer using the PDF base-14 fonts (nothing embedded), one banner
+  per page, monospaced table, pagination. Validated with `qpdf --check` and `pdftotext`.
+- Limitation: Latin-1 text only. Telugu printouts will be produced on the phone with expo-print (Phase 5).
+
+### Offline sync / idempotent upsert for DRF
+
+- Candidates: djangorestframework-bulk (MIT, last release 2015-04, unmaintained). Searches for Django offline sync
+  and DRF bulk upsert returned nothing usable.
+- Decision: (c) build. `SyncView` in `referrals/views.py`: per-record `update_or_create`-style upsert by client UUID
+  inside a savepoint, events replayed through the state machine, per-record status (`created`/`updated`/`duplicate`/`error`).
+
+### Test tools
+
+- pytest 9.1.1 (MIT) and pytest-django 4.14.0 (BSD-3) as dev-only dependencies (`server/requirements-dev.txt`).
+  Requested by `CLAUDE.md`; well-known; small.
