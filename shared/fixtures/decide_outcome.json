@@ -1,0 +1,3650 @@
+{
+ "function": "decide_outcome",
+ "cases": [
+  {
+   "name": "all heard -> PASS",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "PASS",
+    "ear_outcomes": {
+     "left": "PASS",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "All tones were heard in both ears."
+    ]
+   }
+  },
+  {
+   "name": "single point missed, fixed by rescreen -> PASS",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "PASS",
+    "ear_outcomes": {
+     "left": "PASS",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard_on_rescreen",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 14,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Left ear 4000 Hz: missed at first, heard on rescreen."
+    ]
+   }
+  },
+  {
+   "name": "persistent fail after rescreen -> REFER",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "REFER",
+    "ear_outcomes": {
+     "left": "PASS",
+     "right": "REFER"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "not_heard_confirmed",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 14,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Right ear 2000 Hz: not heard, confirmed on rescreen."
+    ]
+   }
+  },
+  {
+   "name": "fails in both ears -> REFER both",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "REFER",
+    "ear_outcomes": {
+     "left": "REFER",
+     "right": "REFER"
+    },
+    "point_status": {
+     "left-1000": "not_heard_confirmed",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "not_heard_confirmed"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 16,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Left ear 1000 Hz: not heard, confirmed on rescreen.",
+     "Right ear 4000 Hz: not heard, confirmed on rescreen."
+    ]
+   }
+  },
+  {
+   "name": "random tapper: 3 of 4 catch trials tapped -> RETEST",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "RETEST"
+    },
+    "point_status": {},
+    "reliability": {
+     "score": 0.8125,
+     "catch_trials": 4,
+     "false_alarms": 3,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Retest: responses were not reliable, so this test cannot refer.",
+     "3 of 4 silent check trials got a tap."
+    ]
+   }
+  },
+  {
+   "name": "false alarms exactly at the limit (1 of 4) -> still PASS",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "PASS",
+    "ear_outcomes": {
+     "left": "PASS",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 0.9375,
+     "catch_trials": 4,
+     "false_alarms": 1,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "All tones were heard in both ears."
+    ]
+   }
+  },
+  {
+   "name": "false alarms just over the limit (2 of 4) -> RETEST",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "RETEST"
+    },
+    "point_status": {},
+    "reliability": {
+     "score": 0.875,
+     "catch_trials": 4,
+     "false_alarms": 2,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Retest: responses were not reliable, so this test cannot refer.",
+     "2 of 4 silent check trials got a tap."
+    ]
+   }
+  },
+  {
+   "name": "only 2 catch trials -> RETEST",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "RETEST"
+    },
+    "point_status": {},
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 2,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Retest: only 2 silent check trials were done (3 needed)."
+    ]
+   }
+  },
+  {
+   "name": "no catch trials at all -> RETEST",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "RETEST"
+    },
+    "point_status": {},
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 0,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Retest: only 0 silent check trials were done (3 needed)."
+    ]
+   }
+  },
+  {
+   "name": "late taps on 4 of 12 tone trials -> RETEST",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 3000
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 3000
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 3000
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 3000
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "RETEST"
+    },
+    "point_status": {},
+    "reliability": {
+     "score": 0.75,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 4
+    },
+    "reasons": [
+     "Retest: responses were not reliable, so this test cannot refer.",
+     "4 of 12 tone trials got a tap outside the response window."
+    ]
+   }
+  },
+  {
+   "name": "anticipation taps on 3 of 12 (at the limit) -> PASS, other presentation heard",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 100
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 100
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 100
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "PASS",
+    "ear_outcomes": {
+     "left": "PASS",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 0.8125,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 3
+    },
+    "reasons": [
+     "All tones were heard in both ears."
+    ]
+   }
+  },
+  {
+   "name": "unreliable beats a confirmed fail: RETEST, never REFER",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "RETEST"
+    },
+    "point_status": {},
+    "reliability": {
+     "score": 0.8333333333333334,
+     "catch_trials": 4,
+     "false_alarms": 3,
+     "tone_trials": 14,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Retest: responses were not reliable, so this test cannot refer.",
+     "3 of 4 silent check trials got a tap."
+    ]
+   }
+  },
+  {
+   "name": "noise replay limit hit at one point -> RETEST that ear",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": [
+     {
+      "round": 1,
+      "ear": "left",
+      "freq": 2000
+     },
+     {
+      "round": 1,
+      "ear": "left",
+      "freq": 2000
+     },
+     {
+      "round": 1,
+      "ear": "left",
+      "freq": 2000
+     }
+    ]
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "noisy",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 10,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Left ear 2000 Hz: too noisy to test (3 tones discarded for noise)."
+    ]
+   }
+  },
+  {
+   "name": "two noise replays then heard -> PASS",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": [
+     {
+      "round": 1,
+      "ear": "left",
+      "freq": 2000
+     },
+     {
+      "round": 1,
+      "ear": "left",
+      "freq": 2000
+     }
+    ]
+   },
+   "expected": {
+    "outcome": "PASS",
+    "ear_outcomes": {
+     "left": "PASS",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "All tones were heard in both ears."
+    ]
+   }
+  },
+  {
+   "name": "confirmed fail in one ear, noisy point in the other -> REFER",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": [
+     {
+      "round": 1,
+      "ear": "left",
+      "freq": 4000
+     },
+     {
+      "round": 1,
+      "ear": "left",
+      "freq": 4000
+     },
+     {
+      "round": 1,
+      "ear": "left",
+      "freq": 4000
+     }
+    ]
+   },
+   "expected": {
+    "outcome": "REFER",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "REFER"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "noisy",
+     "right-1000": "not_heard_confirmed",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Left ear 4000 Hz: too noisy to test (3 tones discarded for noise).",
+     "Right ear 1000 Hz: not heard, confirmed on rescreen."
+    ]
+   }
+  },
+  {
+   "name": "missed in round 1, rescreen not done -> RETEST",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "rescreen_missing",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Left ear 1000 Hz: missed in the first round and not rescreened yet."
+    ]
+   }
+  },
+  {
+   "name": "rescreen disabled: a round-1 miss -> REFER",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "REFER",
+    "ear_outcomes": {
+     "left": "REFER",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "not_heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Left ear 1000 Hz: not heard."
+    ]
+   },
+   "config_overrides": {
+    "rescreen.enabled": false
+   }
+  },
+  {
+   "name": "point never presented -> RETEST",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "PASS",
+     "right": "RETEST"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "not_tested"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 10,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Right ear 4000 Hz: not tested."
+    ]
+   }
+  },
+  {
+   "name": "500 Hz included and heard -> PASS",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 500,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 500,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 500,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 500,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "PASS",
+    "ear_outcomes": {
+     "left": "PASS",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-500": "heard",
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-500": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 16,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "All tones were heard in both ears."
+    ]
+   }
+  },
+  {
+   "name": "500 Hz included, confirmed fail -> REFER",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 500,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 500,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 500,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 500,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 500,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 2,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 500,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "REFER",
+    "ear_outcomes": {
+     "left": "REFER",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-500": "not_heard_confirmed",
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-500": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 18,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Left ear 500 Hz: not heard, confirmed on rescreen."
+    ]
+   }
+  },
+  {
+   "name": "missed, then too noisy on rescreen -> RETEST",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": [
+     {
+      "round": 2,
+      "ear": "left",
+      "freq": 4000
+     },
+     {
+      "round": 2,
+      "ear": "left",
+      "freq": 4000
+     },
+     {
+      "round": 2,
+      "ear": "left",
+      "freq": 4000
+     }
+    ]
+   },
+   "expected": {
+    "outcome": "RETEST",
+    "ear_outcomes": {
+     "left": "RETEST",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "noisy",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Left ear 4000 Hz: too noisy to test (3 tones discarded for noise)."
+    ]
+   }
+  },
+  {
+   "name": "min_hits_per_point=2, one of two heard, no rescreen -> REFER",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "REFER",
+    "ear_outcomes": {
+     "left": "REFER",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "not_heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "Left ear 1000 Hz: not heard."
+    ]
+   },
+   "config_overrides": {
+    "min_hits_per_point": 2,
+    "rescreen.enabled": false
+   }
+  },
+  {
+   "name": "one of two presentations heard (default min 1) -> PASS",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": {
+    "outcome": "PASS",
+    "ear_outcomes": {
+     "left": "PASS",
+     "right": "PASS"
+    },
+    "point_status": {
+     "left-1000": "heard",
+     "left-2000": "heard",
+     "left-4000": "heard",
+     "right-1000": "heard",
+     "right-2000": "heard",
+     "right-4000": "heard"
+    },
+    "reliability": {
+     "score": 1.0,
+     "catch_trials": 4,
+     "false_alarms": 0,
+     "tone_trials": 12,
+     "out_of_window": 0
+    },
+    "reasons": [
+     "All tones were heard in both ears."
+    ]
+   }
+  }
+ ]
+}

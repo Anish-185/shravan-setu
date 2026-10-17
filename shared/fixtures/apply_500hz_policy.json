@@ -1,0 +1,81 @@
+{
+ "function": "apply_500hz_policy",
+ "cases": [
+  {
+   "name": "always",
+   "input": {
+    "ambient_db_re_baseline": 30
+   },
+   "config_overrides": {
+    "policy_500hz.mode": "always"
+   },
+   "expected": {
+    "include": true,
+    "reason": "500 Hz policy: always tested."
+   }
+  },
+  {
+   "name": "never",
+   "input": {
+    "ambient_db_re_baseline": 0
+   },
+   "config_overrides": {
+    "policy_500hz.mode": "never"
+   },
+   "expected": {
+    "include": false,
+    "reason": "500 Hz policy: never tested."
+   }
+  },
+  {
+   "name": "quiet room (3 < 6) -> include",
+   "input": {
+    "ambient_db_re_baseline": 3
+   },
+   "expected": {
+    "include": true,
+    "reason": "500 Hz tested: room noise below the limit."
+   }
+  },
+  {
+   "name": "exactly at threshold (6) -> skip",
+   "input": {
+    "ambient_db_re_baseline": 6
+   },
+   "expected": {
+    "include": false,
+    "reason": "500 Hz skipped: room too noisy for low tones."
+   }
+  },
+  {
+   "name": "noisy room (12) -> skip",
+   "input": {
+    "ambient_db_re_baseline": 12
+   },
+   "expected": {
+    "include": false,
+    "reason": "500 Hz skipped: room too noisy for low tones."
+   }
+  },
+  {
+   "name": "no measurement -> skip",
+   "input": {
+    "ambient_db_re_baseline": null
+   },
+   "expected": {
+    "include": false,
+    "reason": "500 Hz skipped: no room noise measurement."
+   }
+  },
+  {
+   "name": "unknown mode -> error",
+   "input": {
+    "ambient_db_re_baseline": 3
+   },
+   "config_overrides": {
+    "policy_500hz.mode": "sometimes"
+   },
+   "expected_error": true
+  }
+ ]
+}

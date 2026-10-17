@@ -1,0 +1,112 @@
+{
+ "function": "reliability_score",
+ "cases": [
+  {
+   "name": "no trials -> score 1",
+   "input": {
+    "trials": []
+   },
+   "expected": {
+    "score": 1.0,
+    "catch_trials": 0,
+    "false_alarms": 0,
+    "tone_trials": 0,
+    "out_of_window": 0
+   }
+  },
+  {
+   "name": "1 false alarm + 1 late + 1 missed (a miss is not unreliable)",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 2600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": true,
+      "response_ms": 900
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ]
+   },
+   "expected": {
+    "score": 0.6666666666666667,
+    "catch_trials": 3,
+    "false_alarms": 1,
+    "tone_trials": 3,
+    "out_of_window": 1
+   }
+  },
+  {
+   "name": "window edges are inclusive (150 and 2500 ms count)",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 150
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 2500
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 149
+     }
+    ]
+   },
+   "expected": {
+    "score": 0.6666666666666667,
+    "catch_trials": 0,
+    "false_alarms": 0,
+    "tone_trials": 3,
+    "out_of_window": 1
+   }
+  }
+ ]
+}

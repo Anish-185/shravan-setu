@@ -1,0 +1,100 @@
+{
+ "function": "triage_route",
+ "cases": [
+  {
+   "name": "ear discharge -> PHC",
+   "input": {
+    "answers": {
+     "ear_discharge": true
+    }
+   },
+   "expected": {
+    "route": "PHC",
+    "rule": "likely_treatable_cause",
+    "reason": "Likely treatable cause reported (for example wax or infection): PHC first. Triage, not diagnosis."
+   }
+  },
+  {
+   "name": "recent cold only -> PHC",
+   "input": {
+    "answers": {
+     "recent_cold": true,
+     "ear_pain": false
+    }
+   },
+   "expected": {
+    "route": "PHC",
+    "rule": "likely_treatable_cause",
+    "reason": "Likely treatable cause reported (for example wax or infection): PHC first. Triage, not diagnosis."
+   }
+  },
+  {
+   "name": "pain plus asks for repetition -> PHC",
+   "input": {
+    "answers": {
+     "ear_pain": true,
+     "asks_for_repetition": true
+    }
+   },
+   "expected": {
+    "route": "PHC",
+    "rule": "likely_treatable_cause",
+    "reason": "Likely treatable cause reported (for example wax or infection): PHC first. Triage, not diagnosis."
+   }
+  },
+  {
+   "name": "only asks for repetition -> DEIC",
+   "input": {
+    "answers": {
+     "asks_for_repetition": true
+    }
+   },
+   "expected": {
+    "route": "DEIC",
+    "rule": "default",
+    "reason": "No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis."
+   }
+  },
+  {
+   "name": "all no -> DEIC",
+   "input": {
+    "answers": {
+     "ear_discharge": false,
+     "ear_pain": false,
+     "recent_cold": false,
+     "blocked_feeling": false,
+     "asks_for_repetition": false
+    }
+   },
+   "expected": {
+    "route": "DEIC",
+    "rule": "default",
+    "reason": "No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis."
+   }
+  },
+  {
+   "name": "no answers -> DEIC",
+   "input": {
+    "answers": {}
+   },
+   "expected": {
+    "route": "DEIC",
+    "rule": "default",
+    "reason": "No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis."
+   }
+  },
+  {
+   "name": "string 'yes' is not a yes (strict booleans) -> DEIC",
+   "input": {
+    "answers": {
+     "ear_discharge": "yes"
+    }
+   },
+   "expected": {
+    "route": "DEIC",
+    "rule": "default",
+    "reason": "No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis."
+   }
+  }
+ ]
+}

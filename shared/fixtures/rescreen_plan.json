@@ -1,0 +1,706 @@
+{
+ "function": "rescreen_plan",
+ "cases": [
+  {
+   "name": "nothing missed -> empty plan",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": []
+  },
+  {
+   "name": "one miss -> that point only",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": [
+    [
+     "left",
+     4000
+    ]
+   ]
+  },
+  {
+   "name": "several misses incl. 500 Hz, ordered by ear then frequency; noisy point not rescreened",
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 500,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 500,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 500,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 500,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": [
+     {
+      "round": 1,
+      "ear": "right",
+      "freq": 2000
+     },
+     {
+      "round": 1,
+      "ear": "right",
+      "freq": 2000
+     },
+     {
+      "round": 1,
+      "ear": "right",
+      "freq": 2000
+     }
+    ]
+   },
+   "expected": [
+    [
+     "left",
+     500
+    ],
+    [
+     "left",
+     4000
+    ],
+    [
+     "right",
+     1000
+    ]
+   ]
+  },
+  {
+   "name": "rescreen disabled -> empty plan",
+   "config_overrides": {
+    "rescreen.enabled": false
+   },
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": []
+  },
+  {
+   "name": "max_rounds 0 -> empty plan",
+   "config_overrides": {
+    "rescreen.max_rounds": 0
+   },
+   "input": {
+    "trials": [
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "left",
+      "freq": 4000,
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 1000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 2000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "tone",
+      "ear": "right",
+      "freq": 4000,
+      "responded": true,
+      "response_ms": 600
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     },
+     {
+      "round": 1,
+      "kind": "catch",
+      "responded": false,
+      "response_ms": null
+     }
+    ],
+    "noise_events": []
+   },
+   "expected": []
+  }
+ ]
+}
