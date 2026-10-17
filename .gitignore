@@ -102,3 +102,11 @@ __pycache__/
 local_settings.py
 
 .env
+
+### SFIC project ###
+.venv/
+server/db.sqlite3
+*.sqlite3
+data/raw/
+.remember/
+.pytest_cache/
