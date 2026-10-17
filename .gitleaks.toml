@@ -1,0 +1,8 @@
+# gitleaks config: default rules plus one documented false positive (docs/SECURITY_NOTE.md).
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Django migration dependency tuples, e.g. ('apigateway', '0012_alter_assignment_deadline'), flagged by generic-api-key"
+regexTarget = "line"
+regexes = ['''^\s*\('apigateway', '\d{4}_[a-z0-9_]+'\),?\s*$''']

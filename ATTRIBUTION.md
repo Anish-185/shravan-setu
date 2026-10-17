@@ -1,8 +1,8 @@
 # Attribution
 
-This repository is a fork of **DhwaniSarathi** (https://github.com/S1ddh4rthaG/DhwaniSarathi),
-built by team **gps4** for Smart India Hackathon 2023, problem statement SIH1403 ("App-Based Audiometer"),
-where it was a winning entry.
+This project builds on **DhwaniSarathi** by **the DhwaniSarathi team (SIH 2023)**:
+https://github.com/S1ddh4rthaG/DhwaniSarathi. It was built by team gps4 for Smart India Hackathon 2023,
+problem statement SIH1403 ("App-Based Audiometer"), where it was a winning entry.
 
 **Original team** (from the original README):
 
@@ -15,9 +15,20 @@ where it was a winning entry.
 
 The original work is licensed under the **Apache License 2.0**. The `LICENSE` file in the repo root is theirs
 and is kept unchanged. The original repo has no `NOTICE` file, so there is none to carry.
-Their full git history is preserved in this repo.
 
-The original mobile app lives in `audiometer/` and is **not modified** by us. It is kept for attribution.
+**How their code is included.** The first commit of this repo imports the original repository as it was at
+commit `80e990f` (2024-01-11), the latest upstream commit when we started. The original team's 227-commit history is
+not copied here; it remains in full at the link above. In that import we made only these changes, so that this public
+repo does not republish them:
+
+- the original team's Firebase configuration values (`audiometer/FirebaseConfig.js`), Clarifai API token
+  (`audiometer/app/Screens/JewelleryDetection.js`) and hardcoded Django `SECRET_KEY` (`server/backend/settings.py`)
+  are replaced with `REDACTED`;
+- the committed test database `server/db.sqlite3` is removed.
+
+Everything else in `audiometer/`, `server/apigateway/`, `Screenshots/` and the two PDFs is exactly as in `80e990f`.
+
+The original mobile app lives in `audiometer/` and is **not modified** by us apart from the redaction above. It is kept for attribution.
 The original Django backend lives in `server/apigateway/`; our changes to `server/` are listed in
 `docs/ERROR_LOG.md` and the commit history (Phase 0: env-based settings, Django 5.2 upgrade, removal of the committed database).
 
