@@ -41,7 +41,13 @@ The original Django backend lives in `server/apigateway/`; our changes to `serve
 Filled in per phase.
 
 - (Phase 0) No features yet: cleanup, attribution, architecture.
+- (Phase 1) Throwaway audio spike only (`screener/src/app/spike.tsx`): tone playback with live mic metering and a JSON log.
 
 ## Third-party code and assets we reuse
 
-None yet. Every entry here must also appear in `docs/REUSE_LOG.md`.
+Every entry here must also appear in `docs/REUSE_LOG.md`.
+
+| What | From | Licence | Where in our repo |
+|---|---|---|---|
+| Pure-tone WAVs: 1000 Hz and 4000 Hz, left-only and right-only, 10 s (`tone_*Hz_*_um.wav`), copied unmodified | DhwaniSarathi `audiometer/app/assets/puretones/` (original team, see above) | Apache-2.0 | `screener/assets/tones/` |
+| App scaffold (`create-expo-app` default template, reset to blank) | Expo (650 Industries) | MIT (`screener/LICENSE`) | `screener/` config files, `src/app/_layout.tsx` |

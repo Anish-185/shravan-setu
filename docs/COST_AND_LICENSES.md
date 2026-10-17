@@ -23,7 +23,36 @@ Runtime: Python 3.12 + SQLite on a laptop. No cloud hosting, no database service
 
 ## Mobile app (`screener/`)
 
-Not scaffolded yet (Phase 1).
+Expo SDK 58. Licences read from each package's installed `package.json` (Phase 1). Runs in the free Expo Go app;
+no Expo account needed for local development.
+
+| Package | Version | Licence | Cost | Network calls |
+|---|---|---|---|---|
+| expo | 58.0.14 | MIT | 0 | Dev server only (laptop ↔ phone on LAN). None in the app code |
+| expo-router | 58.0.23 | MIT | 0 | None |
+| expo-audio | 58.0.9 | MIT | 0 | None (local assets) |
+| expo-file-system | 58.0.9 | MIT | 0 | None (local files) |
+| expo-sharing | 58.0.19 | MIT | 0 | None (opens the Android share sheet) |
+| expo-device | 58.0.5 | MIT | 0 | None |
+| expo-asset | 58.0.16 | MIT | 0 | None (required peer of expo-audio, flagged by expo-doctor) |
+| expo-constants, expo-font, expo-image, expo-linking, expo-splash-screen, expo-status-bar, expo-symbols, expo-system-ui, expo-web-browser, expo-glass-effect, @expo/ui | 58.x | MIT | 0 | None (template defaults; unused ones may be removed later) |
+| react / react-dom | 19.3.0 | MIT | 0 | None |
+| react-native | 0.88.0 | MIT | 0 | None |
+| react-native-gesture-handler, -reanimated, -worklets, -safe-area-context, -screens, -web | template | MIT | 0 | None |
+| typescript (dev) | 6.0.3 | Apache-2.0 | 0 | None |
+| eslint, eslint-config-expo (dev) | 9.39.5 / 58.0.4 | MIT | 0 | None |
+
+**Transitive packages with licences outside our allowlist** (all build or dev tooling pulled in by Expo, Babel or
+ESLint; none added by us; none is GPL-only). Pending owner approval:
+
+| Package | Licence | Pulled in by | Assessment |
+|---|---|---|---|
+| lightningcss (+ platform binary) | MPL-2.0 | `@expo/metro-config` (bundler) | File-level weak copyleft. Build tool only, used unmodified |
+| node-forge | BSD-3-Clause OR GPL-2.0 | `@expo/cli` (code signing) | Dual licence; we take it under BSD-3-Clause |
+| caniuse-lite | CC-BY-4.0 | Babel `browserslist` | Data file, build time only. CC-BY is allowed for media |
+| argparse | Python-2.0 | `js-yaml` ← ESLint | Permissive. Dev only |
+| glob, minimatch, minipass, path-scurry, lru-cache, sax | BlueOak-1.0.0 | various CLI tools | Permissive (similar to MIT) |
+| jsc-safe-url | 0BSD | Metro | Public-domain-like |
 
 ## Original app (`audiometer/`, not used by us)
 
@@ -42,3 +71,6 @@ cost model (Phase 6) takes them as inputs.
 | Teacher / screener time | TODO(source) | Minutes per child × local wage |
 | Laptop for the backend | TODO(source) | Often already available at the school or block office |
 | SMS / IVR reminders | TODO(source) | Future cost only; stubbed (logged, not sent) in this version |
+
+npm 11 blocks dependency install scripts by default. One is blocked in `screener/`: `unrs-resolver` (postinstall that
+fetches a fallback native binary for ESLint's import resolver). Left blocked; lint works without it.
