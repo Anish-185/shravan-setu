@@ -1,0 +1,82 @@
+{
+  "config_version": "0.1.0",
+  "_about": "Single source of truth for screening and triage rules. Every value has a source. PLACEHOLDER = no evidence yet; tune from team tests (Phase 6) and record the evidence here. Levels are in dB re: team baseline, never dB HL.",
+
+  "ears": {
+    "value": ["left", "right"],
+    "source": "Design choice: both ears, left first."
+  },
+  "frequencies_hz": {
+    "value": [1000, 2000, 4000],
+    "source": "TODO(source): school pure-tone screening convention of 1, 2 and 4 kHz (cite a published school screening guideline). 500 Hz is controlled separately by policy_500hz."
+  },
+  "screening_level_db_re_team_baseline": {
+    "value": null,
+    "source": "TODO(source): set after biological calibration on [PHONE_MODEL] + [EARPHONE_MODEL] (docs/TEAM_TEST_PROTOCOL.md, Phase 6). The usual school screening convention is 20-25 dB HL at 1, 2 and 4 kHz; citation TODO. We cannot claim dB HL without instrument calibration."
+  },
+
+  "tone": {
+    "duration_ms": {"value": 1000, "source": "PLACEHOLDER: no evidence yet."},
+    "ramp_ms": {"value": 25, "source": "PLACEHOLDER. TODO(source): rise/fall time from a pure-tone audiometry standard. Purpose: avoid onset/offset clicks (ERR-005)."},
+    "sample_rate_hz": {"value": 44100, "source": "Design choice: standard audio rate, same as the original app's tones."},
+    "peak_dbfs": {"value": -1, "source": "Design choice: just below full scale to avoid clipping. Loudness is then set by the player volume and calibration."}
+  },
+
+  "response": {
+    "min_response_ms": {"value": 150, "source": "PLACEHOLDER: taps faster than this after tone onset are treated as anticipation, not hearing."},
+    "response_window_ms": {"value": 2500, "source": "PLACEHOLDER: a tap must come within this time after tone onset to count."},
+    "inter_stimulus_interval_ms": {"value": [1500, 4000], "source": "PLACEHOLDER: random gap range between presentations, so the child can't predict the rhythm."}
+  },
+
+  "presentations_per_point": {"value": 2, "source": "PLACEHOLDER: tone presentations per ear and frequency per round."},
+  "min_hits_per_point": {"value": 1, "source": "PLACEHOLDER: valid in-window responses needed to count a point as heard."},
+
+  "reliability": {
+    "catch_trials": {"value": 4, "source": "PLACEHOLDER: silent trials inserted at random per session."},
+    "min_catch_trials": {"value": 3, "source": "PLACEHOLDER: below this, reliability can't be judged, so the outcome is RETEST."},
+    "max_false_alarm_rate": {"value": 0.25, "source": "PLACEHOLDER: share of silent trials that got a tap. Above this, RETEST."},
+    "max_out_of_window_rate": {"value": 0.25, "source": "PLACEHOLDER: share of tone trials with a tap outside the response window. Above this, RETEST."}
+  },
+
+  "noise": {
+    "gate_db_above_baseline": {"value": 10, "source": "PLACEHOLDER: depends on Phase 1 spike results (does mic metering work during playback?)."},
+    "max_replays_per_tone": {"value": 2, "source": "PLACEHOLDER: a tone masked by noise is discarded and replayed at most this many times; then the point is 'too noisy'."}
+  },
+
+  "policy_500hz": {
+    "mode": {"value": "only_if_ambient_below", "source": "Design choice: low tones are easily masked by room noise, so 500 Hz is only tested in a quiet room. Allowed: always | never | only_if_ambient_below."},
+    "ambient_threshold_db_re_baseline": {"value": 6, "source": "PLACEHOLDER: ambient level above the quiet baseline at which 500 Hz is skipped."}
+  },
+
+  "rescreen": {
+    "enabled": {"value": true, "source": "Design choice: two-stage screening. Rescreen immediately, before any REFER."},
+    "failed_points_only": {"value": true, "source": "Design choice: only the ear/frequency points that were not heard."},
+    "max_rounds": {"value": 1, "source": "Design choice: at most one rescreen round in the same session."}
+  },
+
+  "triage": {
+    "questions": {
+      "value": [
+        {"id": "ear_discharge", "en": "Is there fluid or discharge from the ear?", "te": "TODO_TE"},
+        {"id": "ear_pain", "en": "Does the child have ear pain?", "te": "TODO_TE"},
+        {"id": "recent_cold", "en": "Has the child had a cold or blocked nose recently?", "te": "TODO_TE"},
+        {"id": "blocked_feeling", "en": "Does the child say the ear feels blocked or full?", "te": "TODO_TE"},
+        {"id": "asks_for_repetition", "en": "Teacher: does the child often ask for things to be repeated?", "te": "TODO_TE"}
+      ],
+      "source": "TODO(source): checklist wording needs review by a clinician (CLAUDE.md: ask about medical wording). Telugu from [TELUGU_SPEAKER]."
+    },
+    "rules": {
+      "value": [
+        {
+          "id": "likely_treatable_cause",
+          "if_any_yes": ["ear_discharge", "ear_pain", "blocked_feeling", "recent_cold"],
+          "route": "PHC",
+          "reason": "Likely treatable cause reported (for example wax or infection): PHC first. Triage, not diagnosis."
+        }
+      ],
+      "source": "TODO(source): routing rule needs a citation and clinician review. First matching rule wins."
+    },
+    "default_route": {"value": "DEIC", "source": "Design choice: no likely treatable cause reported, so route to the District Early Intervention Centre for further hearing assessment."},
+    "default_reason": {"value": "No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis.", "source": "Wording: TODO(source) clinician review."}
+  }
+}
