@@ -169,3 +169,28 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED (owner confirmed 2026-10-17: the app opens in Play Store Expo Go on SDK 57, spike step 4)
 - Verification: `npx tsc --noEmit` exit 0; `npx expo lint` exit 0; `npx expo-doctor` 21/21; `scripts/check_rules_parity.sh` PARITY OK (pytest 167 + 1, jest 46); `npx expo export --platform android` produces the Hermes bundle.
 - Lesson: choose the Expo SDK from the Expo Go build the test phone can install from the Play Store, not from npm `latest`.
+
+### ERR-015: `npm install` in `screener/` reports audit vulnerabilities and blocked install scripts
+- Phase / date: Phase 4 Step 0 / 2026-10-17
+- Symptom: owner saw "55 vulnerabilities" and 2 packages blocked by allowScripts (`@parcel/watcher`, `unrs-resolver`). On the current SDK 57 tree: `66 vulnerabilities (17 moderate, 49 high)` and only `unrs-resolver@1.12.2 (postinstall: node postinstall.js)` blocked.
+- Where: `cd screener && npm install` (npm 11.19.0, Node 26.7.0).
+- Root cause: the owner's numbers came from the SDK 58 tree; jest 30's `jest-haste-map` pulled in `@parcel/watcher`, which the SDK 57 tree (jest 29) no longer has. The 66 entries come from **5 advisories**; the other 61 are parent packages flagged only because they depend on one of the five:
+
+  | Advisory | Installed | Path | Ships in the APK? | Patched release? |
+  |---|---|---|---|---|
+  | braces ≤3.0.3, DoS on nested patterns (GHSA-vfj7-8cjw-p6xm) | 3.0.3 | micromatch ← metro, jest | No: bundler/test runner on the dev laptop | None on npm (3.0.3 is latest) |
+  | node-forge ≤1.4.0, RSA signature check (GHSA-86w9-cpqp-85rv) | 1.4.0 | @expo/code-signing-certificates ← @expo/cli | No: CLI code signing for EAS Update, which we don't use | None on npm (1.4.0 is latest) |
+  | sprintf-js ≤1.1.3, DoS (GHSA-hp3w-g68c-fv3c) | 1.0.3 | argparse ← js-yaml ← istanbul ← jest | No: test coverage tooling | None on npm (1.1.3 is latest) |
+  | uuid <11.1.1, buffer bounds in v3/v5/v6 with `buf` (GHSA-w5hq-g745-h8pq) | 7.0.3 | xcode ← @expo/config-plugins | No: prebuild-time iOS project editing; xcode only calls `uuid.v4()` (not affected) | 11.1.1 |
+  | decode-uri-component ≤0.4.2, DoS on malformed `%` input (GHSA-vcc3-ghjq-m6fr) | 0.2.2 | query-string ← expo-router | **Yes**: expo-router parses deep-link paths with it | 0.5.0, ESM-only |
+
+  `unrs-resolver` is a native resolver for `eslint-import-resolver-typescript` (lint only). Its postinstall (`napi-postinstall`) only checks for, or downloads, the platform binding, which npm already installs as an optional dependency (`@unrs/resolver-binding-linux-x64-gnu`).
+- Fix:
+  - `screener/package.json` `overrides: {"xcode": {"uuid": "^11.1.1"}}`: same CJS `v4()` API, so it's safe. Result: 57 vulnerabilities (8 moderate, 49 high).
+  - `screener/package.json` `allowScripts: {"unrs-resolver": false}` (via `npm install-scripts deny unrs-resolver`): no install-time network download, warning gone, lint still works with the prebuilt binding.
+  - Not fixed, on purpose: `npm audit fix --force` would install expo@44 / jest 30 / expo-router 58 (wrong SDK, ERR-014). decode-uri-component 0.5.0 is ESM-only while query-string 7 `require()`s it, so an override would break routing at runtime. braces, node-forge and sprintf-js have no patched release.
+  - Shipped-app exposure: only decode-uri-component. Worst case is a crafted `screener://` deep link opened on the teacher's phone hanging our own app. No server or data exposure; the app is offline.
+- Status: OPEN (blocked upstream). Uuid fixed; the rest has no safe fix today.
+- Verification: `npm install` → `57 vulnerabilities`, no install-scripts warning; `npm ls uuid` → xcode uses uuid@11.1.1; `npx tsc --noEmit` exit 0; `npx expo lint` exit 0; `npx jest` 46 passed; `npx expo-doctor` 21/21; `npx expo export --platform android` exit 0.
+- Next step: at each Step 0, run `npm audit` and recheck braces/node-forge/sprintf-js for patched releases (add an override if one is semver-compatible). Move to expo-router 58 when the Play Store Expo Go supports SDK 58, which clears decode-uri-component.
+- Lesson: read `npm audit` by root advisory and by whether the package ships in the bundle; never take `audit fix --force` in an Expo project.
