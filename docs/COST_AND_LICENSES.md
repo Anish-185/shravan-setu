@@ -39,6 +39,10 @@ no Expo account needed for local development.
 | expo-file-system | 57.0.7 | MIT | 0 | None (local files) |
 | expo-sharing | 57.0.23 | MIT | 0 | None (opens the Android share sheet) |
 | expo-device | 57.0.2 | MIT | 0 | None |
+| expo-sqlite | 57.0.4 | MIT | 0 | None (local database file) |
+| expo-crypto | 57.0.4 | MIT | 0 | None (`randomUUID()` for client-generated ids) |
+| expo-secure-store | 57.0.4 | MIT | 0 | None (stores the backend token in Android Keystore) |
+| App code: sync (`src/db/sync.ts`, `src/app/settings.tsx`) | ours | Apache-2.0 | 0 | **Only when the teacher taps Log in or Sync**: HTTP to the team's own laptop backend on the LAN (`/api/token/`, `/api/schools/`, `/api/sync/`, `/api/cases/`). No third-party host |
 | expo-asset | 57.0.20 | MIT | 0 | None (required peer of expo-audio, flagged by expo-doctor) |
 | expo-constants, expo-font, expo-image, expo-linking, expo-splash-screen, expo-status-bar, expo-symbols, expo-system-ui, expo-web-browser, expo-glass-effect, @expo/ui | 57.x | MIT | 0 | None (template defaults; unused ones may be removed later) |
 | react / react-dom | 19.2.3 | MIT | 0 | None |

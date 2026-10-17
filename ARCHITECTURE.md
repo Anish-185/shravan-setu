@@ -87,6 +87,29 @@ Key decisions:
 - **Triage routing**, not diagnosis: a yes/no checklist routes a likely treatable cause to a PHC, otherwise to DEIC.
 - **Sound levels** are relative to a biological calibration baseline ("dB re: team baseline").
 
+## Screening app (Phase 4, built)
+
+```
+screener/src/
+  app/index.tsx, settings.tsx, children.tsx, sync.tsx, screen/[childId].tsx   expo-router screens
+  engine/engine.ts     timer-driven test state machine; time, randomness and audio injected through Port
+  audio/useScreeningAudio.ts   expo-audio players + mic meter + earphone detection (one 100 ms tick)
+  db/store.ts, sync.ts, index.ts   SQLite records + outbox; push to /api/sync/, pull case status
+  rules/               shared rule engine (JS port)
+  config.ts            imports ../../config/screening.json (metro.config.js watchFolders)
+```
+
+- **Noise gating = during_tone** (docs/SPIKE.md §5.4). The mic runs for the whole session. Each tone's metering
+  samples go through `noise_verdict`: floor/missing samples, the mic settle window and the plug guard window are
+  excluded; a tone is replayed if any valid sample is saturated or above `reference_quiet_db + gate_db_above_baseline`,
+  or if too few valid samples remain.
+- **Earphone detection** polls the live input device list (`getAvailableInputs()` = `AudioManager.getDevices`) for a
+  wired headset, and rejects Bluetooth. Any change pauses the engine, stops the tone, discards the presentation, and
+  needs the tester to resume. No tone is played unless wired earphones are present.
+- **Storage**: one generic `records(type, id, data)` table whose `data` is exactly the backend serializer payload,
+  plus `outbox` and `kv`. The full session log (trials, metering numbers, device changes) stays on the phone for
+  export; audio recordings are deleted.
+
 ## Referral tracker backend (Phase 2, built)
 
 `server/referrals/`. Every record has a client-generated UUID primary key. Token auth on every endpoint.

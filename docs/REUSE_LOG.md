@@ -125,3 +125,58 @@ Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state mach
 - jest 29.7.0 (MIT) with jest-expo 57.0.6 (MIT), the versions SDK 57 pins (was jest 30.5.2 / jest-expo 58.0.11 before
   the ERR-014 downgrade), plus @types/jest 29.5.14 and
   @types/node 26.6.5 (MIT). Dev only. Required by `CLAUDE.md` (jest-expo preset).
+
+## Phase 4
+
+### Earphone connect/disconnect detection
+
+- Queries (2026-10-17): GitHub `headphone detection react-native`, `expo audio device change`, `AudioDeviceCallback wired headset`
+  (and `expo audio route change`, `react-native wired headset`, `expo headphones module`: no results); npm
+  `headphone detection`, `audio route expo`, `headset plug react-native`.
+
+| Candidate | Licence | Last release / push | Verdict |
+|---|---|---|---|
+| react-native-headphone-detection (Tintef) | MIT | npm 1.3.0, 2020 | Old bridge module, not in Expo Go, unmaintained |
+| react-native-headphone-detect-v2 | ? | 0.2.6-beta-1, 2025 | Pre-release only; banned |
+| zukethenuke/expo-audio-output-detector | MIT | 2025-10 | Repo holds only a LICENSE file; not on npm |
+| react-native-incall-manager | ISC | 2026-09 | WebRTC call manager; takes over the audio mode; heavy; not in Expo Go |
+| expo-audio 57 (already installed) | MIT | SDK 57 | No route/device-change events. `getAvailableInputs()` re-queries `AudioManager.getDevices(INPUTS)` on every call; `getCurrentInput()` falls back to a cached preferred device (why the spike saw "H2W" after unplugging) |
+
+- Decision: (c) build on the installed expo-audio: poll `getAvailableInputs()` every `noise.meter_poll_ms` for a
+  `MicrophoneWired` device and no Bluetooth device. Runs in Expo Go.
+- Limits: needs earphones with an inline mic (TRRS headset); 3-pole earphones are never detected, so the test refuses
+  to start (fails safe). Up to one poll interval of a tone can reach the loudspeaker after an unplug, before the stop.
+  True route events (`AudioDeviceCallback` / `ACTION_AUDIO_BECOMING_NOISY`) need a small native module and a dev
+  build (no Expo Go); proposed for the APK build, not done.
+
+### Tone presentation scheduling / test engine
+
+- Queries: GitHub `expo audio tone scheduling`, `react native audiometry test engine` (no results),
+  `pure tone audiometry javascript`.
+- Candidates: AHSLab-UW/UWAHSLAB_Hearing_Screener (MIT, 2026-10): browser, Bayesian threshold fitting, Web Audio.
+  cnspica/hearing-self-diagnosis (MIT): browser Hughson-Westlake, diagnostic framing. Neither is fixed-level
+  screening with catch trials, during-tone noise gating and a rescreen round; both are Web Audio.
+- Decision: (c) build. `screener/src/engine/engine.ts` (~230 lines), timers through an injected `Port` so jest drives it.
+
+### Offline-first sync on expo-sqlite
+
+- Queries: GitHub `expo-sqlite sync outbox`, `offline first sync react native sqlite`, `watermelondb sync`.
+
+| Candidate | Licence | Last release | Verdict |
+|---|---|---|---|
+| @nozbe/watermelondb | MIT | 0.28.0, 2025-07 | JSI native module: not in Expo Go; heavy; own sync protocol would need a new backend endpoint |
+| @powersync/react-native | Apache-2.0 | 2.3.1, 2026-10 | Needs the PowerSync service (hosted or self-run server); rejected (service in runtime path) |
+| Felix-au/SyncZen-Local and similar | MIT | 2026 | App-specific, not a library |
+
+- Decision: (c) build a hand-written outbox: `src/db/store.ts` + `src/db/sync.ts` (~120 lines) on expo-sqlite
+  57.0.4 (MIT, in Expo Go). Matches the existing idempotent `/api/sync/` endpoint exactly.
+
+### UUID generation
+
+- Candidates: expo-crypto 57.0.4 `randomUUID()` (MIT, in Expo Go, native CSPRNG); `uuid` 14 (MIT) + 
+  `react-native-get-random-values` polyfill (MIT).
+- Decision: (a) expo-crypto. One call, no polyfill.
+
+### Token storage
+
+- expo-secure-store 57.0.4 (MIT), included in Expo Go, so no limitation to document.

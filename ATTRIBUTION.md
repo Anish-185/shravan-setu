@@ -52,6 +52,11 @@ The original Django backend lives in `server/apigateway/`; our changes to `serve
 Filled in per phase.
 
 - (Phase 0) No features yet: cleanup, attribution, architecture.
+- (Phase 4) Offline screening flow in `screener/`: consent, device check with live wired-earphone detection,
+  left/right check (idea ported from the original `EarTest.js`, re-implemented, no code copied), room-noise
+  measurement, timer-driven test engine with during-tone noise gating, catch trials and rescreen of failed points,
+  result screen with a permanent screening-only banner, local REFER case. Local SQLite outbox with manual idempotent
+  sync. Noise rules (`noise_verdict`, `ambient_level`) added to both rule engines. Spike analysis script.
 - (Phase 3) Screening rule engine, written twice (Python reference `server/referrals/rules/`, JS port
   `screener/src/rules/`) and checked against the same 45 shared fixtures: PASS/RETEST/REFER with reasons, catch-trial
   reliability gating, per-tone noise discard, rescreen of failed points only, 500 Hz policy, triage routing (PHC/DEIC).
