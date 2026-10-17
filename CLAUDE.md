@@ -72,6 +72,7 @@ Our originality is the closed referral loop, two-stage screening, reliability ga
 - **All thresholds live in `config/screening.json`.** No magic numbers in code. Each value has a `"source"` field (citation, script, or `"TODO(source)"`).
 - **Rules exist twice** (Python reference in `server/referrals/rules/` and JS port in `screener/src/rules/`). Both MUST pass the same fixtures in `shared/fixtures/`.
 - **Tests are required for:** the referral state machine, rescreen logic, 500 Hz gating, reliability scoring, triage routing, sync idempotency, simulator, audit-log verification. Python: pytest. JS: jest (jest-expo preset).
+- **Versions:** never use beta, RC, canary or other pre-release SDKs or packages. Before choosing an Expo SDK, check which SDK the current Play Store Expo Go supports and use that stable SDK (ERR-014).
 - **IDs:** client-generated UUIDv4 for every record, so sync is idempotent.
 - **Children's data:** collect the minimum. Parent phone is optional. Consent is recorded before any test. No real child data in the repo, ever. Seed data uses obviously fake names ("Student A1").
 - **Secrets:** none in code. Django `SECRET_KEY` comes from an environment variable. `.env` is gitignored. Never commit `db.sqlite3`.
