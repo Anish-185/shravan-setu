@@ -1,0 +1,177 @@
+{
+ "function": "ambient_level",
+ "cases": [
+  {
+   "name": "odd count: median -32 -> -2 re reference",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": -33
+     },
+     {
+      "t": 2100,
+      "db": -31
+     },
+     {
+      "t": 2200,
+      "db": -32
+     },
+     {
+      "t": 2300,
+      "db": -30
+     },
+     {
+      "t": 2400,
+      "db": -34
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "db_re_reference": -2,
+    "valid": 5
+   }
+  },
+  {
+   "name": "even count after dropping the floor: median -25 -> +5",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": -160
+     },
+     {
+      "t": 2100,
+      "db": -30
+     },
+     {
+      "t": 2200,
+      "db": -28
+     },
+     {
+      "t": 2300,
+      "db": -26
+     },
+     {
+      "t": 2400,
+      "db": -24
+     },
+     {
+      "t": 2500,
+      "db": -22
+     },
+     {
+      "t": 2600,
+      "db": -20
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "db_re_reference": 5,
+    "valid": 6
+   }
+  },
+  {
+   "name": "settle time excluded: only 2 valid (t=1000, 1100) -> no measurement",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 200,
+      "db": -33
+     },
+     {
+      "t": 300,
+      "db": -33
+     },
+     {
+      "t": 400,
+      "db": -33
+     },
+     {
+      "t": 500,
+      "db": -33
+     },
+     {
+      "t": 600,
+      "db": -33
+     },
+     {
+      "t": 700,
+      "db": -33
+     },
+     {
+      "t": 800,
+      "db": -33
+     },
+     {
+      "t": 900,
+      "db": -33
+     },
+     {
+      "t": 1000,
+      "db": -33
+     },
+     {
+      "t": 1100,
+      "db": -33
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "db_re_reference": null,
+    "valid": 2
+   }
+  },
+  {
+   "name": "saturated samples count as loud: median -1 -> +29",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": -1
+     },
+     {
+      "t": 2100,
+      "db": -1
+     },
+     {
+      "t": 2200,
+      "db": -1
+     },
+     {
+      "t": 2300,
+      "db": -15
+     },
+     {
+      "t": 2400,
+      "db": -20
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "db_re_reference": 29,
+    "valid": 5
+   }
+  }
+ ]
+}

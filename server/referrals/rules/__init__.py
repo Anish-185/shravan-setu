@@ -8,7 +8,9 @@ Input shapes
   trial:       {"round": 1|2, "kind": "tone"|"catch", "ear": "left"|"right", "freq": int,
                 "responded": bool, "response_ms": number|None}      (catch trials need no ear/freq)
   noise_event: {"round": 1|2, "ear": ..., "freq": ...}             one tone presentation discarded for noise
+  sample:      {"t": ms, "db": number|None}                          one mic metering reading (relative, uncalibrated)
 """
+import statistics
 
 POINT_TEXT = {
     "not_heard_confirmed": "{ear} ear {freq} Hz: not heard, confirmed on rescreen.",
@@ -81,6 +83,42 @@ def rescreen_plan(trials, noise_events, cfg):
         [ear, freq] for ear, freq in _points(trials, cfg)
         if _point_status(trials, noise_events, 1, ear, freq, cfg)[0] == "not_heard"
     ]
+
+
+def _valid_db(samples, mic_start_ms, device_changes_ms, cfg):
+    """Metering values that can be trusted: not missing or at the floor (-160 = no data, never 'quiet'), not in the
+    mic start-up settle time, not within plug_guard_ms of an earphone connect/disconnect."""
+    settle, guard = v(cfg, "noise", "mic_settle_ms"), v(cfg, "noise", "plug_guard_ms")
+    floor = v(cfg, "noise", "invalid_at_or_below_db")
+    return [
+        s["db"] for s in samples
+        if s["db"] is not None and s["db"] > floor and s["t"] - mic_start_ms >= settle
+        and all(abs(s["t"] - d) >= guard for d in device_changes_ms)
+    ]
+
+
+def noise_verdict(samples, mic_start_ms, device_changes_ms, cfg):
+    """During-tone noise gate for one presentation: ok | noisy (discard and replay) | unknown (too few valid
+    samples to tell, also replayed). Gate = reference quiet level + gate_db_above_baseline; saturation is noisy."""
+    db = _valid_db(samples, mic_start_ms, device_changes_ms, cfg)
+    peak = max(db) if db else None
+    if len(db) < v(cfg, "noise", "min_valid_samples_per_tone"):
+        verdict = "unknown"
+    elif (peak >= v(cfg, "noise", "saturated_at_or_above_db")
+          or peak > v(cfg, "noise", "reference_quiet_db") + v(cfg, "noise", "gate_db_above_baseline")):
+        verdict = "noisy"
+    else:
+        verdict = "ok"
+    return {"verdict": verdict, "valid": len(db), "max_db": peak}
+
+
+def ambient_level(samples, mic_start_ms, device_changes_ms, cfg):
+    """Pre-test room noise: median valid metering minus the reference quiet level (input to apply_500hz_policy).
+    None if there are too few valid samples."""
+    db = _valid_db(samples, mic_start_ms, device_changes_ms, cfg)
+    if len(db) < v(cfg, "noise", "min_valid_samples_per_tone"):
+        return {"db_re_reference": None, "valid": len(db)}
+    return {"db_re_reference": statistics.median(db) - v(cfg, "noise", "reference_quiet_db"), "valid": len(db)}
 
 
 def apply_500hz_policy(ambient_db_re_baseline, cfg):

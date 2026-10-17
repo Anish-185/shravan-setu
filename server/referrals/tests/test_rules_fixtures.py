@@ -30,6 +30,8 @@ def call(fn, inp, cfg):
         return rules.reliability_score(inp["trials"], cfg)
     if fn == "apply_500hz_policy":
         return rules.apply_500hz_policy(inp["ambient_db_re_baseline"], cfg)
+    if fn in ("noise_verdict", "ambient_level"):
+        return getattr(rules, fn)(inp["samples"], inp["mic_start_ms"], inp["device_changes_ms"], cfg)
     if fn == "triage_route":
         return rules.triage_route(inp["answers"], cfg)
     raise AssertionError(fn)

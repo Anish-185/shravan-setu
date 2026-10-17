@@ -1,0 +1,661 @@
+{
+ "function": "noise_verdict",
+ "cases": [
+  {
+   "name": "quiet tone -> ok",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": -33
+     },
+     {
+      "t": 2100,
+      "db": -33
+     },
+     {
+      "t": 2200,
+      "db": -33
+     },
+     {
+      "t": 2300,
+      "db": -33
+     },
+     {
+      "t": 2400,
+      "db": -33
+     },
+     {
+      "t": 2500,
+      "db": -33
+     },
+     {
+      "t": 2600,
+      "db": -33
+     },
+     {
+      "t": 2700,
+      "db": -33
+     },
+     {
+      "t": 2800,
+      "db": -33
+     },
+     {
+      "t": 2900,
+      "db": -33
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "verdict": "ok",
+    "valid": 10,
+    "max_db": -33
+   }
+  },
+  {
+   "name": "one loud sample -> noisy",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": -33
+     },
+     {
+      "t": 2100,
+      "db": -33
+     },
+     {
+      "t": 2200,
+      "db": -33
+     },
+     {
+      "t": 2300,
+      "db": -33
+     },
+     {
+      "t": 2400,
+      "db": -33
+     },
+     {
+      "t": 2500,
+      "db": -33
+     },
+     {
+      "t": 2600,
+      "db": -33
+     },
+     {
+      "t": 2700,
+      "db": -33
+     },
+     {
+      "t": 2800,
+      "db": -33
+     },
+     {
+      "t": 2900,
+      "db": -15
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "verdict": "noisy",
+    "valid": 10,
+    "max_db": -15
+   }
+  },
+  {
+   "name": "exactly at the gate (-20) -> ok",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": -33
+     },
+     {
+      "t": 2100,
+      "db": -33
+     },
+     {
+      "t": 2200,
+      "db": -33
+     },
+     {
+      "t": 2300,
+      "db": -33
+     },
+     {
+      "t": 2400,
+      "db": -33
+     },
+     {
+      "t": 2500,
+      "db": -33
+     },
+     {
+      "t": 2600,
+      "db": -33
+     },
+     {
+      "t": 2700,
+      "db": -33
+     },
+     {
+      "t": 2800,
+      "db": -33
+     },
+     {
+      "t": 2900,
+      "db": -20
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "verdict": "ok",
+    "valid": 10,
+    "max_db": -20
+   }
+  },
+  {
+   "name": "just over the gate (-19.5) -> noisy",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": -33
+     },
+     {
+      "t": 2100,
+      "db": -33
+     },
+     {
+      "t": 2200,
+      "db": -33
+     },
+     {
+      "t": 2300,
+      "db": -33
+     },
+     {
+      "t": 2400,
+      "db": -33
+     },
+     {
+      "t": 2500,
+      "db": -33
+     },
+     {
+      "t": 2600,
+      "db": -33
+     },
+     {
+      "t": 2700,
+      "db": -33
+     },
+     {
+      "t": 2800,
+      "db": -33
+     },
+     {
+      "t": 2900,
+      "db": -19.5
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "verdict": "noisy",
+    "valid": 10,
+    "max_db": -19.5
+   }
+  },
+  {
+   "name": "saturated (-1.2) is noisy even with a huge gate",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30,
+    "noise.gate_db_above_baseline": 50
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": -33
+     },
+     {
+      "t": 2100,
+      "db": -33
+     },
+     {
+      "t": 2200,
+      "db": -33
+     },
+     {
+      "t": 2300,
+      "db": -33
+     },
+     {
+      "t": 2400,
+      "db": -33
+     },
+     {
+      "t": 2500,
+      "db": -33
+     },
+     {
+      "t": 2600,
+      "db": -33
+     },
+     {
+      "t": 2700,
+      "db": -33
+     },
+     {
+      "t": 2800,
+      "db": -33
+     },
+     {
+      "t": 2900,
+      "db": -1.2
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "verdict": "noisy",
+    "valid": 10,
+    "max_db": -1.2
+   }
+  },
+  {
+   "name": "-160 floor samples are invalid, not quiet -> unknown",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": -160
+     },
+     {
+      "t": 2100,
+      "db": -160
+     },
+     {
+      "t": 2200,
+      "db": -160
+     },
+     {
+      "t": 2300,
+      "db": -160
+     },
+     {
+      "t": 2400,
+      "db": -160
+     },
+     {
+      "t": 2500,
+      "db": -160
+     },
+     {
+      "t": 2600,
+      "db": -33
+     },
+     {
+      "t": 2700,
+      "db": -33
+     },
+     {
+      "t": 2800,
+      "db": -33
+     },
+     {
+      "t": 2900,
+      "db": -33
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "verdict": "unknown",
+    "valid": 4,
+    "max_db": -33
+   }
+  },
+  {
+   "name": "missing (null) samples are invalid -> unknown",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 2000,
+      "db": null
+     },
+     {
+      "t": 2100,
+      "db": null
+     },
+     {
+      "t": 2200,
+      "db": null
+     },
+     {
+      "t": 2300,
+      "db": null
+     },
+     {
+      "t": 2400,
+      "db": null
+     },
+     {
+      "t": 2500,
+      "db": null
+     },
+     {
+      "t": 2600,
+      "db": null
+     },
+     {
+      "t": 2700,
+      "db": -33
+     },
+     {
+      "t": 2800,
+      "db": -33
+     },
+     {
+      "t": 2900,
+      "db": -33
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "verdict": "unknown",
+    "valid": 3,
+    "max_db": -33
+   }
+  },
+  {
+   "name": "mic start-up hump inside settle time is ignored -> ok",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 500,
+      "db": -160
+     },
+     {
+      "t": 600,
+      "db": -19
+     },
+     {
+      "t": 700,
+      "db": -19
+     },
+     {
+      "t": 800,
+      "db": -25
+     },
+     {
+      "t": 900,
+      "db": -31
+     },
+     {
+      "t": 1000,
+      "db": -33
+     },
+     {
+      "t": 1100,
+      "db": -33
+     },
+     {
+      "t": 1200,
+      "db": -33
+     },
+     {
+      "t": 1300,
+      "db": -33
+     },
+     {
+      "t": 1400,
+      "db": -33
+     },
+     {
+      "t": 1500,
+      "db": -33
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "verdict": "ok",
+    "valid": 6,
+    "max_db": -33
+   }
+  },
+  {
+   "name": "plug click within the guard window is ignored -> ok",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [
+     {
+      "t": 1000,
+      "db": -33
+     },
+     {
+      "t": 1100,
+      "db": -33
+     },
+     {
+      "t": 1200,
+      "db": -33
+     },
+     {
+      "t": 1300,
+      "db": -33
+     },
+     {
+      "t": 1400,
+      "db": -33
+     },
+     {
+      "t": 1500,
+      "db": -33
+     },
+     {
+      "t": 1600,
+      "db": -33
+     },
+     {
+      "t": 1700,
+      "db": -33
+     },
+     {
+      "t": 1800,
+      "db": -33
+     },
+     {
+      "t": 1900,
+      "db": -33
+     },
+     {
+      "t": 2000,
+      "db": -33
+     },
+     {
+      "t": 2100,
+      "db": -33
+     },
+     {
+      "t": 2200,
+      "db": -33
+     },
+     {
+      "t": 2300,
+      "db": -33
+     },
+     {
+      "t": 2400,
+      "db": -33
+     },
+     {
+      "t": 2500,
+      "db": -33
+     },
+     {
+      "t": 2600,
+      "db": -33
+     },
+     {
+      "t": 2700,
+      "db": -33
+     },
+     {
+      "t": 2800,
+      "db": -33
+     },
+     {
+      "t": 2900,
+      "db": -33
+     },
+     {
+      "t": 3000,
+      "db": -1.0
+     },
+     {
+      "t": 3100,
+      "db": -33
+     },
+     {
+      "t": 3200,
+      "db": -33
+     },
+     {
+      "t": 3300,
+      "db": -33
+     },
+     {
+      "t": 3400,
+      "db": -33
+     },
+     {
+      "t": 3500,
+      "db": -33
+     },
+     {
+      "t": 3600,
+      "db": -33
+     },
+     {
+      "t": 3700,
+      "db": -33
+     },
+     {
+      "t": 3800,
+      "db": -33
+     },
+     {
+      "t": 3900,
+      "db": -33
+     },
+     {
+      "t": 4000,
+      "db": -33
+     },
+     {
+      "t": 4100,
+      "db": -33
+     },
+     {
+      "t": 4200,
+      "db": -33
+     },
+     {
+      "t": 4300,
+      "db": -33
+     },
+     {
+      "t": 4400,
+      "db": -33
+     },
+     {
+      "t": 4500,
+      "db": -33
+     },
+     {
+      "t": 4600,
+      "db": -33
+     },
+     {
+      "t": 4700,
+      "db": -33
+     },
+     {
+      "t": 4800,
+      "db": -33
+     },
+     {
+      "t": 4900,
+      "db": -33
+     }
+    ],
+    "mic_start_ms": 0,
+    "device_changes_ms": [
+     3000
+    ]
+   },
+   "expected": {
+    "verdict": "ok",
+    "valid": 21,
+    "max_db": -33
+   }
+  },
+  {
+   "name": "no samples -> unknown",
+   "config_overrides": {
+    "noise.reference_quiet_db": -30
+   },
+   "input": {
+    "samples": [],
+    "mic_start_ms": 0,
+    "device_changes_ms": []
+   },
+   "expected": {
+    "verdict": "unknown",
+    "valid": 0,
+    "max_db": null
+   }
+  }
+ ]
+}

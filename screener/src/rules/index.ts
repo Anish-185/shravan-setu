@@ -12,6 +12,8 @@ export type Trial = {
   response_ms: number | null;
 };
 export type NoiseEvent = { round: number; ear: Ear; freq: number };
+/** One mic metering reading (relative, uncalibrated). */
+export type Sample = { t: number; db: number | null };
 export type Outcome = 'PASS' | 'RETEST' | 'REFER';
 export type Config = Record<string, any>;
 
@@ -78,6 +80,40 @@ const rescreenOn = (cfg: Config) => v(cfg, 'rescreen', 'enabled') && v(cfg, 'res
 export function rescreenPlan(trials: Trial[], noise: NoiseEvent[], cfg: Config): [Ear, number][] {
   if (!rescreenOn(cfg)) return [];
   return points(trials, cfg).filter(([ear, f]) => pointStatus(trials, noise, 1, ear, f, cfg)[0] === 'not_heard');
+}
+
+/** Trusted metering values: not missing or at the floor (-160 = no data, never 'quiet'), not in the mic settle
+ * time, not within plug_guard_ms of an earphone connect/disconnect. */
+function validDb(samples: Sample[], micStartMs: number, deviceChangesMs: number[], cfg: Config): number[] {
+  const settle = v(cfg, 'noise', 'mic_settle_ms');
+  const guard = v(cfg, 'noise', 'plug_guard_ms');
+  const floor = v(cfg, 'noise', 'invalid_at_or_below_db');
+  return samples
+    .filter((s) => s.db !== null && s.db > floor && s.t - micStartMs >= settle
+      && deviceChangesMs.every((d) => Math.abs(s.t - d) >= guard))
+    .map((s) => s.db as number);
+}
+
+/** During-tone noise gate for one presentation: ok | noisy (discard, replay) | unknown (too few valid samples). */
+export function noiseVerdict(samples: Sample[], micStartMs: number, deviceChangesMs: number[], cfg: Config) {
+  const db = validDb(samples, micStartMs, deviceChangesMs, cfg);
+  const peak = db.length ? Math.max(...db) : null;
+  let verdict: 'ok' | 'noisy' | 'unknown';
+  if (db.length < v(cfg, 'noise', 'min_valid_samples_per_tone')) verdict = 'unknown';
+  else if ((peak as number) >= v(cfg, 'noise', 'saturated_at_or_above_db')
+    || (peak as number) > v(cfg, 'noise', 'reference_quiet_db') + v(cfg, 'noise', 'gate_db_above_baseline')) {
+    verdict = 'noisy';
+  } else verdict = 'ok';
+  return { verdict, valid: db.length, max_db: peak };
+}
+
+/** Pre-test room noise: median valid metering minus the reference quiet level. null if too few valid samples. */
+export function ambientLevel(samples: Sample[], micStartMs: number, deviceChangesMs: number[], cfg: Config) {
+  const db = validDb(samples, micStartMs, deviceChangesMs, cfg).sort((a, b) => a - b);
+  if (db.length < v(cfg, 'noise', 'min_valid_samples_per_tone')) return { db_re_reference: null, valid: db.length };
+  const mid = db.length >> 1;
+  const median = db.length % 2 ? db[mid] : (db[mid - 1] + db[mid]) / 2;
+  return { db_re_reference: median - v(cfg, 'noise', 'reference_quiet_db'), valid: db.length };
 }
 
 export function apply500HzPolicy(ambientDbReBaseline: number | null, cfg: Config) {

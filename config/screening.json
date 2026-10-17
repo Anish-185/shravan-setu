@@ -19,7 +19,9 @@
     "duration_ms": {"value": 1000, "source": "PLACEHOLDER: no evidence yet."},
     "ramp_ms": {"value": 25, "source": "PLACEHOLDER. TODO(source): rise/fall time from a pure-tone audiometry standard. Purpose: avoid onset/offset clicks (ERR-005)."},
     "sample_rate_hz": {"value": 44100, "source": "Design choice: standard audio rate, same as the original app's tones."},
-    "peak_dbfs": {"value": -1, "source": "Design choice: just below full scale to avoid clipping. Loudness is then set by the player volume and calibration."}
+    "peak_dbfs": {"value": -1, "source": "Design choice: just below full scale to avoid clipping. Loudness is then set by the player volume and calibration."},
+    "uncalibrated_player_volume": {"value": 0.1, "source": "PLACEHOLDER for Phase 4 device trials only: the spike's worn-earphone volume (docs/SPIKE.md §5). Used while screening_level_db_re_team_baseline is null; every such session is marked UNCALIBRATED."},
+    "team_baseline_player_volume": {"value": null, "source": "TODO(source): player volume per frequency at the team's biological baseline threshold (Phase 6, docs/TEAM_TEST_PROTOCOL.md). Map of Hz -> 0..1."}
   },
 
   "response": {
@@ -40,7 +42,9 @@
 
   "noise": {
     "gating_strategy": {"value": "during_tone", "source": "docs/SPIKE.md §5: metering keeps running during playback (spike step 7) and worn-earphone tone leakage at vol 0.10 stays within the room's own drift (scripts/analyze_spike.py). Allowed: during_tone | between_tones."},
-    "gate_db_above_baseline": {"value": 10, "source": "PLACEHOLDER. Spike (scripts/analyze_spike.py, CLAIMS SPK-03/SPK-04): tone-on medians sit within a few dB of the quiet baseline; quiet vs corridor medians differ by more than 10. Tune from Phase 6 team tests."},
+    "reference_quiet_db": {"value": -30.3, "source": "PLACEHOLDER: quiet-room median metering on the spike phone (Redmi 2201117TI, scripts/analyze_spike.py, quiet-baseline clip, docs/SPIKE.md §5.3). Device-specific; re-measure per standard device in Phase 6. Relative mic level, not dB SPL."},
+    "ambient_measure_ms": {"value": 5000, "source": "PLACEHOLDER: length of the pre-test room-noise measurement (after mic settle)."},
+    "gate_db_above_baseline": {"value": 10, "source": "PLACEHOLDER. Gate = reference_quiet_db + this. Spike (scripts/analyze_spike.py, CLAIMS SPK-03/SPK-04): tone-on medians sit within a few dB of the quiet baseline; quiet vs corridor medians differ by more than 10. Tune from Phase 6 team tests."},
     "max_replays_per_tone": {"value": 2, "source": "PLACEHOLDER: a tone masked by noise is discarded and replayed at most this many times; then the point is 'too noisy'."},
     "meter_poll_ms": {"value": 100, "source": "Design choice: same poll rate as the spike, so a 1000 ms tone gets about 10 samples."},
     "mic_settle_ms": {"value": 1000, "source": "Spike (CLAIMS SPK-01): first sample after mic start was -160 in 13/13 clips, then a start-up hump at ~0.4-0.63 s, settled by ~750 ms. 1000 ms adds margin."},
@@ -50,15 +54,20 @@
     "min_valid_samples_per_tone": {"value": 5, "source": "PLACEHOLDER: fewer valid samples than this during a tone means noise is unknown, so the tone is replayed."}
   },
 
+  "earphone_check": {
+    "trials": {"value": 2, "source": "PLACEHOLDER: left/right check presentations (random side), all must be answered correctly. Idea ported from the original DhwaniSarathi EarTest screen (Apache-2.0, ATTRIBUTION.md)."}
+  },
+
   "policy_500hz": {
     "mode": {"value": "only_if_ambient_below", "source": "Design choice: low tones are easily masked by room noise, so 500 Hz is only tested in a quiet room. Allowed: always | never | only_if_ambient_below."},
-    "ambient_threshold_db_re_baseline": {"value": 6, "source": "PLACEHOLDER: ambient level above the quiet baseline at which 500 Hz is skipped."}
+    "ambient_threshold_db_re_baseline": {"value": 6, "source": "PLACEHOLDER: ambient level above noise.reference_quiet_db at which 500 Hz is skipped."}
   },
 
   "rescreen": {
     "enabled": {"value": true, "source": "Design choice: two-stage screening. Rescreen immediately, before any REFER."},
     "failed_points_only": {"value": true, "source": "Design choice: only the ear/frequency points that were not heard."},
-    "max_rounds": {"value": 1, "source": "Design choice: at most one rescreen round in the same session."}
+    "max_rounds": {"value": 1, "source": "Design choice: at most one rescreen round in the same session."},
+    "catch_trials": {"value": 1, "source": "PLACEHOLDER: silent trials inserted into the rescreen round, so it can't be passed by tapping in rhythm."}
   },
 
   "triage": {

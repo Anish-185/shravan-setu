@@ -235,11 +235,65 @@ RELIABILITY = [
 ]
 
 
+# Noise rules. Reference level overridden to -30 so the gate (-20) and medians are exact in binary floating point.
+NOISE_CFG = {"noise.reference_quiet_db": -30}
+
+
+def samples(dbs, t0=2000, step=100):
+    return [{"t": t0 + i * step, "db": db} for i, db in enumerate(dbs)]
+
+
+def nv(name, smp, expected, mic_start=0, changes=(), overrides=None):
+    return {"name": name, "config_overrides": {**NOISE_CFG, **(overrides or {})},
+            "input": {"samples": smp, "mic_start_ms": mic_start, "device_changes_ms": list(changes)},
+            "expected": expected}
+
+
+NOISE = [
+    nv("quiet tone -> ok", samples([-33] * 10), {"verdict": "ok", "valid": 10, "max_db": -33}),
+    nv("one loud sample -> noisy", samples([-33] * 9 + [-15]), {"verdict": "noisy", "valid": 10, "max_db": -15}),
+    nv("exactly at the gate (-20) -> ok", samples([-33] * 9 + [-20]), {"verdict": "ok", "valid": 10, "max_db": -20}),
+    nv("just over the gate (-19.5) -> noisy", samples([-33] * 9 + [-19.5]),
+       {"verdict": "noisy", "valid": 10, "max_db": -19.5}),
+    nv("saturated (-1.2) is noisy even with a huge gate", samples([-33] * 9 + [-1.2]),
+       {"verdict": "noisy", "valid": 10, "max_db": -1.2}, overrides={"noise.gate_db_above_baseline": 50}),
+    nv("-160 floor samples are invalid, not quiet -> unknown", samples([-160] * 6 + [-33] * 4),
+       {"verdict": "unknown", "valid": 4, "max_db": -33}),
+    nv("missing (null) samples are invalid -> unknown", samples([None] * 7 + [-33] * 3),
+       {"verdict": "unknown", "valid": 3, "max_db": -33}),
+    nv("mic start-up hump inside settle time is ignored -> ok",
+       samples([-160, -19, -19, -25, -31] + [-33] * 6, t0=500), {"verdict": "ok", "valid": 6, "max_db": -33}),
+    nv("plug click within the guard window is ignored -> ok",
+       samples([-33] * 20 + [-1.0] + [-33] * 19, t0=1000), {"verdict": "ok", "valid": 21, "max_db": -33},
+       changes=[3000]),
+    nv("no samples -> unknown", [], {"verdict": "unknown", "valid": 0, "max_db": None}),
+]
+
+
+def amb(name, smp, expected, mic_start=0, changes=()):
+    return {"name": name, "config_overrides": NOISE_CFG,
+            "input": {"samples": smp, "mic_start_ms": mic_start, "device_changes_ms": list(changes)},
+            "expected": expected}
+
+
+AMBIENT = [
+    amb("odd count: median -32 -> -2 re reference", samples([-33, -31, -32, -30, -34]),
+        {"db_re_reference": -2, "valid": 5}),
+    amb("even count after dropping the floor: median -25 -> +5", samples([-160, -30, -28, -26, -24, -22, -20]),
+        {"db_re_reference": 5, "valid": 6}),
+    amb("settle time excluded: only 2 valid (t=1000, 1100) -> no measurement", samples([-33] * 10, t0=200),
+        {"db_re_reference": None, "valid": 2}),
+    amb("saturated samples count as loud: median -1 -> +29", samples([-1, -1, -1, -15, -20]),
+        {"db_re_reference": 29, "valid": 5}),
+]
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / "config" / "screening.json", OUT / "fixture_config.json")
     for fn, cases in (("decide_outcome", DECIDE), ("rescreen_plan", RESCREEN), ("apply_500hz_policy", POLICY),
-                      ("triage_route", TRIAGE), ("reliability_score", RELIABILITY)):
+                      ("triage_route", TRIAGE), ("reliability_score", RELIABILITY), ("noise_verdict", NOISE),
+                      ("ambient_level", AMBIENT)):
         path = OUT / f"{fn}.json"
         path.write_text(json.dumps({"function": fn, "cases": cases}, indent=1) + "\n")
         print(f"{path.relative_to(ROOT)}: {len(cases)} cases")
