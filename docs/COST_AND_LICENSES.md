@@ -28,25 +28,25 @@ Runtime: Python 3.12 + SQLite on a laptop. No cloud hosting, no database service
 
 ## Mobile app (`screener/`)
 
-Expo SDK 58. Licences read from each package's installed `package.json` (Phase 1). Runs in the free Expo Go app;
+Expo SDK 57 (downgraded from 58 for Play Store Expo Go, ERR-014). Licences read from each package's installed `package.json`. Runs in the free Expo Go app;
 no Expo account needed for local development.
 
 | Package | Version | Licence | Cost | Network calls |
 |---|---|---|---|---|
-| expo | 58.0.14 | MIT | 0 | Dev server only (laptop ↔ phone on LAN). None in the app code |
-| expo-router | 58.0.23 | MIT | 0 | None |
-| expo-audio | 58.0.9 | MIT | 0 | None (local assets) |
-| expo-file-system | 58.0.9 | MIT | 0 | None (local files) |
-| expo-sharing | 58.0.19 | MIT | 0 | None (opens the Android share sheet) |
-| expo-device | 58.0.5 | MIT | 0 | None |
-| expo-asset | 58.0.16 | MIT | 0 | None (required peer of expo-audio, flagged by expo-doctor) |
-| expo-constants, expo-font, expo-image, expo-linking, expo-splash-screen, expo-status-bar, expo-symbols, expo-system-ui, expo-web-browser, expo-glass-effect, @expo/ui | 58.x | MIT | 0 | None (template defaults; unused ones may be removed later) |
-| react / react-dom | 19.3.0 | MIT | 0 | None |
-| react-native | 0.88.0 | MIT | 0 | None |
+| expo | 57.0.30 | MIT | 0 | Dev server only (laptop ↔ phone on LAN). None in the app code |
+| expo-router | 57.0.28 | MIT | 0 | None |
+| expo-audio | 57.0.5 | MIT | 0 | None (local assets) |
+| expo-file-system | 57.0.7 | MIT | 0 | None (local files) |
+| expo-sharing | 57.0.23 | MIT | 0 | None (opens the Android share sheet) |
+| expo-device | 57.0.2 | MIT | 0 | None |
+| expo-asset | 57.0.20 | MIT | 0 | None (required peer of expo-audio, flagged by expo-doctor) |
+| expo-constants, expo-font, expo-image, expo-linking, expo-splash-screen, expo-status-bar, expo-symbols, expo-system-ui, expo-web-browser, expo-glass-effect, @expo/ui | 57.x | MIT | 0 | None (template defaults; unused ones may be removed later) |
+| react / react-dom | 19.2.3 | MIT | 0 | None |
+| react-native | 0.86.3 | MIT | 0 | None |
 | react-native-gesture-handler, -reanimated, -worklets, -safe-area-context, -screens, -web | template | MIT | 0 | None |
 | typescript (dev) | 6.0.3 | Apache-2.0 | 0 | None |
-| eslint, eslint-config-expo (dev) | 9.39.5 / 58.0.4 | MIT | 0 | None |
-| jest, jest-expo, @types/jest, @types/node (dev) | 30.5.2 / 58.0.11 / 30.0.0 / 26.6.5 | MIT | 0 | None |
+| eslint, eslint-config-expo (dev) | 9.39.5 / 57.0.2 | MIT | 0 | None |
+| jest, jest-expo, @types/jest, @types/node (dev) | 29.7.0 / 57.0.6 / 29.5.14 / 26.6.5 | MIT | 0 | None |
 
 **Transitive packages with licences outside our allowlist** (all build or dev tooling pulled in by Expo, Babel or
 ESLint; none added by us; none is GPL-only). Pending owner approval:

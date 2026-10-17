@@ -1,6 +1,6 @@
 # screener/
 
-Our offline-first Expo app (Expo SDK 58, expo-router). All new mobile work goes here.
+Our offline-first Expo app (Expo SDK 57, expo-router). All new mobile work goes here.
 Screening and referral tool, not a diagnostic device.
 
 - Screens/routes: `src/app/` (every file is a route). Non-route code goes in `src/`.
@@ -11,7 +11,7 @@ Screening and referral tool, not a diagnostic device.
 
 ```
 npm install
-npx expo start        # scan the QR code with Expo Go (SDK 58) on an Android phone on the same Wi-Fi
+npx expo start        # scan the QR code with Expo Go from the Play Store (SDK 57) on an Android phone on the same Wi-Fi
 npx tsc --noEmit      # typecheck
 npx expo lint         # lint
 ```

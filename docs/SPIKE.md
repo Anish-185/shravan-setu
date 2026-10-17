@@ -5,6 +5,10 @@ before building the test engine. **SPIKE DATA is not a hearing measurement.** Me
 
 ## 1. Expo SDK choice
 
+**Changed to SDK 57 (ERR-014).** The Play Store Expo Go on the test phone does not run SDK 58, so `screener/`
+is on SDK 57 (expo 57.0.30, React Native 0.86.3, React 19.2.3), the SDK the Play Store build supports.
+The notes below are the original SDK 58 reasoning, kept for the record.
+
 - Expo Go download page (https://expo.dev/go, checked 2026-10-17) lists **SDK 58 (latest)** for Android.
 - SDK version table (https://docs.expo.dev/versions/latest/): SDK 58 = React Native 0.88, React 19.3.0, Node ≥ 22.13.
 - The Expo troubleshooting page (https://docs.expo.dev/troubleshooting/expo-go-version-mismatch/) warns that the
@@ -13,9 +17,10 @@ before building the test engine. **SPIKE DATA is not a hearing measurement.** Me
 - `screener/` is scaffolded with `create-expo-app` (default template, reset to blank) on SDK 58 with expo-router.
   Routes live in `screener/src/app/` (the current template's layout), so the spike is `src/app/spike.tsx`.
 
-## 2. What the expo-audio docs say (SDK 58)
+## 2. What the expo-audio docs say (read for SDK 58; recheck against SDK 57)
 
-Source: https://docs.expo.dev/versions/v58.0.0/sdk/audio/ (read 2026-10-17). Also checked against the installed
+Source: https://docs.expo.dev/versions/v58.0.0/sdk/audio/ (read 2026-10-17). After the SDK 57 downgrade, the
+installed expo-audio 57.0.5 types still have `isMeteringEnabled` and `RecorderState.metering`; the spike typechecks. Also checked against the installed
 type definitions in `node_modules/expo-audio/build/AudioModule.types.d.ts`.
 
 | Question | What the docs say | Status |
@@ -58,7 +63,7 @@ Equipment: `[PHONE_MODEL]`, wired `[EARPHONE_MODEL]`, a laptop on the same Wi-Fi
 **a) Does it open in Expo Go?**
 
 4. Does the app open after scanning? If Expo Go says the project's SDK is unsupported, write down the exact message
-   and the Expo Go version (Expo Go → Settings), install the SDK 58 build from https://expo.dev/go, then retry.
+   and the Expo Go version (Expo Go → Settings), then stop and report it (do not sideload a different Expo Go).
 5. Tap "Open audio spike". Allow the microphone permission. Any red error text? Copy it exactly.
 
 **b) Does metering keep updating while a tone plays?**

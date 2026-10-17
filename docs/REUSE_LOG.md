@@ -122,5 +122,6 @@ Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state mach
 
 ### JS test runner
 
-- jest 30.5.2 (MIT) with jest-expo 58.0.11 (MIT), the preset Expo documents for SDK 58, plus @types/jest 30.0.0 and
+- jest 29.7.0 (MIT) with jest-expo 57.0.6 (MIT), the versions SDK 57 pins (was jest 30.5.2 / jest-expo 58.0.11 before
+  the ERR-014 downgrade), plus @types/jest 29.5.14 and
   @types/node 26.6.5 (MIT). Dev only. Required by `CLAUDE.md` (jest-expo preset).

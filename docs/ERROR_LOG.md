@@ -158,3 +158,14 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: `npx tsc --noEmit` exits 0; `npx expo lint` exits 0; jest 46 passed; expo-doctor 20/20.
 - Lesson: on a TypeScript major upgrade, list the ambient type packages each project needs explicitly.
+
+### ERR-014: phone test blocked, Play Store Expo Go does not run SDK 58
+- Phase / date: Phase 1 spike (found before Phase 4) / 2026-10-17
+- Symptom: the owner's Android phone could not open `screener/` in Expo Go from the Play Store. That build supports SDK 57; the project was on SDK 58.
+- Where: `npx expo start` → scan QR in Expo Go on the phone; `screener/package.json` (`expo ~58.0.14`).
+- Root cause: in Phase 1 the SDK was picked from npm's `latest` tag and the expo.dev/go download page, not from the Expo Go version actually on the Play Store, against Prompt 1's instruction. `docs/SPIKE.md` §1 even noted that the Play Store build "can lag behind a new SDK release" and then worked around it by suggesting a sideloaded Expo Go instead of picking the older SDK. Registry state today, for the record: npm `expo` has `latest` = 58.0.14 and `next` = 58.0.11 (so 58 left pre-release very recently), `sdk-57` = 57.0.30. The Play Store build had not caught up.
+- Fix: `screener/` downgraded with `npm install expo@~57.0.30` then `npx expo install --fix`. Result: expo 57.0.30, React Native 0.86.3, React 19.2.3, jest 29.7.0 / jest-expo 57.0.6 / @types/jest 29.5.14, every expo-* at its SDK 57 pin. `expo install` also registered the expo-font, expo-image, expo-status-bar and expo-web-browser config plugins in `app.json`. No app code needed changes: expo-audio 57.0.5 still has `isMeteringEnabled` / `RecorderState.metering`, `expo-file-system` `File`/`Paths` and `expo-sharing` are present, and SDK 57 pins `expo-sqlite ~57.0.4` and `expo-print ~57.0.2` for later phases. Docs updated: `docs/SPIKE.md`, `docs/COST_AND_LICENSES.md`, `docs/REUSE_LOG.md`, `screener/README.md`. Rule added to `CLAUDE.md` (stable SDKs only, checked against Play Store Expo Go).
+- ERR-013 re-check: not caused by SDK 58. The SDK 57 default template (`expo-template-default@sdk-57`) also pins `typescript ~6.0.3`, so the TS 6 `types: []` default still applies and the `tsconfig.json` fix stays.
+- Status: FIXED (pending owner confirmation that the phone now opens the app)
+- Verification: `npx tsc --noEmit` exit 0; `npx expo lint` exit 0; `npx expo-doctor` 21/21; `scripts/check_rules_parity.sh` PARITY OK (pytest 167 + 1, jest 46); `npx expo export --platform android` produces the Hermes bundle.
+- Lesson: choose the Expo SDK from the Expo Go build the test phone can install from the Play Store, not from npm `latest`.
