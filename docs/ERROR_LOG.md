@@ -191,6 +191,7 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
   - Not fixed, on purpose: `npm audit fix --force` would install expo@44 / jest 30 / expo-router 58 (wrong SDK, ERR-014). decode-uri-component 0.5.0 is ESM-only while query-string 7 `require()`s it, so an override would break routing at runtime. braces, node-forge and sprintf-js have no patched release.
   - Shipped-app exposure: only decode-uri-component. Worst case is a crafted `screener://` deep link opened on the teacher's phone hanging our own app. No server or data exposure; the app is offline.
 - Status: OPEN (blocked upstream). Uuid fixed; the rest has no safe fix today.
+- Recheck (Phase 6 Step 0, 2026-10-19): `npm audit` → 57 (8 moderate, 49 high), same 5 advisories; braces 3.0.3, node-forge 1.4.0, sprintf-js 1.1.3 are still the latest releases; decode-uri-component still needs expo-router 58. No change.
 - Verification: `npm install` → `57 vulnerabilities`, no install-scripts warning; `npm ls uuid` → xcode uses uuid@11.1.1; `npx tsc --noEmit` exit 0; `npx expo lint` exit 0; `npx jest` 46 passed; `npx expo-doctor` 21/21; `npx expo export --platform android` exit 0.
 - Next step: at each Step 0, run `npm audit` and recheck braces/node-forge/sprintf-js for patched releases (add an override if one is semver-compatible). Move to expo-router 58 when the Play Store Expo Go supports SDK 58, which clears decode-uri-component.
 - Lesson: read `npm audit` by root advisory and by whether the package ships in the bundle; never take `audit fix --force` in an Expo project.
