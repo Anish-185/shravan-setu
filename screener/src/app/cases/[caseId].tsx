@@ -9,6 +9,7 @@ import { cfg } from '@/config';
 import { db } from '@/db';
 import { get } from '@/db/store';
 import { useLang, useT } from '@/i18n';
+import { exportSession } from '@/result';
 import { LOST, nextStatuses, TREATMENTS } from '@/rules';
 import { TriageForm } from '@/triage';
 import { Banner, Btn, Chips, H, P, s } from '@/ui';
@@ -26,6 +27,9 @@ export default function CaseDetail() {
   const name = get<{ display_name: string }>(db, 'child', c.child)?.display_name ?? '?';
   const facility = c.facility ? get<Facility>(db, 'facility', c.facility) : null;
   const next = nextStatuses(c.status);
+  // The full engine log exists only for sessions run on this phone (not for cases pulled from the server).
+  const session = c.screening_result ? get<{ session: string }>(db, 'screening_result', c.screening_result)?.session : undefined;
+  const hasLog = !!session && !!get(db, 'session_log', session);
 
   function move(to: string) {
     // camp_scheduled goes through a camp request, so the camp list and the PDF stay complete
@@ -52,7 +56,7 @@ export default function CaseDetail() {
       <H>{t('case.history')}</H>
       {events(db, caseId).map((e, i) => (
         <P key={i}>{t('case.event', {
-          at: e.at.slice(0, 16).replace('T', ' '), from: t(`status.${e.from_status}` as never), to: t(`status.${e.to_status}` as never),
+          at: localTime(e.at), from: t(`status.${e.from_status}` as never), to: t(`status.${e.to_status}` as never),
         })}{e.treatment ? ` (${t(`treatment.${e.treatment}` as never)})` : ''}{e.reason ? ` (${e.reason})` : ''}</P>
       ))}
 
@@ -70,10 +74,18 @@ export default function CaseDetail() {
       </View>
       {!!msg && <Text style={s.warn}>{msg}</Text>}
 
+      {hasLog && <Btn kind="plain" title={t('result.export')} onPress={() => exportSession(session!)} />}
+
       {remindersFor(db, caseId).length > 0 && <H>{t('case.reminders')}</H>}
       {remindersFor(db, caseId).map((r, i) => (
         <P key={i}>{t('case.wouldSend', { text: lang === 'te' ? r.text_te : r.text_en })}</P>
       ))}
     </ScrollView>
   );
+}
+
+/** "2026-10-19 00:18" in the phone's own time zone (events are stored as UTC ISO strings). */
+function localTime(iso: string) {
+  const d = new Date(iso);
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 16).replace('T', ' ');
 }
