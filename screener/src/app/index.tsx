@@ -11,6 +11,7 @@ export default function Home() {
       <Banner />
       <Text style={s.p}>{t('home.intro')}</Text>
       <Link href="/children" style={styles.link}>{t('home.screen')}</Link>
+      <Link href="/cases" style={styles.link}>{t('home.cases')}</Link>
       <Link href="/sync" style={styles.link}>{t('home.sync')}</Link>
       <Link href="/settings" style={styles.link}>{t('home.settings')}</Link>
       <Link href="/spike" style={styles.dev}>{t('home.spike')}</Link>
