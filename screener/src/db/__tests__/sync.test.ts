@@ -1,22 +1,7 @@
 // Outbox + sync tests on a real SQLite (node:sqlite) with a fake server that behaves like /api/sync/.
-import { DatabaseSync } from 'node:sqlite';
-
-import { get, kvGet, migrate, outbox, put, type Db } from '../store';
+import { memDb } from '../memDb';
+import { get, kvGet, outbox, put, type Db } from '../store';
 import { syncNow } from '../sync';
-
-function memDb(): Db {
-  const d = new DatabaseSync(':memory:');
-  const db: Db = {
-    all: (sql, ...p) => d.prepare(sql).all(...(p as never[])) as never[],
-    run: (sql, ...p) => { d.prepare(sql).run(...(p as never[])); },
-    tx: (fn) => {
-      d.exec('BEGIN');
-      try { fn(); d.exec('COMMIT'); } catch (e) { d.exec('ROLLBACK'); throw e; }
-    },
-  };
-  migrate(db);
-  return db;
-}
 
 /** Fake backend: idempotent upsert by id, case_event duplicates reported, optional per-type rejection. */
 function fakeServer() {

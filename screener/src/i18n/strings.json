@@ -1,0 +1,817 @@
+{
+ "banner": {
+  "en": "Screening only, not a diagnosis",
+  "te": "TODO_TE",
+  "where": "Yellow banner on every screen that shows a result"
+ },
+ "lang.switchToTe": {
+  "en": "Telugu",
+  "te": "TODO_TE",
+  "where": "Header button on every screen: switches the app to Telugu"
+ },
+ "lang.switchToEn": {
+  "en": "English",
+  "te": "TODO_TE",
+  "where": "Header button on every screen: switches the app to English"
+ },
+ "common.continue": {
+  "en": "Continue",
+  "te": "TODO_TE",
+  "where": "Button: go to the next step"
+ },
+ "common.yes": {
+  "en": "Yes",
+  "te": "TODO_TE",
+  "where": "Answer button"
+ },
+ "common.no": {
+  "en": "No",
+  "te": "TODO_TE",
+  "where": "Answer button"
+ },
+ "common.notSet": {
+  "en": "not set",
+  "te": "TODO_TE",
+  "where": "Shown when a setting is empty"
+ },
+ "title.home": {
+  "en": "Hearing screening",
+  "te": "TODO_TE",
+  "where": "Screen title in the header"
+ },
+ "title.children": {
+  "en": "Children",
+  "te": "TODO_TE",
+  "where": "Screen title in the header"
+ },
+ "title.screen": {
+  "en": "Screening test",
+  "te": "TODO_TE",
+  "where": "Screen title in the header"
+ },
+ "title.sync": {
+  "en": "Sync",
+  "te": "TODO_TE",
+  "where": "Screen title in the header"
+ },
+ "title.settings": {
+  "en": "Settings",
+  "te": "TODO_TE",
+  "where": "Screen title in the header"
+ },
+ "title.spike": {
+  "en": "Audio spike (developer)",
+  "te": "TODO_TE",
+  "where": "Screen title in the header"
+ },
+ "title.cases": {
+  "en": "Referral cases",
+  "te": "TODO_TE",
+  "where": "Screen title in the header"
+ },
+ "title.case": {
+  "en": "Case",
+  "te": "TODO_TE",
+  "where": "Screen title in the header"
+ },
+ "title.camp": {
+  "en": "Camp request",
+  "te": "TODO_TE",
+  "where": "Screen title in the header"
+ },
+ "home.intro": {
+  "en": "School hearing screening and referral. Works offline; sync when you have a connection.",
+  "te": "TODO_TE",
+  "where": "Home screen, intro line"
+ },
+ "home.screen": {
+  "en": "Screen a child",
+  "te": "TODO_TE",
+  "where": "Home screen link"
+ },
+ "home.cases": {
+  "en": "Referral cases",
+  "te": "TODO_TE",
+  "where": "Home screen link"
+ },
+ "home.sync": {
+  "en": "Sync",
+  "te": "TODO_TE",
+  "where": "Home screen link"
+ },
+ "home.settings": {
+  "en": "Settings",
+  "te": "TODO_TE",
+  "where": "Home screen link"
+ },
+ "home.spike": {
+  "en": "Audio spike (developer)",
+  "te": "TODO_TE",
+  "where": "Home screen link (developer tool)"
+ },
+ "children.pickSchool": {
+  "en": "Pick your school in Settings first.",
+  "te": "TODO_TE",
+  "where": "Children screen, before a school is set"
+ },
+ "children.addH": {
+  "en": "Add a child",
+  "te": "TODO_TE",
+  "where": "Children screen heading"
+ },
+ "children.namePlaceholder": {
+  "en": "Pseudonym, e.g. \"Student A1\"",
+  "te": "TODO_TE",
+  "where": "Children screen, name box hint"
+ },
+ "children.add": {
+  "en": "Add",
+  "te": "TODO_TE",
+  "where": "Children screen button"
+ },
+ "children.listH": {
+  "en": "Children",
+  "te": "TODO_TE",
+  "where": "Children screen heading"
+ },
+ "children.row": {
+  "en": "{name} ({age}) → screen",
+  "te": "TODO_TE",
+  "where": "Children list row; {name} = pseudonym, {age} = age band"
+ },
+ "sync.pending": {
+  "en": "{n} record(s) waiting to sync.",
+  "te": "TODO_TE",
+  "where": "Sync screen"
+ },
+ "sync.now": {
+  "en": "Sync now",
+  "te": "TODO_TE",
+  "where": "Sync screen button"
+ },
+ "sync.busy": {
+  "en": "Syncing…",
+  "te": "TODO_TE",
+  "where": "Sync screen, while syncing"
+ },
+ "sync.setup": {
+  "en": "Set up the backend and school in Settings first.",
+  "te": "TODO_TE",
+  "where": "Sync screen, before setup"
+ },
+ "sync.done": {
+  "en": "Sent {pushed}, failed {failed}, case updates received {pulled}.",
+  "te": "TODO_TE",
+  "where": "Sync screen, after sync"
+ },
+ "sync.failed": {
+  "en": "{error}. Nothing was lost; try again when connected.",
+  "te": "TODO_TE",
+  "where": "Sync screen, sync error ({error} stays in English)"
+ },
+ "settings.backendH": {
+  "en": "Backend",
+  "te": "TODO_TE",
+  "where": "Settings heading"
+ },
+ "settings.backendP": {
+  "en": "The laptop running the server, on the same Wi-Fi. Only needed for sync.",
+  "te": "TODO_TE",
+  "where": "Settings"
+ },
+ "settings.username": {
+  "en": "username",
+  "te": "TODO_TE",
+  "where": "Settings, login box hint"
+ },
+ "settings.password": {
+  "en": "password",
+  "te": "TODO_TE",
+  "where": "Settings, password box hint"
+ },
+ "settings.login": {
+  "en": "Log in and load schools",
+  "te": "TODO_TE",
+  "where": "Settings button"
+ },
+ "settings.connecting": {
+  "en": "Connecting…",
+  "te": "TODO_TE",
+  "where": "Settings, while logging in"
+ },
+ "settings.loggedIn": {
+  "en": "Logged in. Pick your school.",
+  "te": "TODO_TE",
+  "where": "Settings, after login"
+ },
+ "settings.schoolSet": {
+  "en": "School set: {name}.",
+  "te": "TODO_TE",
+  "where": "Settings, after picking a school"
+ },
+ "settings.school": {
+  "en": "School: {name}",
+  "te": "TODO_TE",
+  "where": "Settings"
+ },
+ "settings.deviceH": {
+  "en": "Standard device",
+  "te": "TODO_TE",
+  "where": "Settings heading"
+ },
+ "settings.deviceP": {
+  "en": "Recorded with every test. Use the same wired earphones and the same media-volume setting every time.",
+  "te": "TODO_TE",
+  "where": "Settings"
+ },
+ "settings.earphone": {
+  "en": "Earphone model (wired)",
+  "te": "TODO_TE",
+  "where": "Settings, box hint"
+ },
+ "settings.volume": {
+  "en": "Media volume, e.g. \"zero, then up 8 steps\"",
+  "te": "TODO_TE",
+  "where": "Settings, box hint"
+ },
+ "settings.saveDevice": {
+  "en": "Save device settings",
+  "te": "TODO_TE",
+  "where": "Settings button"
+ },
+ "settings.deviceSaved": {
+  "en": "Device settings saved.",
+  "te": "TODO_TE",
+  "where": "Settings, after saving"
+ },
+ "screen.notFound": {
+  "en": "Child not found.",
+  "te": "TODO_TE",
+  "where": "Screening screen error"
+ },
+ "consent.h": {
+  "en": "1. Consent",
+  "te": "TODO_TE",
+  "where": "Screening step heading"
+ },
+ "consent.p": {
+  "en": "Consent must be recorded before any test. Who gave it, and how?",
+  "te": "TODO_TE",
+  "where": "Consent step"
+ },
+ "consent.by.parent": {
+  "en": "Parent",
+  "te": "TODO_TE",
+  "where": "Consent step choice"
+ },
+ "consent.by.guardian": {
+  "en": "Guardian",
+  "te": "TODO_TE",
+  "where": "Consent step choice"
+ },
+ "consent.method.written": {
+  "en": "Written",
+  "te": "TODO_TE",
+  "where": "Consent step choice"
+ },
+ "consent.method.verbal": {
+  "en": "Verbal",
+  "te": "TODO_TE",
+  "where": "Consent step choice"
+ },
+ "consent.method.school_form": {
+  "en": "School form",
+  "te": "TODO_TE",
+  "where": "Consent step choice"
+ },
+ "consent.continue": {
+  "en": "Consent given: continue",
+  "te": "TODO_TE",
+  "where": "Consent step button"
+ },
+ "consent.stop": {
+  "en": "No consent: stop",
+  "te": "TODO_TE",
+  "where": "Consent step button"
+ },
+ "device.h": {
+  "en": "2. Device check",
+  "te": "TODO_TE",
+  "where": "Screening step heading"
+ },
+ "device.phone": {
+  "en": "Phone: {model}",
+  "te": "TODO_TE",
+  "where": "Device check"
+ },
+ "device.earphones": {
+  "en": "Earphones: {model}",
+  "te": "TODO_TE",
+  "where": "Device check"
+ },
+ "device.volume": {
+  "en": "Media volume: {setting}",
+  "te": "TODO_TE",
+  "where": "Device check"
+ },
+ "device.notSetSettings": {
+  "en": "not set (Settings)",
+  "te": "TODO_TE",
+  "where": "Device check, missing setting"
+ },
+ "device.detected": {
+  "en": "Wired earphones detected.",
+  "te": "TODO_TE",
+  "where": "Device check, status"
+ },
+ "device.notDetected": {
+  "en": "No wired earphones detected. Plug them in. Tones never play through the speaker.",
+  "te": "TODO_TE",
+  "where": "Device check, status"
+ },
+ "device.micStarting": {
+  "en": "Starting microphone…",
+  "te": "TODO_TE",
+  "where": "Device check, status"
+ },
+ "device.volumeOk": {
+  "en": "Media volume is at the fixed setting: {setting}",
+  "te": "TODO_TE",
+  "where": "Device check, tick box"
+ },
+ "device.btOff": {
+  "en": "Bluetooth is off",
+  "te": "TODO_TE",
+  "where": "Device check, tick box"
+ },
+ "lr.h": {
+  "en": "3. Left / right check",
+  "te": "TODO_TE",
+  "where": "Screening step heading"
+ },
+ "lr.p": {
+  "en": "Play a beep. The child points to the ear that heard it; tap that side.",
+  "te": "TODO_TE",
+  "where": "Left/right check"
+ },
+ "lr.play": {
+  "en": "Play beep",
+  "te": "TODO_TE",
+  "where": "Left/right check button"
+ },
+ "lr.left": {
+  "en": "Left",
+  "te": "TODO_TE",
+  "where": "Left/right check button"
+ },
+ "lr.right": {
+  "en": "Right",
+  "te": "TODO_TE",
+  "where": "Left/right check button"
+ },
+ "lr.plugIn": {
+  "en": "Plug in the wired earphones first.",
+  "te": "TODO_TE",
+  "where": "Left/right check message"
+ },
+ "lr.wrong": {
+  "en": "Wrong side. Check the L/R marks on the earphones, then start again.",
+  "te": "TODO_TE",
+  "where": "Left/right check message"
+ },
+ "lr.correct": {
+  "en": "Correct ({n} of {total}).",
+  "te": "TODO_TE",
+  "where": "Left/right check message"
+ },
+ "ambient.h": {
+  "en": "4. Room noise",
+  "te": "TODO_TE",
+  "where": "Screening step heading"
+ },
+ "ambient.p": {
+  "en": "Everyone quiet for a few seconds. Earphones on the child.",
+  "te": "TODO_TE",
+  "where": "Room noise step"
+ },
+ "ambient.measure": {
+  "en": "Measure room noise",
+  "te": "TODO_TE",
+  "where": "Room noise step button"
+ },
+ "ambient.measuring": {
+  "en": "Measuring…",
+  "te": "TODO_TE",
+  "where": "Room noise step, while measuring"
+ },
+ "ambient.value": {
+  "en": "Room noise: {value} re: reference quiet room (relative, uncalibrated)",
+  "te": "TODO_TE",
+  "where": "Room noise step result; {value} is a number"
+ },
+ "ambient.couldNot": {
+  "en": "Room noise: could not measure",
+  "te": "TODO_TE",
+  "where": "Room noise step result"
+ },
+ "ambient.noisy": {
+  "en": "The room is noisy: many tones may be discarded. Move somewhere quieter if you can.",
+  "te": "TODO_TE",
+  "where": "Room noise step warning"
+ },
+ "ambient.continue": {
+  "en": "Continue to the test",
+  "te": "TODO_TE",
+  "where": "Room noise step button"
+ },
+ "test.h": {
+  "en": "5. Test",
+  "te": "TODO_TE",
+  "where": "Screening step heading"
+ },
+ "test.teacher": {
+  "en": "Play the voice instructions, or tell the child: “Tap the balloon every time you hear a beep, even a very quiet one.” Then hand over the phone.",
+  "te": "TODO_TE",
+  "where": "Test step, for the teacher"
+ },
+ "test.playVoice": {
+  "en": "Play voice instructions (Telugu)",
+  "te": "TODO_TE",
+  "where": "Test step button and the speaker buttons in other steps"
+ },
+ "test.voicePlaceholder": {
+  "en": "voice placeholder",
+  "te": "TODO_TE",
+  "where": "Developer tag shown when a voice file is still a silent placeholder"
+ },
+ "test.start": {
+  "en": "Start test",
+  "te": "TODO_TE",
+  "where": "Test step button"
+ },
+ "test.pausedChanged": {
+  "en": "Paused after an earphone change. The interrupted beep will be repeated.",
+  "te": "TODO_TE",
+  "where": "Test paused"
+ },
+ "test.disconnected": {
+  "en": "Earphones disconnected. Plug them back in.",
+  "te": "TODO_TE",
+  "where": "Test paused"
+ },
+ "test.resume": {
+  "en": "Resume",
+  "te": "TODO_TE",
+  "where": "Test paused button"
+ },
+ "test.progress": {
+  "en": "{done} of {total}",
+  "te": "TODO_TE",
+  "where": "Child mode, small progress text"
+ },
+ "test.balloon": {
+  "en": "I heard a beep",
+  "te": "TODO_TE",
+  "where": "Child mode balloon (read by screen readers)"
+ },
+ "result.h": {
+  "en": "Result: {outcome}",
+  "te": "TODO_TE",
+  "where": "Result step; {outcome} stays PASS / RETEST / REFER"
+ },
+ "result.ears": {
+  "en": "Left ear: {left} · Right ear: {right}",
+  "te": "TODO_TE",
+  "where": "Result step; values stay PASS / RETEST / REFER"
+ },
+ "result.uncalibrated": {
+  "en": "UNCALIBRATED test level (development volume). Not valid for real screening yet.",
+  "te": "TODO_TE",
+  "where": "Result step warning"
+ },
+ "result.refer": {
+  "en": "A referral case was created on this phone. Do the ear-health triage now, then sync.",
+  "te": "TODO_TE",
+  "where": "Result step, REFER"
+ },
+ "result.retest": {
+  "en": "Retest this child, ideally in a quieter room.",
+  "te": "TODO_TE",
+  "where": "Result step, RETEST"
+ },
+ "result.export": {
+  "en": "Export session JSON",
+  "te": "TODO_TE",
+  "where": "Result step button"
+ },
+ "result.done": {
+  "en": "Done",
+  "te": "TODO_TE",
+  "where": "Result step button"
+ },
+ "triage.h": {
+  "en": "Ear-health triage",
+  "te": "TODO_TE",
+  "where": "Triage heading"
+ },
+ "triage.label": {
+  "en": "Triage, not diagnosis",
+  "te": "TODO_TE",
+  "where": "Triage label (always shown)"
+ },
+ "triage.p": {
+  "en": "Ask the child (and the parent if present). Tap Yes or No for each question.",
+  "te": "TODO_TE",
+  "where": "Triage instructions"
+ },
+ "triage.save": {
+  "en": "Save triage",
+  "te": "TODO_TE",
+  "where": "Triage button"
+ },
+ "triage.routePHC": {
+  "en": "Route: nearest PHC ({facility})",
+  "te": "TODO_TE",
+  "where": "Triage result"
+ },
+ "triage.routeDEIC": {
+  "en": "Route: DEIC ({facility})",
+  "te": "TODO_TE",
+  "where": "Triage result"
+ },
+ "triage.noFacility": {
+  "en": "no facility list: log in once in Settings",
+  "te": "TODO_TE",
+  "where": "Triage result, no facility loaded"
+ },
+ "triage.saved": {
+  "en": "Triage saved on the case.",
+  "te": "TODO_TE",
+  "where": "Triage, after saving"
+ },
+ "cases.all": {
+  "en": "All",
+  "te": "TODO_TE",
+  "where": "Case list filter"
+ },
+ "cases.empty": {
+  "en": "No cases on this phone yet.",
+  "te": "TODO_TE",
+  "where": "Case list"
+ },
+ "cases.row": {
+  "en": "{name}: {status} · {route}",
+  "te": "TODO_TE",
+  "where": "Case list row"
+ },
+ "cases.createCamp": {
+  "en": "Create camp request ({n} selected)",
+  "te": "TODO_TE",
+  "where": "Case list button"
+ },
+ "cases.selectHint": {
+  "en": "Tick referred or rescheduled cases to put them in one camp request.",
+  "te": "TODO_TE",
+  "where": "Case list hint"
+ },
+ "cases.shareCsv": {
+  "en": "Share CSV",
+  "te": "TODO_TE",
+  "where": "Case list button"
+ },
+ "cases.camps": {
+  "en": "Camp requests",
+  "te": "TODO_TE",
+  "where": "Case list heading"
+ },
+ "cases.campRow": {
+  "en": "{date}: {n} case(s)",
+  "te": "TODO_TE",
+  "where": "Camp request row"
+ },
+ "status.screened": {
+  "en": "Screened",
+  "te": "TODO_TE",
+  "where": "Case status name"
+ },
+ "status.referred": {
+  "en": "Referred",
+  "te": "TODO_TE",
+  "where": "Case status name"
+ },
+ "status.camp_scheduled": {
+  "en": "Camp scheduled",
+  "te": "TODO_TE",
+  "where": "Case status name"
+ },
+ "status.missed": {
+  "en": "Missed camp",
+  "te": "TODO_TE",
+  "where": "Case status name"
+ },
+ "status.rescheduled": {
+  "en": "Rescheduled",
+  "te": "TODO_TE",
+  "where": "Case status name"
+ },
+ "status.seen": {
+  "en": "Seen at camp",
+  "te": "TODO_TE",
+  "where": "Case status name"
+ },
+ "status.treated": {
+  "en": "Treated / onward care",
+  "te": "TODO_TE",
+  "where": "Case status name"
+ },
+ "status.closed": {
+  "en": "Closed",
+  "te": "TODO_TE",
+  "where": "Case status name"
+ },
+ "status.closed_lost_to_followup": {
+  "en": "Closed: lost to follow-up",
+  "te": "TODO_TE",
+  "where": "Case status name"
+ },
+ "treatment.wax_removed": {
+  "en": "Wax removed",
+  "te": "TODO_TE",
+  "where": "Treatment choice when marking a case treated"
+ },
+ "treatment.infection_treated": {
+  "en": "Infection treated",
+  "te": "TODO_TE",
+  "where": "Treatment choice when marking a case treated"
+ },
+ "treatment.hearing_aid": {
+  "en": "Hearing aid",
+  "te": "TODO_TE",
+  "where": "Treatment choice when marking a case treated"
+ },
+ "treatment.further_audiology": {
+  "en": "Further audiology",
+  "te": "TODO_TE",
+  "where": "Treatment choice when marking a case treated"
+ },
+ "case.status": {
+  "en": "Status: {status}",
+  "te": "TODO_TE",
+  "where": "Case detail"
+ },
+ "case.route": {
+  "en": "Triage: {route} · {facility}",
+  "te": "TODO_TE",
+  "where": "Case detail"
+ },
+ "case.noTriage": {
+  "en": "Triage not done yet.",
+  "te": "TODO_TE",
+  "where": "Case detail"
+ },
+ "case.doTriage": {
+  "en": "Do triage",
+  "te": "TODO_TE",
+  "where": "Case detail button"
+ },
+ "case.history": {
+  "en": "Status history",
+  "te": "TODO_TE",
+  "where": "Case detail heading"
+ },
+ "case.event": {
+  "en": "{at}: {from} → {to}",
+  "te": "TODO_TE",
+  "where": "Case detail history row"
+ },
+ "case.move": {
+  "en": "Move to:",
+  "te": "TODO_TE",
+  "where": "Case detail, before the status buttons"
+ },
+ "case.final": {
+  "en": "This case is closed.",
+  "te": "TODO_TE",
+  "where": "Case detail, no more moves"
+ },
+ "case.reason": {
+  "en": "Reason (required)",
+  "te": "TODO_TE",
+  "where": "Case detail, reason box hint for lost to follow-up"
+ },
+ "case.why.illegal": {
+  "en": "That move is not allowed from this status.",
+  "te": "TODO_TE",
+  "where": "Case detail error"
+ },
+ "case.why.needs_treatment": {
+  "en": "Pick a treatment first.",
+  "te": "TODO_TE",
+  "where": "Case detail error"
+ },
+ "case.why.needs_reason": {
+  "en": "Write a reason first.",
+  "te": "TODO_TE",
+  "where": "Case detail error"
+ },
+ "case.reminders": {
+  "en": "Reminders (stubbed: logged, not sent)",
+  "te": "TODO_TE",
+  "where": "Case detail heading"
+ },
+ "case.wouldSend": {
+  "en": "Would send: {text}",
+  "te": "TODO_TE",
+  "where": "Case detail reminder row"
+ },
+ "camp.h": {
+  "en": "Camp request",
+  "te": "TODO_TE",
+  "where": "Camp request heading"
+ },
+ "camp.cases": {
+  "en": "{n} case(s): {names}",
+  "te": "TODO_TE",
+  "where": "Camp request"
+ },
+ "camp.date": {
+  "en": "Camp date (YYYY-MM-DD)",
+  "te": "TODO_TE",
+  "where": "Camp request, date box hint"
+ },
+ "camp.badDate": {
+  "en": "Enter the date as YYYY-MM-DD.",
+  "te": "TODO_TE",
+  "where": "Camp request error"
+ },
+ "camp.facility": {
+  "en": "Facility",
+  "te": "TODO_TE",
+  "where": "Camp request, facility choice heading"
+ },
+ "camp.create": {
+  "en": "Create camp request",
+  "te": "TODO_TE",
+  "where": "Camp request button"
+ },
+ "camp.created": {
+  "en": "Saved on this phone. Sync to send it; the laptop makes the PDF after sync.",
+  "te": "TODO_TE",
+  "where": "Camp request, after saving"
+ },
+ "camp.pdf": {
+  "en": "Download PDF (after sync)",
+  "te": "TODO_TE",
+  "where": "Camp request button"
+ },
+ "camp.pdfFailed": {
+  "en": "Could not get the PDF: {error}. Sync first, and check the laptop is reachable.",
+  "te": "TODO_TE",
+  "where": "Camp request error"
+ },
+ "camp.shareCsv": {
+  "en": "Share CSV",
+  "te": "TODO_TE",
+  "where": "Camp request button"
+ },
+ "voice.intro": {
+  "en": "Hello! You will hear some beeps in your earphones.",
+  "te": "TODO_TE",
+  "where": "Child mode: first line when the teacher taps 'Play voice instructions'",
+  "file": "intro.m4a",
+  "recorded": false
+ },
+ "voice.tap": {
+  "en": "Every time you hear a beep, even a very quiet one, tap the balloon.",
+  "te": "TODO_TE",
+  "where": "Child mode: second line, right after intro",
+  "file": "tap.m4a",
+  "recorded": false
+ },
+ "voice.lr": {
+  "en": "Point to the ear that heard the beep.",
+  "te": "TODO_TE",
+  "where": "Left/right check: the teacher taps the speaker button before 'Play beep'",
+  "file": "lr.m4a",
+  "recorded": false
+ },
+ "voice.quiet": {
+  "en": "Please sit very quietly for a few seconds.",
+  "te": "TODO_TE",
+  "where": "Room noise step: the teacher taps the speaker button, then 'Measure room noise' after it ends",
+  "file": "quiet.m4a",
+  "recorded": false
+ },
+ "voice.done": {
+  "en": "All done. Well done!",
+  "te": "TODO_TE",
+  "where": "Child mode: when the test finishes",
+  "file": "done.m4a",
+  "recorded": false
+ },
+ "common.playVoice": {
+  "en": "Play voice line",
+  "te": "TODO_TE",
+  "where": "Speaker button (read by screen readers)"
+ }
+}

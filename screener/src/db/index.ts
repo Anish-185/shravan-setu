@@ -4,11 +4,16 @@ import { openDatabaseSync } from 'expo-sqlite';
 import { migrate, type Db } from './store';
 
 const sqlite = openDatabaseSync('screener.db');
+let depth = 0; // tx is re-entrant: a put() inside a multi-record move joins the outer transaction
 
 export const db: Db = {
   all: (sql, ...params) => sqlite.getAllSync(sql, params as never),
   run: (sql, ...params) => { sqlite.runSync(sql, params as never); },
-  tx: (fn) => sqlite.withTransactionSync(fn),
+  tx: (fn) => {
+    if (depth) return fn();
+    depth++;
+    try { sqlite.withTransactionSync(fn); } finally { depth--; }
+  },
 };
 
 migrate(db);

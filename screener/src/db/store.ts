@@ -4,11 +4,16 @@
 export type Db = {
   all<T = any>(sql: string, ...params: unknown[]): T[];
   run(sql: string, ...params: unknown[]): void;
-  tx(fn: () => void): void;
+  tx(fn: () => void): void; // re-entrant: nested calls join the outer transaction
 };
 
-export const SYNCED_TYPES = ['child', 'consent', 'screening_session', 'screening_result', 'case', 'case_event'] as const;
-export type RecordType = (typeof SYNCED_TYPES)[number] | 'session_log';
+// Order of first sync matters only within one batch, and the outbox keeps insertion order (camp_request is queued
+// before its cases' camp_scheduled events).
+export const SYNCED_TYPES = [
+  'child', 'consent', 'screening_session', 'screening_result', 'case', 'case_event', 'camp_request',
+] as const;
+// Local only: session_log (full engine log), facility (pulled at login), reminder (stub log; the server logs its own).
+export type RecordType = (typeof SYNCED_TYPES)[number] | 'session_log' | 'facility' | 'reminder';
 
 export function migrate(db: Db) {
   db.run(`CREATE TABLE IF NOT EXISTS records (

@@ -54,6 +54,10 @@
     "min_valid_samples_per_tone": {"value": 5, "source": "PLACEHOLDER: fewer valid samples than this during a tone means noise is unknown, so the tone is replayed."}
   },
 
+  "voice": {
+    "player_volume": {"value": 0.5, "source": "PLACEHOLDER: Telugu voice instructions through the earphones at the fixed media volume. Set by ear with real recordings (comfortable, not loud). Not a test level."}
+  },
+
   "earphone_check": {
     "trials": {"value": 2, "source": "PLACEHOLDER: left/right check presentations (random side), all must be answered correctly. Idea ported from the original DhwaniSarathi EarTest screen (Apache-2.0, ATTRIBUTION.md)."}
   },
@@ -94,5 +98,15 @@
     },
     "default_route": {"value": "DEIC", "source": "Design choice: no likely treatable cause reported, so route to the District Early Intervention Centre for further hearing assessment."},
     "default_reason": {"value": "No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis.", "source": "Wording: TODO(source) clinician review."}
+  },
+
+  "reminders": {
+    "missed_camp": {
+      "value": {
+        "en": "Reminder: {child} ({school}) missed the ear-check camp{date}. Please contact the class teacher to book a new date. This is a screening follow-up, not a diagnosis.",
+        "te": "TODO_TE"
+      },
+      "source": "Design choice: stubbed reminder (logged as 'would send', never sent; real SMS is a future cost). {date} is ' on 18 Oct 2026' or empty. Telugu by [TELUGU_SPEAKER], never machine-translated."
+    }
   }
 }

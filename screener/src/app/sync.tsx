@@ -6,9 +6,11 @@ import { FlatList, Text, View } from 'react-native';
 import { db } from '@/db';
 import { kvGet, outbox } from '@/db/store';
 import { syncNow } from '@/db/sync';
+import { useT } from '@/i18n';
 import { Btn, P, s } from '@/ui';
 
 export default function Sync() {
+  const t = useT();
   const [rows, setRows] = useState(() => outbox(db));
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
@@ -17,14 +19,14 @@ export default function Sync() {
     const baseUrl = kvGet(db, 'server_url');
     const school = kvGet(db, 'school_id');
     const token = await SecureStore.getItemAsync('api_token');
-    if (!baseUrl || !school || !token) return setMsg('Set up the backend and school in Settings first.');
+    if (!baseUrl || !school || !token) return setMsg(t('sync.setup'));
     setBusy(true);
-    setMsg('Syncing…');
+    setMsg(t('sync.busy'));
     try {
       const r = await syncNow(db, { baseUrl, token, school });
-      setMsg(`Sent ${r.pushed}, failed ${r.failed}, case updates received ${r.pulled}.`);
+      setMsg(t('sync.done', { pushed: r.pushed, failed: r.failed, pulled: r.pulled }));
     } catch (e) {
-      setMsg(`${String(e)}. Nothing was lost; try again when connected.`);
+      setMsg(t('sync.failed', { error: String(e) }));
     } finally {
       setBusy(false);
       setRows(outbox(db));
@@ -34,8 +36,8 @@ export default function Sync() {
   const pending = rows.filter((r) => r.status !== 'synced').length;
   return (
     <View style={[s.screen, { flex: 1 }]}>
-      <P>{pending} record(s) waiting to sync.</P>
-      <Btn title={busy ? 'Syncing…' : 'Sync now'} onPress={run} disabled={busy} />
+      <P>{t('sync.pending', { n: pending })}</P>
+      <Btn title={t(busy ? 'sync.busy' : 'sync.now')} onPress={run} disabled={busy} />
       {!!msg && <P>{msg}</P>}
       <FlatList
         data={rows}

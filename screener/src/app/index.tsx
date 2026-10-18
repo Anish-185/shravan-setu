@@ -1,17 +1,19 @@
 import { Link } from 'expo-router';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 
+import { useT } from '@/i18n';
 import { Banner, s } from '@/ui';
 
 export default function Home() {
+  const t = useT();
   return (
     <ScrollView contentContainerStyle={s.screen}>
       <Banner />
-      <Text style={s.p}>School hearing screening and referral. Works offline; sync when you have a connection.</Text>
-      <Link href="/children" style={styles.link}>Screen a child</Link>
-      <Link href="/sync" style={styles.link}>Sync</Link>
-      <Link href="/settings" style={styles.link}>Settings</Link>
-      <Link href="/spike" style={styles.dev}>Audio spike (developer)</Link>
+      <Text style={s.p}>{t('home.intro')}</Text>
+      <Link href="/children" style={styles.link}>{t('home.screen')}</Link>
+      <Link href="/sync" style={styles.link}>{t('home.sync')}</Link>
+      <Link href="/settings" style={styles.link}>{t('home.settings')}</Link>
+      <Link href="/spike" style={styles.dev}>{t('home.spike')}</Link>
     </ScrollView>
   );
 }
