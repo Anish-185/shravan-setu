@@ -318,3 +318,13 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: pytest 211 passed
 - Lesson: field-level validation runs before `validate()`; check which layer produces the message.
+
+### ERR-028: case history could show moves out of order
+- Phase / date: Phase 5 / 2026-10-18
+- Symptom: demo path test: history `['referred', 'treated', 'closed', 'seen', 'camp_scheduled']` instead of the order of the moves.
+- Where: `screener/src/cases.ts` `events()`
+- Root cause: history was sorted by the `at` timestamp only; moves within the same millisecond (always under jest's fake clock, possible on a phone for the referred event plus a quick move) tie, and the tie order came from `list()`'s `updated_at DESC`.
+- Fix: `events()` reads case events in insertion order (`ORDER BY rowid`); events are append-only, so that is the true order.
+- Status: FIXED
+- Verification: `npx jest src/__tests__/demoPath.test.ts` 2 passed
+- Lesson: for append-only logs, order by insertion, not by a clock value that can tie.

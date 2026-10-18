@@ -78,8 +78,11 @@ export const remindersFor = (db: Db, caseId: string) => list<Reminder>(db, 'remi
 export const campsFor = (db: Db, caseId: string) =>
   list<CampRec>(db, 'camp_request').filter((c) => c.cases.includes(caseId)).sort((a, b) => b.camp_date.localeCompare(a.camp_date));
 
-export function events(db: Db, caseId: string) {
-  return list<EventRec>(db, 'case_event').filter((e) => e.case === caseId).sort((a, b) => a.at.localeCompare(b.at));
+/** History in the order it happened. Events are append-only, so insertion order (rowid) is exact even when two
+ *  moves share a millisecond timestamp (ERR-028). */
+export function events(db: Db, caseId: string): EventRec[] {
+  return db.all<{ data: string }>("SELECT data FROM records WHERE type = 'case_event' ORDER BY rowid")
+    .map((r) => JSON.parse(r.data) as EventRec).filter((e) => e.case === caseId);
 }
 
 /** Camp request first, then each case's camp_scheduled event, so the outbox syncs them in a valid order. */
