@@ -816,92 +816,92 @@
  },
  "reason.fewCatch": {
   "en": "Retest: only {n} silent check trials were done ({needed} needed).",
-  "te": "TODO_TE",
+  "te": "మళ్ళీ పరీక్ష అవసరం: బీప్ లేని తనిఖీ రౌండ్లు {n} మాత్రమే జరిగాయి ({needed} అవసరం).",
   "where": "Screening result, list of reasons"
  },
  "reason.unreliable": {
   "en": "Retest: responses were not reliable, so this test cannot refer.",
-  "te": "TODO_TE",
+  "te": "మళ్ళీ పరీక్ష అవసరం: స్పందనలు నమ్మదగినవిగా లేవు, కాబట్టి ఈ పరీక్ష ఆధారంగా రిఫర్ చేయలేం.",
   "where": "Screening result, list of reasons"
  },
  "reason.falseAlarms": {
   "en": "{n} of {total} silent check trials got a tap.",
-  "te": "TODO_TE",
+  "te": "బీప్ లేని {total} తనిఖీ రౌండ్లలో {n} సార్లు నొక్కారు.",
   "where": "Screening result, list of reasons, after the 'not reliable' line"
  },
  "reason.outOfWindow": {
   "en": "{n} of {total} tone trials got a tap outside the response window.",
-  "te": "TODO_TE",
+  "te": "{total} బీప్ రౌండ్లలో {n} సార్లు నిర్ణీత సమయం వెలుపల నొక్కారు.",
   "where": "Screening result, list of reasons, after the 'not reliable' line"
  },
  "reason.notHeardConfirmed": {
   "en": "{ear} ear {freq} Hz: not heard, confirmed on rescreen.",
-  "te": "TODO_TE",
+  "te": "{ear} చెవి {freq} Hz: వినిపించలేదు; రెండోసారి పరీక్షించినప్పుడూ వినిపించలేదు.",
   "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
  },
  "reason.notHeard": {
   "en": "{ear} ear {freq} Hz: not heard.",
-  "te": "TODO_TE",
+  "te": "{ear} చెవి {freq} Hz: వినిపించలేదు.",
   "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
  },
  "reason.heardOnRescreen": {
   "en": "{ear} ear {freq} Hz: missed at first, heard on rescreen.",
-  "te": "TODO_TE",
+  "te": "{ear} చెవి {freq} Hz: మొదట వినిపించలేదు, రెండోసారి పరీక్షించినప్పుడు వినిపించింది.",
   "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
  },
  "reason.noisy": {
   "en": "{ear} ear {freq} Hz: too noisy to test ({n} tones discarded for noise).",
-  "te": "TODO_TE",
+  "te": "{ear} చెవి {freq} Hz: శబ్దం ఎక్కువగా ఉండి పరీక్షించలేకపోయాం (శబ్దం వల్ల {n} టోన్లు రద్దయ్యాయి).",
   "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
  },
  "reason.notTested": {
   "en": "{ear} ear {freq} Hz: not tested.",
-  "te": "TODO_TE",
+  "te": "{ear} చెవి {freq} Hz: పరీక్షించలేదు.",
   "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
  },
  "reason.rescreenMissing": {
   "en": "{ear} ear {freq} Hz: missed in the first round and not rescreened yet.",
-  "te": "TODO_TE",
+  "te": "{ear} చెవి {freq} Hz: మొదటి రౌండ్‌లో వినిపించలేదు, ఇంకా రెండోసారి పరీక్షించలేదు.",
   "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
  },
  "reason.allHeard": {
   "en": "All tones were heard in both ears.",
-  "te": "TODO_TE",
+  "te": "రెండు చెవుల్లోనూ అన్ని టోన్లు వినిపించాయి.",
   "where": "Screening result, list of reasons (PASS)"
  },
  "reason.500.always": {
   "en": "500 Hz policy: always tested.",
-  "te": "TODO_TE",
+  "te": "500 Hz విధానం: ఎప్పుడూ పరీక్షిస్తాం.",
   "where": "Room noise step, after measuring"
  },
  "reason.500.never": {
   "en": "500 Hz policy: never tested.",
-  "te": "TODO_TE",
+  "te": "500 Hz విధానం: ఎప్పుడూ పరీక్షించం.",
   "where": "Room noise step, after measuring"
  },
  "reason.500.noMeasure": {
   "en": "500 Hz skipped: no room noise measurement.",
-  "te": "TODO_TE",
+  "te": "500 Hz వదిలేశాం: గదిలో శబ్దం కొలవలేదు.",
   "where": "Room noise step, after measuring"
  },
  "reason.500.quiet": {
   "en": "500 Hz tested: room noise below the limit.",
-  "te": "TODO_TE",
+  "te": "500 Hz కూడా పరీక్షిస్తాం: గదిలో శబ్దం పరిమితి కంటే తక్కువగా ఉంది.",
   "where": "Room noise step, after measuring"
  },
  "reason.500.noisy": {
   "en": "500 Hz skipped: room too noisy for low tones.",
-  "te": "TODO_TE",
+  "te": "500 Hz వదిలేశాం: తక్కువ పిచ్ టోన్లకు గదిలో శబ్దం ఎక్కువగా ఉంది.",
   "where": "Room noise step, after measuring"
  },
  "reason.triage.likely_treatable_cause": {
   "en": "Likely treatable cause reported (for example wax or infection): PHC first. Triage, not diagnosis.",
-  "te": "TODO_TE",
+  "te": "చికిత్స చేయగల కారణం ఉండే అవకాశం ఉంది (ఉదా. గులిమి లేదా ఇన్ఫెక్షన్): ముందుగా PHC కి. ప్రాథమిక పరిశీలన మాత్రమే, వ్యాధి నిర్ధారణ కాదు.",
   "where": "Triage result after saving the checklist (route to PHC). English must match config/screening.json triage.rules"
  },
  "reason.triage.default": {
   "en": "No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis.",
-  "te": "TODO_TE",
+  "te": "ప్రశ్నల్లో చికిత్స చేయగల కారణం ఏదీ కనిపించలేదు: తదుపరి వినికిడి పరీక్ష కోసం DEIC కి. ప్రాథమిక పరిశీలన మాత్రమే, వ్యాధి నిర్ధారణ కాదు.",
   "where": "Triage result after saving the checklist (route to DEIC). English must match config/screening.json triage.default_reason"
  }
 }

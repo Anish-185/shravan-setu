@@ -345,6 +345,6 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Where: `screener/src/app/screen/[childId].tsx` (room-noise step, result step), `screener/src/triage.tsx`
 - Root cause: the rule engines return English sentences (they must: both engines are compared word for word by the shared fixtures, and the server stores them); the screens printed them directly without going through the translation helper.
 - Fix: `reason.*` templates in `screener/src/i18n/strings.json` (Telugu `TODO_TE` for now); `reasonText()` / `t.reason()` in `screener/src/i18n/strings.ts` matches a stored English reason to its template and fills the Telugu (ear names via `lr.left` / `lr.right`). An unmatched reason shows `[TODO_TE]` + English. Rule engines and stored records unchanged.
-- Status: FIXED (Telugu for the 18 new strings still needed from the native speaker)
+- Status: FIXED (Telugu for the 18 new strings written by Anish, native Telugu speaker, 18-10-2026; docs/TELUGU_REVIEW.md #168–#185)
 - Verification: `npx jest src/i18n`: every reason in the shared fixtures and the triage config matches a template and fills back to the exact English; all 18 templates are hit by at least one fixture.
 - Lesson: anything a rule returns as text is UI text; route it through the translation helper where it is shown.
