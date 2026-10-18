@@ -42,7 +42,7 @@ no Expo account needed for local development.
 | expo-sqlite | 57.0.4 | MIT | 0 | None (local database file) |
 | expo-crypto | 57.0.4 | MIT | 0 | None (`randomUUID()` for client-generated ids) |
 | expo-secure-store | 57.0.4 | MIT | 0 | None (stores the backend token in Android Keystore) |
-| App code: sync (`src/db/sync.ts`, `src/app/settings.tsx`) | ours | Apache-2.0 | 0 | **Only when the teacher taps Log in or Sync**: HTTP to the team's own laptop backend on the LAN (`/api/token/`, `/api/schools/`, `/api/sync/`, `/api/cases/`). No third-party host |
+| App code: sync and downloads (`src/db/sync.ts`, `src/app/settings.tsx`, `src/app/camp.tsx`) | ours | Apache-2.0 | 0 | **Only when the teacher taps Log in, Sync or Download PDF**: HTTP to the team's own laptop backend on the LAN (`/api/token/`, `/api/schools/`, `/api/facilities/`, `/api/sync/`, `/api/cases/`, `/api/camp-requests/<id>/pdf/`). No third-party host |
 | expo-asset | 57.0.20 | MIT | 0 | None (required peer of expo-audio, flagged by expo-doctor) |
 | expo-constants, expo-font, expo-image, expo-linking, expo-splash-screen, expo-status-bar, expo-symbols, expo-system-ui, expo-web-browser, expo-glass-effect, @expo/ui | 57.x | MIT | 0 | None (template defaults; unused ones may be removed later) |
 | react / react-dom | 19.2.3 | MIT | 0 | None |
@@ -51,6 +51,11 @@ no Expo account needed for local development.
 | typescript (dev) | 6.0.3 | Apache-2.0 | 0 | None |
 | eslint, eslint-config-expo (dev) | 9.39.5 / 57.0.2 | MIT | 0 | None |
 | jest, jest-expo, @types/jest, @types/node (dev) | 29.7.0 / 57.0.6 / 29.5.14 / 26.6.5 | MIT | 0 | None |
+
+Phase 5 added **no new dependency**. Not added, on purpose: `expo-print` (the camp request PDF is made by the server),
+i18next / react-i18next (a ~40-line helper covers two languages), `@expo-google-fonts/noto-sans-telugu` (Android's
+system Telugu font first; see `docs/REUSE_LOG.md`). Voice placeholders are made with ffmpeg on the laptop (a local
+tool, not a project dependency).
 
 **Transitive packages with licences outside our allowlist** (all build or dev tooling pulled in by Expo, Babel or
 ESLint; none added by us; none is GPL-only). Pending owner approval:
@@ -81,6 +86,7 @@ cost model (Phase 6) takes them as inputs.
 | Teacher / screener time | TODO(source) | Minutes per child × local wage |
 | Laptop for the backend | TODO(source) | Often already available at the school or block office |
 | SMS / IVR reminders | TODO(source) | Future cost only; stubbed (logged, not sent) in this version |
+| Telugu text and voice recordings | TODO(source) | [TELUGU_SPEAKER]'s time: 160+ UI texts, 5 triage questions, 1 reminder, 5 voice lines (`docs/TELUGU_STRINGS.md`, `docs/VOICE_SCRIPT.md`); one-off |
 
 npm 11 blocks dependency install scripts by default. Two are blocked in `screener/`: `unrs-resolver` (postinstall that
 fetches a fallback native binary for ESLint's import resolver) and `@parcel/watcher` (build-from-source fallback; the
