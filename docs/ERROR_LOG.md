@@ -308,3 +308,13 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Next step: run checklist item F, then `python scripts/analyze_phase4.py <new files>`. If play latency is consistent (narrow min–max), switch `timing_origin` to `playback_start` and record the numbers in CLAIMS P5-01. Thresholds stay unchanged.
 - Lesson: timestamp the event you mean (sound starts), not the call that requests it.
 
+
+### ERR-027: wrong test expectation for an empty camp request
+- Phase / date: Phase 5 / 2026-10-18
+- Symptom: `test_sync_camp_request_validates_cases`: expected "at least one case", got `{'cases': ['This list may not be empty.']}`
+- Where: `server/referrals/tests/test_api.py`
+- Root cause: my expectation. DRF's many-to-many field rejects an empty list before `CampRequestSerializer.validate` runs, so the serializer's own message never appears. The server still rejects it (correct behaviour).
+- Fix: the test now checks both rejections by their real messages: empty list, and a case that is still "screened".
+- Status: FIXED
+- Verification: pytest 211 passed
+- Lesson: field-level validation runs before `validate()`; check which layer produces the message.

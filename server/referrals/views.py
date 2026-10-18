@@ -46,6 +46,8 @@ class SyncView(APIView):
             with transaction.atomic():
                 if rtype == "case_event":
                     result["status"] = self.apply_event(rid, data, user)
+                elif rtype == "camp_request":
+                    result["status"] = self.apply_camp(rid, data, user)
                 elif rtype in SYNC_TYPES:
                     result["status"] = self.upsert(rtype, rid, data, user)
                 else:
@@ -64,6 +66,16 @@ class SyncView(APIView):
         extra = {"owner": user} if rtype == "case" and instance is None else {}
         ser.save(**extra)
         return "updated" if instance else "created"
+
+    def apply_camp(self, rid, data, user):
+        """Phone-made camp request: created once, never updated (its cases have moved on by the next sync). The phone
+        sends the cases' camp_scheduled events right after it, so no transitions here (unlike POST /camp-requests/)."""
+        if models.CampRequest.objects.filter(pk=rid).exists():
+            return "duplicate"
+        ser = s.CampRequestSerializer(data={**data, "id": rid})
+        ser.is_valid(raise_exception=True)
+        ser.save(created_by=user)
+        return "created"
 
     def apply_event(self, rid, data, user):
         if models.CaseEvent.objects.filter(pk=rid).exists():
@@ -85,6 +97,13 @@ class SchoolViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = models.School.objects.order_by("name")
     serializer_class = s.SchoolSerializer
+
+
+class FacilityViewSet(viewsets.ReadOnlyModelViewSet):
+    """Phone setup: facilities from the local CSV (load_facilities), for triage routing. No maps."""
+
+    queryset = models.Facility.objects.order_by("type", "code")
+    serializer_class = s.FacilitySerializer
 
 
 class CaseViewSet(viewsets.ReadOnlyModelViewSet):

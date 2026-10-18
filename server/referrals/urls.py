@@ -6,6 +6,7 @@ from . import views
 
 router = DefaultRouter()
 router.register("schools", views.SchoolViewSet, basename="school")
+router.register("facilities", views.FacilityViewSet, basename="facility")
 router.register("cases", views.CaseViewSet, basename="case")
 router.register("camp-requests", views.CampRequestViewSet, basename="camprequest")
 router.register("reminders", views.ReminderLogViewSet, basename="reminder")

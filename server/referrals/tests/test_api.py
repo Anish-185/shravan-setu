@@ -266,3 +266,37 @@ def test_seed_demo(db, capsys):
     assert {"referred", "camp_scheduled", "missed", "seen", "treated", "closed", "closed_lost_to_followup"} <= statuses
     assert models.ReminderLog.objects.exists()
     assert set(models.Facility.objects.values_list("code", flat=True)) == {"SAMPLE-PHC-1", "SAMPLE-PHC-2", "SAMPLE-DEIC-1"}
+
+
+def test_facilities_list_for_phone_setup(api, db):
+    call_command("load_facilities")
+    rows = api.get("/api/facilities/").json()
+    assert {r["type"] for r in rows} == {"PHC", "DEIC"} and all(r["id"] and r["mandal"] for r in rows)
+
+
+def test_sync_phone_camp_request_then_events_is_idempotent_and_exports(api, school):
+    payload, ids = sync_payload(school)
+    camp_id, ev = str(uuid.uuid4()), str(uuid.uuid4())
+    payload["records"] += [
+        {"type": "camp_request", "id": camp_id, "data": {"school": str(school.pk), "camp_date": DAY, "cases": [ids["case"]]}},
+        {"type": "case_event", "id": ev, "data": {
+            "case": ids["case"], "from_status": "referred", "to_status": "camp_scheduled", "note": f"camp request {camp_id}"}},
+    ]
+    res = api.post("/api/sync/", payload, format="json").json()["results"]
+    assert [x["status"] for x in res][-2:] == ["created", "created"]
+    assert models.Case.objects.get(pk=ids["case"]).status == "camp_scheduled"
+    again = api.post("/api/sync/", payload, format="json").json()["results"]
+    assert [x["status"] for x in again][-2:] == ["duplicate", "duplicate"]  # re-sync: no validation error
+    assert api.get(f"/api/camp-requests/{camp_id}/pdf/").content.startswith(b"%PDF")
+
+
+def test_sync_camp_request_validates_cases(api, school):
+    payload, ids = sync_payload(school)
+    payload["records"].pop()  # no screened -> referred event: the case is still "screened"
+    api.post("/api/sync/", payload, format="json")
+    for cases, msg in (([], "may not be empty"), ([ids["case"]], "must be referred/rescheduled")):
+        bad = {"records": [{"type": "camp_request", "id": str(uuid.uuid4()), "data": {
+            "school": str(school.pk), "camp_date": DAY, "cases": cases}}]}
+        res = api.post("/api/sync/", bad, format="json").json()["results"]
+        assert res[0]["status"] == "error" and msg in str(res[0]["errors"])
+

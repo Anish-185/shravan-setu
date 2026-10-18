@@ -14,6 +14,7 @@ ChildSerializer = model_serializer(models.Child)
 ConsentSerializer = model_serializer(models.Consent)
 ScreeningResultSerializer = model_serializer(models.ScreeningResult)
 ReminderLogSerializer = model_serializer(models.ReminderLog)
+FacilitySerializer = model_serializer(models.Facility)
 CaseEventSerializer = model_serializer(models.CaseEvent)
 
 
