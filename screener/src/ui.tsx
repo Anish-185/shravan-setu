@@ -44,8 +44,8 @@ export function Chips<T extends string>({ options, value, onChange, label = (o) 
 export function Check({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
   return (
     <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: value }} onPress={() => onChange(!value)} style={s.check}>
-      <Text style={s.checkBox}>{value ? '☑' : '☐'}</Text>
-      <Text style={s.checkLabel}>{label}</Text>
+      <View style={[s.checkBox, value && s.checkBoxOn]}>{value && <Text style={s.checkTick}>✓</Text>}</View>
+      {!!label && <Text style={s.checkLabel}>{label}</Text>}
     </Pressable>
   );
 }
@@ -81,8 +81,12 @@ export const s = StyleSheet.create({
   chipOn: { backgroundColor: '#0a58ca', borderColor: '#0a58ca' },
   chipOnText: { color: 'white' },
   check: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 4 },
-  checkBox: { fontSize: 24 },
-  checkLabel: { flex: 1, fontSize: 16 },
+  // Drawn box, not a ☑/☐ glyph: the glyph's look depends on the phone's fonts. The label shrinks, never grows,
+  // so a Check without a label stays box-sized inside a row (ERR-031).
+  checkBox: { width: 28, height: 28, borderWidth: 2, borderColor: '#0a58ca', borderRadius: 4, alignItems: 'center', justifyContent: 'center' },
+  checkBoxOn: { backgroundColor: '#0a58ca' },
+  checkTick: { color: 'white', fontSize: 18, fontWeight: '700' },
+  checkLabel: { flexShrink: 1, fontSize: 16 },
   h: { fontSize: 20, fontWeight: '700' },
   p: { fontSize: 16 },
   input: { borderWidth: 1, borderColor: '#888', borderRadius: 6, padding: 10, fontSize: 16 },
