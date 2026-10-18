@@ -3,9 +3,7 @@
 import Constants from 'expo-constants';
 import * as Crypto from 'expo-crypto';
 import * as Device from 'expo-device';
-import { File, Paths } from 'expo-file-system';
 import { router, useLocalSearchParams } from 'expo-router';
-import * as Sharing from 'expo-sharing';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -17,8 +15,8 @@ import { get, kvGet, put } from '@/db/store';
 import { createEngine, type Engine, type Snapshot } from '@/engine/engine';
 import { useT } from '@/i18n';
 import { ambientLevel, apply500HzPolicy, v, type Ear, type Sample } from '@/rules';
+import { ResultStep } from '@/result';
 import { saveSession } from '@/session';
-import { TriageForm } from '@/triage';
 import { Banner, Btn, Check, Chips, H, P, s, VoiceBtn } from '@/ui';
 
 type Step = 'consent' | 'device' | 'lr' | 'ambient' | 'test' | 'result';
@@ -294,33 +292,6 @@ function Balloon({ onTap, label }: { onTap: () => void; label: string }) {
       <View style={st.string} />
     </Pressable>
   );
-}
-
-function ResultStep({ snap, calibrated, onSave }: {
-  snap: Snapshot; calibrated: boolean; onSave: () => { sessionId: string; caseId: string | null };
-}) {
-  const t = useT();
-  const r = snap.result!;
-  const [ids] = useState(onSave);
-  return (
-    <View style={s.screen}>
-      <H>{t('result.h', { outcome: r.outcome ?? '-' })}</H>
-      <P>{t('result.ears', { left: r.ear_outcomes.left ?? '-', right: r.ear_outcomes.right ?? '-' })}</P>
-      {r.reasons.map((x) => <P key={x}>• {t.reason(x)}</P>)}
-      {!calibrated && <Text style={s.warn}>{t('result.uncalibrated')}</Text>}
-      {r.outcome === 'REFER' && <P>{t('result.refer')}</P>}
-      {r.outcome === 'RETEST' && <P>{t('result.retest')}</P>}
-      {ids.caseId && <TriageForm caseId={ids.caseId} />}
-      <Btn kind="plain" title={t('result.export')} onPress={() => exportSession(ids.sessionId)} />
-      <Btn title={t('result.done')} onPress={() => router.back()} />
-    </View>
-  );
-}
-
-async function exportSession(sessionId: string) {
-  const file = new File(Paths.cache, `session-${sessionId}.json`);
-  file.write(JSON.stringify(get(db, 'session_log', sessionId), null, 1));
-  await Sharing.shareAsync(file.uri, { mimeType: 'application/json' });
 }
 
 const st = StyleSheet.create({
