@@ -328,3 +328,14 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: `npx jest src/__tests__/demoPath.test.ts` 2 passed
 - Lesson: for append-only logs, order by insertion, not by a clock value that can tie.
+
+### ERR-029: Telugu reminder used an English date in English word order
+- Phase / date: Phase 5 follow-up (Telugu text) / 2026-10-18
+- Symptom: in Telugu, the stubbed missed-camp reminder would read "… ({school}) on 24 Oct 2026 చెవి పరీక్ష క్యాంప్‌కు …"; the reviewed Telugu template (docs/TELUGU_REVIEW.md #167) puts `{date}` before the camp and needs a Telugu-style date.
+- Where: `screener/src/cases.ts` `logReminder`, `server/referrals/state.py` `log_missed_reminder`
+- Root cause: both built one English `{date}` value (" on 24 Oct 2026") and filled it into both languages.
+- Fix: per-language date wrapper in `config/screening.json` `reminders.missed_camp.value.date` (en " on {date}", te "{date} న"); English date "24 Oct 2026", Telugu "24-10-2026"; no camp date gives an empty `{date}` and the double space it leaves is collapsed. Same logic on phone and server.
+- Status: FIXED
+- Verification: `npx jest src/__tests__/demoPath.test.ts` (Telugu text contains "24-10-2026 న చెవి పరీక్ష క్యాంప్‌కు"); pytest `test_demo_path.py::test_demo_missed_branch_logs_stubbed_reminder` and `test_state.py::test_missed_logs_stubbed_reminder_in_both_languages` (no-date case, no double space)
+- Lesson: any value inserted into translated text (dates, names of things) needs its own per-language form; word order differs.
+

@@ -1,6 +1,7 @@
 """Case state machine: applies the transition table from referrals.rules (hand-written, docs/REUSE_LOG.md Phase 2)
 to the database: append-only CaseEvents and stubbed reminders on 'missed'."""
 import json
+import re
 
 from django.conf import settings
 from django.db import transaction
@@ -8,11 +9,12 @@ from django.db import transaction
 from .models import Case, CaseEvent, ReminderLog
 from .rules import LOST, TRANSITIONS, TREATMENTS, check_transition  # noqa: F401  (re-exported for callers)
 
-# Reminder template, shared with the phone (config/screening.json reminders.missed_camp). Telugu is written by a
-# human (CLAUDE.md); until then it falls back to English with a visible TODO_TE marker.
+# Reminder template, shared with the phone (config/screening.json reminders.missed_camp). Missing Telugu falls back
+# to English with a visible TODO_TE marker.
 _REMINDER = json.loads((settings.BASE_DIR.parent / "config" / "screening.json").read_text())["reminders"]["missed_camp"]
 REMINDER_EN = _REMINDER["value"]["en"]
 REMINDER_TE = None if _REMINDER["value"]["te"] == "TODO_TE" else _REMINDER["value"]["te"]
+REMINDER_DATE = _REMINDER["value"]["date"]
 
 
 class IllegalTransition(ValueError):
@@ -62,12 +64,16 @@ def transition(case, to_status, *, actor=None, treatment="", reason="", note="",
 
 def log_missed_reminder(case):
     camp = case.camp_requests.order_by("-camp_date").first()
-    date = f" on {camp.camp_date:%d %b %Y}" if camp else ""
-    text_en = REMINDER_EN.format(child=case.child.display_name, school=case.school.name, date=date)
+
+    def fill(template, lang, date_fmt):
+        date = REMINDER_DATE[lang].format(date=f"{camp.camp_date:{date_fmt}}") if camp else ""
+        # no camp date: drop the double space Telugu word order leaves behind
+        return re.sub(" {2,}", " ", template.format(child=case.child.display_name, school=case.school.name, date=date))
+
+    text_en = fill(REMINDER_EN, "en", "%d %b %Y")
     return ReminderLog.objects.create(
         case=case,
         to_phone=case.child.guardian_phone,
         text_en=text_en,
-        text_te=REMINDER_TE.format(child=case.child.display_name, school=case.school.name, date=date)
-        if REMINDER_TE else f"[TODO_TE] {text_en}",
+        text_te=fill(REMINDER_TE, "te", "%d-%m-%Y") if REMINDER_TE else f"[TODO_TE] {text_en}",
     )

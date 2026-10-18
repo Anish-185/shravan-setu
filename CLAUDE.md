@@ -78,7 +78,7 @@ Our originality is the closed referral loop, two-stage screening, reliability ga
 - **Secrets:** none in code. Django `SECRET_KEY` comes from an environment variable. `.env` is gitignored. Never commit `db.sqlite3`.
 - **Commits:** small, one logical change each, conventional style (`feat(referrals): ...`, `fix(screener): ...`, `docs: ...`). Never rewrite history on `main`.
 - **Commit IDs:** always get full IDs from `git rev-parse` (or `git ls-remote` for remote refs) and paste them; never type or complete a commit ID from memory. This matters most for `--force-with-lease`, resets and anything destructive.
-- **UI language:** English + Telugu. Telugu strings are written by a human (`[TELUGU_SPEAKER]`), never machine-translated. Missing Telugu strings use key `TODO_TE` and fall back to English visibly.
+- **UI language:** English + Telugu. Telugu strings are written by a human (`[TELUGU_SPEAKER]`). A machine-assisted Telugu draft is allowed only if a native Telugu speaker reviews and approves every line (record: `docs/TELUGU_REVIEW.md`); unreviewed machine translation is never shipped. Missing Telugu strings use key `TODO_TE` and fall back to English visibly.
 
 ## Error log and carry-over between phases
 

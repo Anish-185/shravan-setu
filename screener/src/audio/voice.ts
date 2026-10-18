@@ -1,4 +1,4 @@
-// Telugu voice instructions (recorded by [TELUGU_SPEAKER]; silent placeholders until then, docs/VOICE_SCRIPT.md).
+// Telugu voice instructions (MP3, recorded by a native Telugu speaker; docs/VOICE_SCRIPT.md).
 // Played through the earphones between steps, never during a test tone or the room-noise measurement.
 import { createAudioPlayer, type AudioPlayer } from 'expo-audio';
 import { useEffect, useMemo, useRef } from 'react';
@@ -7,11 +7,11 @@ import strings from '@/i18n/strings.json';
 import { v, type Config } from '@/rules';
 
 const FILES = {
-  intro: require('@/assets/voice/te/intro.m4a'),
-  tap: require('@/assets/voice/te/tap.m4a'),
-  lr: require('@/assets/voice/te/lr.m4a'),
-  quiet: require('@/assets/voice/te/quiet.m4a'),
-  done: require('@/assets/voice/te/done.m4a'),
+  intro: require('@/assets/voice/te/intro.mp3'),
+  tap: require('@/assets/voice/te/tap.mp3'),
+  lr: require('@/assets/voice/te/lr.mp3'),
+  quiet: require('@/assets/voice/te/quiet.mp3'),
+  done: require('@/assets/voice/te/done.mp3'),
 };
 export type VoiceLine = keyof typeof FILES;
 

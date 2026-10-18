@@ -4,7 +4,7 @@
 import * as Crypto from 'expo-crypto';
 
 import { get, kvGet, list, put, putLocal, type Db } from '@/db/store';
-import { pick } from '@/i18n/strings';
+import { pick, type Lang } from '@/i18n/strings';
 import { checkTransition, triageRoute, v, type Config } from '@/rules';
 
 export type Facility = { id: string; code: string; name: string; type: 'PHC' | 'DEIC'; mandal: string };
@@ -60,14 +60,16 @@ export function moveCase(db: Db, cfg: Config, caseId: string, to: string, extra:
 /** Stub: what WOULD be sent. Nothing is sent (real SMS is a future cost). The server logs its own copy on sync. */
 function logReminder(db: Db, cfg: Config, caseId: string, c: CaseRec) {
   const camp = campsFor(db, caseId)[0];
-  const vars = {
+  const template = v(cfg, 'reminders', 'missed_camp');
+  const fill = (lang: Lang, date: string) => pick(template, lang, {
     child: get<{ display_name: string }>(db, 'child', c.child)?.display_name ?? '?',
     school: kvGet(db, 'school_name') ?? '',
-    date: camp ? ` on ${longDate(camp.camp_date)}` : '',
-  };
-  const template = v(cfg, 'reminders', 'missed_camp');
+    date: camp ? pick(template.date, lang, { date }) : '',
+  }).replace(/ {2,}/g, ' '); // no camp date: drop the double space Telugu word order leaves behind
   const rem: Reminder = {
-    case: caseId, text_en: pick(template, 'en', vars), text_te: pick(template, 'te', vars),
+    case: caseId,
+    text_en: fill('en', camp ? longDate(camp.camp_date) : ''),
+    text_te: fill('te', camp ? camp.camp_date.split('-').reverse().join('-') : ''),
     to_phone: get<{ guardian_phone?: string }>(db, 'child', c.child)?.guardian_phone ?? '', at: nowIso(),
     note: 'would send (stubbed): not sent',
   };

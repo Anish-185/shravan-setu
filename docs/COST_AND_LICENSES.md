@@ -54,8 +54,8 @@ no Expo account needed for local development.
 
 Phase 5 added **no new dependency**. Not added, on purpose: `expo-print` (the camp request PDF is made by the server),
 i18next / react-i18next (a ~40-line helper covers two languages), `@expo-google-fonts/noto-sans-telugu` (Android's
-system Telugu font first; see `docs/REUSE_LOG.md`). Voice placeholders are made with ffmpeg on the laptop (a local
-tool, not a project dependency).
+system Telugu font first; see `docs/REUSE_LOG.md`). Voice lines are plain MP3 recordings played by `expo-audio` (already a
+dependency); no network call.
 
 **Transitive packages with licences outside our allowlist** (all build or dev tooling pulled in by Expo, Babel or
 ESLint; none added by us; none is GPL-only). Pending owner approval:

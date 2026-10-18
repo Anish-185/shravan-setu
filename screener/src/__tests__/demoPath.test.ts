@@ -138,7 +138,7 @@ test('demo path: 3 children -> 1 REFER -> triage -> camp -> seen -> treated -> c
   expect([again.pushed, again.failed]).toEqual([0, 0]);
 });
 
-test('missed camp: reminder logged as "would send (stubbed)", Telugu falls back visibly; rescheduled again', () => {
+test('missed camp: reminder logged as "would send (stubbed)" with a Telugu-style date in Telugu; rescheduled again', () => {
   const db = memDb();
   const [, d2] = setupPhone(db);
   const { caseId } = screenChild(db, d2, (ear, f) => !(ear === 'right' && f === 2000));
@@ -147,7 +147,7 @@ test('missed camp: reminder logged as "would send (stubbed)", Telugu falls back 
   const [rem] = remindersFor(db, caseId!);
   expect(rem.note).toContain('would send (stubbed)');
   expect(rem.text_en).toContain('Student D2 (Demo School (FAKE)) missed the ear-check camp on 24 Oct 2026');
-  expect(rem.text_te.startsWith('[TODO_TE] Reminder:')).toBe(true);
+  expect(rem.text_te).toContain('Student D2 (Demo School (FAKE)) 24-10-2026 న చెవి పరీక్ష క్యాంప్‌కు');
   expect(moveCase(db, cfg, caseId!, 'rescheduled')).toEqual({ allowed: true });
   expect(createCamp(db, cfg, 'school-1', [caseId!], '2026-11-07', null)).toBeTruthy();
   expect(get<CaseRec>(db, 'case', caseId!)?.status).toBe('camp_scheduled');

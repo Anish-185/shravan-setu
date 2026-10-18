@@ -77,13 +77,13 @@
   "triage": {
     "questions": {
       "value": [
-        {"id": "ear_discharge", "en": "Is there fluid or discharge from the ear?", "te": "TODO_TE"},
-        {"id": "ear_pain", "en": "Does the child have ear pain?", "te": "TODO_TE"},
-        {"id": "recent_cold", "en": "Has the child had a cold or blocked nose recently?", "te": "TODO_TE"},
-        {"id": "blocked_feeling", "en": "Does the child say the ear feels blocked or full?", "te": "TODO_TE"},
-        {"id": "asks_for_repetition", "en": "Teacher: does the child often ask for things to be repeated?", "te": "TODO_TE"}
+        {"id": "ear_discharge", "en": "Is there fluid or discharge from the ear?", "te": "చెవి నుండి నీరు, చీము లేదా ఏదైనా ద్రవం కారుతోందా?"},
+        {"id": "ear_pain", "en": "Does the child have ear pain?", "te": "విద్యార్థికి చెవి నొప్పి ఉందా?"},
+        {"id": "recent_cold", "en": "Has the child had a cold or blocked nose recently?", "te": "విద్యార్థికి ఇటీవల జలుబు గానీ ముక్కు దిబ్బడ గానీ ఉండిందా?"},
+        {"id": "blocked_feeling", "en": "Does the child say the ear feels blocked or full?", "te": "చెవి మూసుకుపోయినట్లు లేదా బరువుగా ఉన్నట్లు విద్యార్థి చెబుతున్నారా?"},
+        {"id": "asks_for_repetition", "en": "Teacher: does the child often ask for things to be repeated?", "te": "ఉపాధ్యాయులకు: విద్యార్థి తరచుగా చెప్పినదాన్ని మళ్ళీ చెప్పమని అడుగుతారా?"}
       ],
-      "source": "TODO(source): checklist wording needs review by a clinician (CLAUDE.md: ask about medical wording). Telugu from [TELUGU_SPEAKER]."
+      "source": "TODO(source): checklist wording needs review by a clinician (CLAUDE.md: ask about medical wording). Telugu reviewed and approved by a native speaker (docs/TELUGU_REVIEW.md)."
     },
     "rules": {
       "value": [
@@ -104,9 +104,10 @@
     "missed_camp": {
       "value": {
         "en": "Reminder: {child} ({school}) missed the ear-check camp{date}. Please contact the class teacher to book a new date. This is a screening follow-up, not a diagnosis.",
-        "te": "TODO_TE"
+        "te": "రిమైండర్: {child} ({school}) {date} చెవి పరీక్ష క్యాంప్‌కు హాజరు కాలేదు. కొత్త తేదీ కోసం దయచేసి తరగతి ఉపాధ్యాయులను సంప్రదించండి. ఇది స్క్రీనింగ్ ఫాలో-అప్ మాత్రమే, వ్యాధి నిర్ధారణ కాదు.",
+        "date": {"en": " on {date}", "te": "{date} న"}
       },
-      "source": "Design choice: stubbed reminder (logged as 'would send', never sent; real SMS is a future cost). {date} is ' on 18 Oct 2026' or empty. Telugu by [TELUGU_SPEAKER], never machine-translated."
+      "source": "Design choice: stubbed reminder (logged as 'would send', never sent; real SMS is a future cost). {date} is filled from \"date\" (en ' on 24 Oct 2026', te '24-10-2026 న', where Telugu puts the date before the camp) or empty when no camp is booked. Telugu reviewed and approved by a native speaker (docs/TELUGU_REVIEW.md #167)."
     }
   }
 }

@@ -1,817 +1,817 @@
 {
  "banner": {
   "en": "Screening only, not a diagnosis",
-  "te": "TODO_TE",
+  "te": "ఇది స్క్రీనింగ్ మాత్రమే, వ్యాధి నిర్ధారణ కాదు",
   "where": "Yellow banner on every screen that shows a result"
  },
  "lang.switchToTe": {
   "en": "Telugu",
-  "te": "TODO_TE",
+  "te": "తెలుగు",
   "where": "Header button on every screen: switches the app to Telugu"
  },
  "lang.switchToEn": {
   "en": "English",
-  "te": "TODO_TE",
+  "te": "English",
   "where": "Header button on every screen: switches the app to English"
  },
  "common.continue": {
   "en": "Continue",
-  "te": "TODO_TE",
+  "te": "కొనసాగించండి",
   "where": "Button: go to the next step"
  },
  "common.yes": {
   "en": "Yes",
-  "te": "TODO_TE",
+  "te": "అవును",
   "where": "Answer button"
  },
  "common.no": {
   "en": "No",
-  "te": "TODO_TE",
+  "te": "లేదు",
   "where": "Answer button"
  },
  "common.notSet": {
   "en": "not set",
-  "te": "TODO_TE",
+  "te": "సెట్ చేయలేదు",
   "where": "Shown when a setting is empty"
  },
  "title.home": {
   "en": "Hearing screening",
-  "te": "TODO_TE",
+  "te": "వినికిడి స్క్రీనింగ్",
   "where": "Screen title in the header"
  },
  "title.children": {
   "en": "Children",
-  "te": "TODO_TE",
+  "te": "విద్యార్థులు",
   "where": "Screen title in the header"
  },
  "title.screen": {
   "en": "Screening test",
-  "te": "TODO_TE",
+  "te": "స్క్రీనింగ్ పరీక్ష",
   "where": "Screen title in the header"
  },
  "title.sync": {
   "en": "Sync",
-  "te": "TODO_TE",
+  "te": "సింక్",
   "where": "Screen title in the header"
  },
  "title.settings": {
   "en": "Settings",
-  "te": "TODO_TE",
+  "te": "సెట్టింగ్స్",
   "where": "Screen title in the header"
  },
  "title.spike": {
   "en": "Audio spike (developer)",
-  "te": "TODO_TE",
+  "te": "ఆడియో స్పైక్ (డెవలపర్)",
   "where": "Screen title in the header"
  },
  "title.cases": {
   "en": "Referral cases",
-  "te": "TODO_TE",
+  "te": "రిఫరల్ కేసులు",
   "where": "Screen title in the header"
  },
  "title.case": {
   "en": "Case",
-  "te": "TODO_TE",
+  "te": "కేసు",
   "where": "Screen title in the header"
  },
  "title.camp": {
   "en": "Camp request",
-  "te": "TODO_TE",
+  "te": "క్యాంప్ అభ్యర్థన",
   "where": "Screen title in the header"
  },
  "home.intro": {
   "en": "School hearing screening and referral. Works offline; sync when you have a connection.",
-  "te": "TODO_TE",
+  "te": "పాఠశాల వినికిడి స్క్రీనింగ్ మరియు రిఫరల్. ఇంటర్నెట్ లేకుండా పనిచేస్తుంది; కనెక్షన్ ఉన్నప్పుడు సింక్ చేయండి.",
   "where": "Home screen, intro line"
  },
  "home.screen": {
   "en": "Screen a child",
-  "te": "TODO_TE",
+  "te": "విద్యార్థికి స్క్రీనింగ్ చేయండి",
   "where": "Home screen link"
  },
  "home.cases": {
   "en": "Referral cases",
-  "te": "TODO_TE",
+  "te": "రిఫరల్ కేసులు",
   "where": "Home screen link"
  },
  "home.sync": {
   "en": "Sync",
-  "te": "TODO_TE",
+  "te": "సింక్",
   "where": "Home screen link"
  },
  "home.settings": {
   "en": "Settings",
-  "te": "TODO_TE",
+  "te": "సెట్టింగ్స్",
   "where": "Home screen link"
  },
  "home.spike": {
   "en": "Audio spike (developer)",
-  "te": "TODO_TE",
+  "te": "ఆడియో స్పైక్ (డెవలపర్)",
   "where": "Home screen link (developer tool)"
  },
  "children.pickSchool": {
   "en": "Pick your school in Settings first.",
-  "te": "TODO_TE",
+  "te": "ముందుగా సెట్టింగ్స్‌లో మీ పాఠశాలను ఎంచుకోండి.",
   "where": "Children screen, before a school is set"
  },
  "children.addH": {
   "en": "Add a child",
-  "te": "TODO_TE",
+  "te": "విద్యార్థి వివరాలు జోడించండి",
   "where": "Children screen heading"
  },
  "children.namePlaceholder": {
   "en": "Pseudonym, e.g. \"Student A1\"",
-  "te": "TODO_TE",
+  "te": "కోడ్ పేరు (అసలు పేరు కాదు), ఉదా. \"Student A1\"",
   "where": "Children screen, name box hint"
  },
  "children.add": {
   "en": "Add",
-  "te": "TODO_TE",
+  "te": "జోడించండి",
   "where": "Children screen button"
  },
  "children.listH": {
   "en": "Children",
-  "te": "TODO_TE",
+  "te": "విద్యార్థులు",
   "where": "Children screen heading"
  },
  "children.row": {
   "en": "{name} ({age}) → screen",
-  "te": "TODO_TE",
+  "te": "{name} ({age}) → స్క్రీనింగ్",
   "where": "Children list row; {name} = pseudonym, {age} = age band"
  },
  "sync.pending": {
   "en": "{n} record(s) waiting to sync.",
-  "te": "TODO_TE",
+  "te": "సింక్ కోసం వేచి ఉన్న రికార్డులు: {n}.",
   "where": "Sync screen"
  },
  "sync.now": {
   "en": "Sync now",
-  "te": "TODO_TE",
+  "te": "ఇప్పుడు సింక్ చేయండి",
   "where": "Sync screen button"
  },
  "sync.busy": {
   "en": "Syncing…",
-  "te": "TODO_TE",
+  "te": "సింక్ అవుతోంది…",
   "where": "Sync screen, while syncing"
  },
  "sync.setup": {
   "en": "Set up the backend and school in Settings first.",
-  "te": "TODO_TE",
+  "te": "ముందుగా సెట్టింగ్స్‌లో బ్యాకెండ్ మరియు పాఠశాలను సెటప్ చేయండి.",
   "where": "Sync screen, before setup"
  },
  "sync.done": {
   "en": "Sent {pushed}, failed {failed}, case updates received {pulled}.",
-  "te": "TODO_TE",
+  "te": "పంపినవి {pushed}, విఫలమైనవి {failed}, అందిన కేసు అప్‌డేట్లు {pulled}.",
   "where": "Sync screen, after sync"
  },
  "sync.failed": {
   "en": "{error}. Nothing was lost; try again when connected.",
-  "te": "TODO_TE",
+  "te": "{error}. మీ డేటా అంతా ఫోన్‌లోనే సురక్షితంగా ఉంది; కనెక్షన్ ఉన్నప్పుడు మళ్ళీ ప్రయత్నించండి.",
   "where": "Sync screen, sync error ({error} stays in English)"
  },
  "settings.backendH": {
   "en": "Backend",
-  "te": "TODO_TE",
+  "te": "బ్యాకెండ్",
   "where": "Settings heading"
  },
  "settings.backendP": {
   "en": "The laptop running the server, on the same Wi-Fi. Only needed for sync.",
-  "te": "TODO_TE",
+  "te": "సర్వర్ నడుస్తున్న ల్యాప్‌టాప్. ఇది ఈ ఫోన్ ఉన్న Wi-Fi లోనే ఉండాలి. సింక్ కోసం మాత్రమే అవసరం.",
   "where": "Settings"
  },
  "settings.username": {
   "en": "username",
-  "te": "TODO_TE",
+  "te": "యూజర్‌నేమ్",
   "where": "Settings, login box hint"
  },
  "settings.password": {
   "en": "password",
-  "te": "TODO_TE",
+  "te": "పాస్‌వర్డ్",
   "where": "Settings, password box hint"
  },
  "settings.login": {
   "en": "Log in and load schools",
-  "te": "TODO_TE",
+  "te": "లాగిన్ చేసి పాఠశాలలను లోడ్ చేయండి",
   "where": "Settings button"
  },
  "settings.connecting": {
   "en": "Connecting…",
-  "te": "TODO_TE",
+  "te": "కనెక్ట్ అవుతోంది…",
   "where": "Settings, while logging in"
  },
  "settings.loggedIn": {
   "en": "Logged in. Pick your school.",
-  "te": "TODO_TE",
+  "te": "లాగిన్ అయ్యారు. మీ పాఠశాలను ఎంచుకోండి.",
   "where": "Settings, after login"
  },
  "settings.schoolSet": {
   "en": "School set: {name}.",
-  "te": "TODO_TE",
+  "te": "పాఠశాల సెట్ అయింది: {name}.",
   "where": "Settings, after picking a school"
  },
  "settings.school": {
   "en": "School: {name}",
-  "te": "TODO_TE",
+  "te": "పాఠశాల: {name}",
   "where": "Settings"
  },
  "settings.deviceH": {
   "en": "Standard device",
-  "te": "TODO_TE",
+  "te": "ప్రామాణిక పరికరం",
   "where": "Settings heading"
  },
  "settings.deviceP": {
   "en": "Recorded with every test. Use the same wired earphones and the same media-volume setting every time.",
-  "te": "TODO_TE",
+  "te": "ఈ వివరాలు ప్రతి పరీక్షతో పాటు నమోదు అవుతాయి. ప్రతిసారీ అవే వైర్డ్ ఇయర్‌ఫోన్లు, అదే మీడియా వాల్యూమ్ సెట్టింగ్ వాడండి.",
   "where": "Settings"
  },
  "settings.earphone": {
   "en": "Earphone model (wired)",
-  "te": "TODO_TE",
+  "te": "ఇయర్‌ఫోన్ మోడల్ (వైర్డ్)",
   "where": "Settings, box hint"
  },
  "settings.volume": {
   "en": "Media volume, e.g. \"zero, then up 8 steps\"",
-  "te": "TODO_TE",
+  "te": "మీడియా వాల్యూమ్, ఉదా. \"సున్నా, తర్వాత 8 స్టెప్స్ పైకి\"",
   "where": "Settings, box hint"
  },
  "settings.saveDevice": {
   "en": "Save device settings",
-  "te": "TODO_TE",
+  "te": "పరికర సెట్టింగ్స్ సేవ్ చేయండి",
   "where": "Settings button"
  },
  "settings.deviceSaved": {
   "en": "Device settings saved.",
-  "te": "TODO_TE",
+  "te": "పరికర సెట్టింగ్స్ సేవ్ అయ్యాయి.",
   "where": "Settings, after saving"
  },
  "screen.notFound": {
   "en": "Child not found.",
-  "te": "TODO_TE",
+  "te": "విద్యార్థి వివరాలు కనబడలేదు.",
   "where": "Screening screen error"
  },
  "consent.h": {
   "en": "1. Consent",
-  "te": "TODO_TE",
+  "te": "1. సమ్మతి",
   "where": "Screening step heading"
  },
  "consent.p": {
   "en": "Consent must be recorded before any test. Who gave it, and how?",
-  "te": "TODO_TE",
+  "te": "ఏ పరీక్షకైనా ముందు సమ్మతి నమోదు చేయాలి. ఎవరు ఇచ్చారు, ఎలా ఇచ్చారు?",
   "where": "Consent step"
  },
  "consent.by.parent": {
   "en": "Parent",
-  "te": "TODO_TE",
+  "te": "తల్లి/తండ్రి",
   "where": "Consent step choice"
  },
  "consent.by.guardian": {
   "en": "Guardian",
-  "te": "TODO_TE",
+  "te": "సంరక్షకులు",
   "where": "Consent step choice"
  },
  "consent.method.written": {
   "en": "Written",
-  "te": "TODO_TE",
+  "te": "లిఖితపూర్వకంగా",
   "where": "Consent step choice"
  },
  "consent.method.verbal": {
   "en": "Verbal",
-  "te": "TODO_TE",
+  "te": "మౌఖికంగా",
   "where": "Consent step choice"
  },
  "consent.method.school_form": {
   "en": "School form",
-  "te": "TODO_TE",
+  "te": "పాఠశాల ఫారం ద్వారా",
   "where": "Consent step choice"
  },
  "consent.continue": {
   "en": "Consent given: continue",
-  "te": "TODO_TE",
+  "te": "సమ్మతి ఇచ్చారు: కొనసాగించండి",
   "where": "Consent step button"
  },
  "consent.stop": {
   "en": "No consent: stop",
-  "te": "TODO_TE",
+  "te": "సమ్మతి లేదు: ఆపండి",
   "where": "Consent step button"
  },
  "device.h": {
   "en": "2. Device check",
-  "te": "TODO_TE",
+  "te": "2. పరికర తనిఖీ",
   "where": "Screening step heading"
  },
  "device.phone": {
   "en": "Phone: {model}",
-  "te": "TODO_TE",
+  "te": "ఫోన్: {model}",
   "where": "Device check"
  },
  "device.earphones": {
   "en": "Earphones: {model}",
-  "te": "TODO_TE",
+  "te": "ఇయర్‌ఫోన్లు: {model}",
   "where": "Device check"
  },
  "device.volume": {
   "en": "Media volume: {setting}",
-  "te": "TODO_TE",
+  "te": "మీడియా వాల్యూమ్: {setting}",
   "where": "Device check"
  },
  "device.notSetSettings": {
   "en": "not set (Settings)",
-  "te": "TODO_TE",
+  "te": "సెట్ చేయలేదు (సెట్టింగ్స్)",
   "where": "Device check, missing setting"
  },
  "device.detected": {
   "en": "Wired earphones detected.",
-  "te": "TODO_TE",
+  "te": "వైర్డ్ ఇయర్‌ఫోన్లు గుర్తించబడ్డాయి.",
   "where": "Device check, status"
  },
  "device.notDetected": {
   "en": "No wired earphones detected. Plug them in. Tones never play through the speaker.",
-  "te": "TODO_TE",
+  "te": "వైర్డ్ ఇయర్‌ఫోన్లు గుర్తించబడలేదు. వాటిని ప్లగ్ చేయండి. టోన్లు ఎప్పుడూ ఫోన్ స్పీకర్‌లో ప్లే కావు.",
   "where": "Device check, status"
  },
  "device.micStarting": {
   "en": "Starting microphone…",
-  "te": "TODO_TE",
+  "te": "మైక్రోఫోన్ ప్రారంభమవుతోంది…",
   "where": "Device check, status"
  },
  "device.volumeOk": {
   "en": "Media volume is at the fixed setting: {setting}",
-  "te": "TODO_TE",
+  "te": "మీడియా వాల్యూమ్ నిర్ణీత సెట్టింగ్‌లో ఉంది: {setting}",
   "where": "Device check, tick box"
  },
  "device.btOff": {
   "en": "Bluetooth is off",
-  "te": "TODO_TE",
+  "te": "బ్లూటూత్ ఆఫ్‌లో ఉంది",
   "where": "Device check, tick box"
  },
  "lr.h": {
   "en": "3. Left / right check",
-  "te": "TODO_TE",
+  "te": "3. ఎడమ / కుడి తనిఖీ",
   "where": "Screening step heading"
  },
  "lr.p": {
   "en": "Play a beep. The child points to the ear that heard it; tap that side.",
-  "te": "TODO_TE",
+  "te": "ఒక బీప్ ప్లే చేయండి. విద్యార్థి ఏ చెవిలో విన్నారో ఆ చెవిని చూపిస్తారు; ఆ వైపును నొక్కండి.",
   "where": "Left/right check"
  },
  "lr.play": {
   "en": "Play beep",
-  "te": "TODO_TE",
+  "te": "బీప్ ప్లే చేయండి",
   "where": "Left/right check button"
  },
  "lr.left": {
   "en": "Left",
-  "te": "TODO_TE",
+  "te": "ఎడమ",
   "where": "Left/right check button"
  },
  "lr.right": {
   "en": "Right",
-  "te": "TODO_TE",
+  "te": "కుడి",
   "where": "Left/right check button"
  },
  "lr.plugIn": {
   "en": "Plug in the wired earphones first.",
-  "te": "TODO_TE",
+  "te": "ముందుగా వైర్డ్ ఇయర్‌ఫోన్లను ప్లగ్ చేయండి.",
   "where": "Left/right check message"
  },
  "lr.wrong": {
   "en": "Wrong side. Check the L/R marks on the earphones, then start again.",
-  "te": "TODO_TE",
+  "te": "తప్పు వైపు. ఇయర్‌ఫోన్లపై ఉన్న L/R గుర్తులు చూసి, మళ్ళీ మొదలుపెట్టండి.",
   "where": "Left/right check message"
  },
  "lr.correct": {
   "en": "Correct ({n} of {total}).",
-  "te": "TODO_TE",
+  "te": "సరైన వైపు ({total} లో {n}).",
   "where": "Left/right check message"
  },
  "ambient.h": {
   "en": "4. Room noise",
-  "te": "TODO_TE",
+  "te": "4. గదిలో శబ్దం",
   "where": "Screening step heading"
  },
  "ambient.p": {
   "en": "Everyone quiet for a few seconds. Earphones on the child.",
-  "te": "TODO_TE",
+  "te": "కొన్ని సెకన్లు అందరూ నిశ్శబ్దంగా ఉండండి. ఇయర్‌ఫోన్లు విద్యార్థి చెవుల్లో ఉండాలి.",
   "where": "Room noise step"
  },
  "ambient.measure": {
   "en": "Measure room noise",
-  "te": "TODO_TE",
+  "te": "గదిలో శబ్దాన్ని కొలవండి",
   "where": "Room noise step button"
  },
  "ambient.measuring": {
   "en": "Measuring…",
-  "te": "TODO_TE",
+  "te": "కొలుస్తోంది…",
   "where": "Room noise step, while measuring"
  },
  "ambient.value": {
   "en": "Room noise: {value} re: reference quiet room (relative, uncalibrated)",
-  "te": "TODO_TE",
+  "te": "గదిలో శబ్దం: {value} (నిశ్శబ్ద రిఫరెన్స్ గదితో పోలిస్తే; సాపేక్ష విలువ, క్యాలిబ్రేట్ చేయలేదు)",
   "where": "Room noise step result; {value} is a number"
  },
  "ambient.couldNot": {
   "en": "Room noise: could not measure",
-  "te": "TODO_TE",
+  "te": "గదిలో శబ్దం: కొలవలేకపోయాం",
   "where": "Room noise step result"
  },
  "ambient.noisy": {
   "en": "The room is noisy: many tones may be discarded. Move somewhere quieter if you can.",
-  "te": "TODO_TE",
+  "te": "గదిలో శబ్దం ఎక్కువగా ఉంది: చాలా టోన్లు రద్దు కావచ్చు. వీలైతే నిశ్శబ్దమైన చోటికి వెళ్ళండి.",
   "where": "Room noise step warning"
  },
  "ambient.continue": {
   "en": "Continue to the test",
-  "te": "TODO_TE",
+  "te": "పరీక్షకు వెళ్ళండి",
   "where": "Room noise step button"
  },
  "test.h": {
   "en": "5. Test",
-  "te": "TODO_TE",
+  "te": "5. పరీక్ష",
   "where": "Screening step heading"
  },
  "test.teacher": {
   "en": "Play the voice instructions, or tell the child: “Tap the balloon every time you hear a beep, even a very quiet one.” Then hand over the phone.",
-  "te": "TODO_TE",
+  "te": "వాయిస్ సూచనలు ప్లే చేయండి, లేదా విద్యార్థికి ఇలా చెప్పండి: “బీప్ వినిపించిన ప్రతిసారీ, చాలా మెల్లగా వినిపించినా సరే, బెలూన్‌ను నొక్కు.” తర్వాత ఫోన్‌ను విద్యార్థికి ఇవ్వండి.",
   "where": "Test step, for the teacher"
  },
  "test.playVoice": {
   "en": "Play voice instructions (Telugu)",
-  "te": "TODO_TE",
+  "te": "వాయిస్ సూచనలు ప్లే చేయండి (తెలుగు)",
   "where": "Test step button and the speaker buttons in other steps"
  },
  "test.voicePlaceholder": {
   "en": "voice placeholder",
-  "te": "TODO_TE",
+  "te": "వాయిస్ ప్లేస్‌హోల్డర్",
   "where": "Developer tag shown when a voice file is still a silent placeholder"
  },
  "test.start": {
   "en": "Start test",
-  "te": "TODO_TE",
+  "te": "పరీక్ష ప్రారంభించండి",
   "where": "Test step button"
  },
  "test.pausedChanged": {
   "en": "Paused after an earphone change. The interrupted beep will be repeated.",
-  "te": "TODO_TE",
+  "te": "ఇయర్‌ఫోన్లలో మార్పు వల్ల పరీక్ష తాత్కాలికంగా ఆగింది. మధ్యలో ఆగిన బీప్ మళ్ళీ వినిపిస్తుంది.",
   "where": "Test paused"
  },
  "test.disconnected": {
   "en": "Earphones disconnected. Plug them back in.",
-  "te": "TODO_TE",
+  "te": "ఇయర్‌ఫోన్లు డిస్‌కనెక్ట్ అయ్యాయి. మళ్ళీ ప్లగ్ చేయండి.",
   "where": "Test paused"
  },
  "test.resume": {
   "en": "Resume",
-  "te": "TODO_TE",
+  "te": "మళ్ళీ కొనసాగించండి",
   "where": "Test paused button"
  },
  "test.progress": {
   "en": "{done} of {total}",
-  "te": "TODO_TE",
+  "te": "{total} లో {done}",
   "where": "Child mode, small progress text"
  },
  "test.balloon": {
   "en": "I heard a beep",
-  "te": "TODO_TE",
+  "te": "నాకు బీప్ వినిపించింది",
   "where": "Child mode balloon (read by screen readers)"
  },
  "result.h": {
   "en": "Result: {outcome}",
-  "te": "TODO_TE",
+  "te": "ఫలితం: {outcome}",
   "where": "Result step; {outcome} stays PASS / RETEST / REFER"
  },
  "result.ears": {
   "en": "Left ear: {left} · Right ear: {right}",
-  "te": "TODO_TE",
+  "te": "ఎడమ చెవి: {left} · కుడి చెవి: {right}",
   "where": "Result step; values stay PASS / RETEST / REFER"
  },
  "result.uncalibrated": {
   "en": "UNCALIBRATED test level (development volume). Not valid for real screening yet.",
-  "te": "TODO_TE",
+  "te": "హెచ్చరిక: పరీక్ష స్థాయి క్యాలిబ్రేట్ చేయబడలేదు (డెవలప్‌మెంట్ వాల్యూమ్). ఈ ఫలితం నిజమైన స్క్రీనింగ్‌కు ఇంకా చెల్లదు.",
   "where": "Result step warning"
  },
  "result.refer": {
   "en": "A referral case was created on this phone. Do the ear-health triage now, then sync.",
-  "te": "TODO_TE",
+  "te": "ఈ ఫోన్‌లో రిఫరల్ కేసు సృష్టించబడింది. ఇప్పుడే చెవి ఆరోగ్య ప్రాథమిక పరిశీలన చేసి, తర్వాత సింక్ చేయండి.",
   "where": "Result step, REFER"
  },
  "result.retest": {
   "en": "Retest this child, ideally in a quieter room.",
-  "te": "TODO_TE",
+  "te": "ఈ విద్యార్థికి మళ్ళీ పరీక్ష చేయండి, వీలైతే మరింత నిశ్శబ్దమైన గదిలో.",
   "where": "Result step, RETEST"
  },
  "result.export": {
   "en": "Export session JSON",
-  "te": "TODO_TE",
+  "te": "సెషన్ JSON ఎగుమతి చేయండి",
   "where": "Result step button"
  },
  "result.done": {
   "en": "Done",
-  "te": "TODO_TE",
+  "te": "పూర్తయింది",
   "where": "Result step button"
  },
  "triage.h": {
   "en": "Ear-health triage",
-  "te": "TODO_TE",
+  "te": "చెవి ఆరోగ్య ప్రాథమిక పరిశీలన",
   "where": "Triage heading"
  },
  "triage.label": {
   "en": "Triage, not diagnosis",
-  "te": "TODO_TE",
+  "te": "ప్రాథమిక పరిశీలన మాత్రమే, వ్యాధి నిర్ధారణ కాదు",
   "where": "Triage label (always shown)"
  },
  "triage.p": {
   "en": "Ask the child (and the parent if present). Tap Yes or No for each question.",
-  "te": "TODO_TE",
+  "te": "విద్యార్థిని (తల్లి/తండ్రి ఉంటే వారిని కూడా) అడగండి. ప్రతి ప్రశ్నకు “అవును” లేదా “లేదు” నొక్కండి.",
   "where": "Triage instructions"
  },
  "triage.save": {
   "en": "Save triage",
-  "te": "TODO_TE",
+  "te": "ప్రాథమిక పరిశీలన సేవ్ చేయండి",
   "where": "Triage button"
  },
  "triage.routePHC": {
   "en": "Route: nearest PHC ({facility})",
-  "te": "TODO_TE",
+  "te": "పంపాల్సిన చోటు: సమీప PHC ({facility})",
   "where": "Triage result"
  },
  "triage.routeDEIC": {
   "en": "Route: DEIC ({facility})",
-  "te": "TODO_TE",
+  "te": "పంపాల్సిన చోటు: DEIC ({facility})",
   "where": "Triage result"
  },
  "triage.noFacility": {
   "en": "no facility list: log in once in Settings",
-  "te": "TODO_TE",
+  "te": "ఆరోగ్య కేంద్రాల జాబితా లేదు: సెట్టింగ్స్‌లో ఒకసారి లాగిన్ చేయండి",
   "where": "Triage result, no facility loaded"
  },
  "triage.saved": {
   "en": "Triage saved on the case.",
-  "te": "TODO_TE",
+  "te": "ప్రాథమిక పరిశీలన కేసులో సేవ్ అయింది.",
   "where": "Triage, after saving"
  },
  "cases.all": {
   "en": "All",
-  "te": "TODO_TE",
+  "te": "అన్నీ",
   "where": "Case list filter"
  },
  "cases.empty": {
   "en": "No cases on this phone yet.",
-  "te": "TODO_TE",
+  "te": "ఈ ఫోన్‌లో ఇంకా కేసులు లేవు.",
   "where": "Case list"
  },
  "cases.row": {
   "en": "{name}: {status} · {route}",
-  "te": "TODO_TE",
+  "te": "{name}: {status} · {route}",
   "where": "Case list row"
  },
  "cases.createCamp": {
   "en": "Create camp request ({n} selected)",
-  "te": "TODO_TE",
+  "te": "క్యాంప్ అభ్యర్థన సృష్టించండి ({n} ఎంచుకున్నారు)",
   "where": "Case list button"
  },
  "cases.selectHint": {
   "en": "Tick referred or rescheduled cases to put them in one camp request.",
-  "te": "TODO_TE",
+  "te": "రిఫర్ చేసిన లేదా తిరిగి షెడ్యూల్ చేసిన కేసులను టిక్ చేసి, ఒకే క్యాంప్ అభ్యర్థనలో చేర్చండి.",
   "where": "Case list hint"
  },
  "cases.shareCsv": {
   "en": "Share CSV",
-  "te": "TODO_TE",
+  "te": "CSV షేర్ చేయండి",
   "where": "Case list button"
  },
  "cases.camps": {
   "en": "Camp requests",
-  "te": "TODO_TE",
+  "te": "క్యాంప్ అభ్యర్థనలు",
   "where": "Case list heading"
  },
  "cases.campRow": {
   "en": "{date}: {n} case(s)",
-  "te": "TODO_TE",
+  "te": "{date}: {n} కేసు(లు)",
   "where": "Camp request row"
  },
  "status.screened": {
   "en": "Screened",
-  "te": "TODO_TE",
+  "te": "స్క్రీనింగ్ పూర్తయింది",
   "where": "Case status name"
  },
  "status.referred": {
   "en": "Referred",
-  "te": "TODO_TE",
+  "te": "రిఫర్ చేశారు",
   "where": "Case status name"
  },
  "status.camp_scheduled": {
   "en": "Camp scheduled",
-  "te": "TODO_TE",
+  "te": "క్యాంప్ షెడ్యూల్ అయింది",
   "where": "Case status name"
  },
  "status.missed": {
   "en": "Missed camp",
-  "te": "TODO_TE",
+  "te": "క్యాంప్‌కు రాలేదు",
   "where": "Case status name"
  },
  "status.rescheduled": {
   "en": "Rescheduled",
-  "te": "TODO_TE",
+  "te": "తిరిగి షెడ్యూల్ చేశారు",
   "where": "Case status name"
  },
  "status.seen": {
   "en": "Seen at camp",
-  "te": "TODO_TE",
+  "te": "క్యాంప్‌లో పరీక్షించారు",
   "where": "Case status name"
  },
  "status.treated": {
   "en": "Treated / onward care",
-  "te": "TODO_TE",
+  "te": "చికిత్స చేశారు / తదుపరి సంరక్షణకు పంపారు",
   "where": "Case status name"
  },
  "status.closed": {
   "en": "Closed",
-  "te": "TODO_TE",
+  "te": "ముగిసింది",
   "where": "Case status name"
  },
  "status.closed_lost_to_followup": {
   "en": "Closed: lost to follow-up",
-  "te": "TODO_TE",
+  "te": "ముగిసింది: ఫాలో-అప్ సాధ్యం కాలేదు",
   "where": "Case status name"
  },
  "treatment.wax_removed": {
   "en": "Wax removed",
-  "te": "TODO_TE",
+  "te": "గులిమి తొలగించారు",
   "where": "Treatment choice when marking a case treated"
  },
  "treatment.infection_treated": {
   "en": "Infection treated",
-  "te": "TODO_TE",
+  "te": "ఇన్ఫెక్షన్‌కు చికిత్స చేశారు",
   "where": "Treatment choice when marking a case treated"
  },
  "treatment.hearing_aid": {
   "en": "Hearing aid",
-  "te": "TODO_TE",
+  "te": "వినికిడి యంత్రం",
   "where": "Treatment choice when marking a case treated"
  },
  "treatment.further_audiology": {
   "en": "Further audiology",
-  "te": "TODO_TE",
+  "te": "మరిన్ని వినికిడి పరీక్షలు (ఆడియాలజీ)",
   "where": "Treatment choice when marking a case treated"
  },
  "case.status": {
   "en": "Status: {status}",
-  "te": "TODO_TE",
+  "te": "స్థితి: {status}",
   "where": "Case detail"
  },
  "case.route": {
   "en": "Triage: {route} · {facility}",
-  "te": "TODO_TE",
+  "te": "ప్రాథమిక పరిశీలన: {route} · {facility}",
   "where": "Case detail"
  },
  "case.noTriage": {
   "en": "Triage not done yet.",
-  "te": "TODO_TE",
+  "te": "ప్రాథమిక పరిశీలన ఇంకా చేయలేదు.",
   "where": "Case detail"
  },
  "case.doTriage": {
   "en": "Do triage",
-  "te": "TODO_TE",
+  "te": "ప్రాథమిక పరిశీలన చేయండి",
   "where": "Case detail button"
  },
  "case.history": {
   "en": "Status history",
-  "te": "TODO_TE",
+  "te": "స్థితి చరిత్ర",
   "where": "Case detail heading"
  },
  "case.event": {
   "en": "{at}: {from} → {to}",
-  "te": "TODO_TE",
+  "te": "{at}: {from} → {to}",
   "where": "Case detail history row"
  },
  "case.move": {
   "en": "Move to:",
-  "te": "TODO_TE",
+  "te": "స్థితి మార్చండి:",
   "where": "Case detail, before the status buttons"
  },
  "case.final": {
   "en": "This case is closed.",
-  "te": "TODO_TE",
+  "te": "ఈ కేసు ముగిసింది.",
   "where": "Case detail, no more moves"
  },
  "case.reason": {
   "en": "Reason (required)",
-  "te": "TODO_TE",
+  "te": "కారణం (తప్పనిసరి)",
   "where": "Case detail, reason box hint for lost to follow-up"
  },
  "case.why.illegal": {
   "en": "That move is not allowed from this status.",
-  "te": "TODO_TE",
+  "te": "ఈ స్థితి నుండి ఆ మార్పు అనుమతించబడదు.",
   "where": "Case detail error"
  },
  "case.why.needs_treatment": {
   "en": "Pick a treatment first.",
-  "te": "TODO_TE",
+  "te": "ముందుగా చికిత్సను ఎంచుకోండి.",
   "where": "Case detail error"
  },
  "case.why.needs_reason": {
   "en": "Write a reason first.",
-  "te": "TODO_TE",
+  "te": "ముందుగా కారణం రాయండి.",
   "where": "Case detail error"
  },
  "case.reminders": {
   "en": "Reminders (stubbed: logged, not sent)",
-  "te": "TODO_TE",
+  "te": "రిమైండర్లు (ప్రస్తుతం నమోదు మాత్రమే అవుతాయి, పంపబడవు)",
   "where": "Case detail heading"
  },
  "case.wouldSend": {
   "en": "Would send: {text}",
-  "te": "TODO_TE",
+  "te": "పంపితే ఈ సందేశం వెళ్తుంది: {text}",
   "where": "Case detail reminder row"
  },
  "camp.h": {
   "en": "Camp request",
-  "te": "TODO_TE",
+  "te": "క్యాంప్ అభ్యర్థన",
   "where": "Camp request heading"
  },
  "camp.cases": {
   "en": "{n} case(s): {names}",
-  "te": "TODO_TE",
+  "te": "{n} కేసు(లు): {names}",
   "where": "Camp request"
  },
  "camp.date": {
   "en": "Camp date (YYYY-MM-DD)",
-  "te": "TODO_TE",
+  "te": "క్యాంప్ తేదీ (YYYY-MM-DD)",
   "where": "Camp request, date box hint"
  },
  "camp.badDate": {
   "en": "Enter the date as YYYY-MM-DD.",
-  "te": "TODO_TE",
+  "te": "తేదీని YYYY-MM-DD రూపంలో రాయండి.",
   "where": "Camp request error"
  },
  "camp.facility": {
   "en": "Facility",
-  "te": "TODO_TE",
+  "te": "ఆరోగ్య కేంద్రం",
   "where": "Camp request, facility choice heading"
  },
  "camp.create": {
   "en": "Create camp request",
-  "te": "TODO_TE",
+  "te": "క్యాంప్ అభ్యర్థన సృష్టించండి",
   "where": "Camp request button"
  },
  "camp.created": {
   "en": "Saved on this phone. Sync to send it; the laptop makes the PDF after sync.",
-  "te": "TODO_TE",
+  "te": "ఈ ఫోన్‌లో సేవ్ అయింది. పంపడానికి సింక్ చేయండి; సింక్ తర్వాత ల్యాప్‌టాప్ PDF తయారు చేస్తుంది.",
   "where": "Camp request, after saving"
  },
  "camp.pdf": {
   "en": "Download PDF (after sync)",
-  "te": "TODO_TE",
+  "te": "PDF డౌన్‌లోడ్ చేయండి (సింక్ తర్వాత)",
   "where": "Camp request button"
  },
  "camp.pdfFailed": {
   "en": "Could not get the PDF: {error}. Sync first, and check the laptop is reachable.",
-  "te": "TODO_TE",
+  "te": "PDF పొందలేకపోయాం: {error}. ముందుగా సింక్ చేయండి, ల్యాప్‌టాప్ అందుబాటులో ఉందో చూడండి.",
   "where": "Camp request error"
  },
  "camp.shareCsv": {
   "en": "Share CSV",
-  "te": "TODO_TE",
+  "te": "CSV షేర్ చేయండి",
   "where": "Camp request button"
  },
  "voice.intro": {
   "en": "Hello! You will hear some beeps in your earphones.",
-  "te": "TODO_TE",
+  "te": "నమస్తే! నీ ఇయర్‌ఫోన్లలో కొన్ని బీప్ శబ్దాలు వినిపిస్తాయి.",
   "where": "Child mode: first line when the teacher taps 'Play voice instructions'",
-  "file": "intro.m4a",
-  "recorded": false
+  "file": "intro.mp3",
+  "recorded": true
  },
  "voice.tap": {
   "en": "Every time you hear a beep, even a very quiet one, tap the balloon.",
-  "te": "TODO_TE",
+  "te": "బీప్ వినిపించిన ప్రతిసారీ, చాలా మెల్లగా వినిపించినా సరే, బెలూన్‌ను నొక్కు.",
   "where": "Child mode: second line, right after intro",
-  "file": "tap.m4a",
-  "recorded": false
+  "file": "tap.mp3",
+  "recorded": true
  },
  "voice.lr": {
   "en": "Point to the ear that heard the beep.",
-  "te": "TODO_TE",
+  "te": "బీప్ ఏ చెవిలో వినిపించిందో ఆ చెవిని చూపించు.",
   "where": "Left/right check: the teacher taps the speaker button before 'Play beep'",
-  "file": "lr.m4a",
-  "recorded": false
+  "file": "lr.mp3",
+  "recorded": true
  },
  "voice.quiet": {
   "en": "Please sit very quietly for a few seconds.",
-  "te": "TODO_TE",
+  "te": "దయచేసి కొన్ని సెకన్లు చాలా నిశ్శబ్దంగా కూర్చో.",
   "where": "Room noise step: the teacher taps the speaker button, then 'Measure room noise' after it ends",
-  "file": "quiet.m4a",
-  "recorded": false
+  "file": "quiet.mp3",
+  "recorded": true
  },
  "voice.done": {
   "en": "All done. Well done!",
-  "te": "TODO_TE",
+  "te": "అయిపోయింది. చాలా బాగా చేశావు!",
   "where": "Child mode: when the test finishes",
-  "file": "done.m4a",
-  "recorded": false
+  "file": "done.mp3",
+  "recorded": true
  },
  "common.playVoice": {
   "en": "Play voice line",
-  "te": "TODO_TE",
+  "te": "వాయిస్ లైన్ ప్లే చేయండి",
   "where": "Speaker button (read by screen readers)"
  }
 }

@@ -78,4 +78,5 @@ def test_demo_missed_branch_logs_stubbed_reminder(api, school):
     res = api.post("/api/sync/", {"records": recs}, format="json").json()["results"]
     assert [r for r in res if r["status"] == "error"] == []
     rem = models.ReminderLog.objects.get(case=case)
-    assert "missed the ear-check camp on 24 Oct 2026" in rem.text_en and rem.text_te.startswith("[TODO_TE]")
+    assert "missed the ear-check camp on 24 Oct 2026" in rem.text_en
+    assert "24-10-2026 న చెవి పరీక్ష క్యాంప్‌కు" in rem.text_te  # Telugu: date first, Telugu style (#167)

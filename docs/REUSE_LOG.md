@@ -221,5 +221,7 @@ Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state mach
 
 ### Voice placeholders
 
-- Silent `.m4a` placeholders generated locally with ffmpeg (already on the laptop; not a project dependency) by
-  `scripts/make_voice_placeholders.sh`. Real recordings by [TELUGU_SPEAKER] replace them file for file.
+- Silent `.m4a` placeholders were generated locally with ffmpeg until the real recordings arrived.
+- Recordings (Anish, 18-10-2026) arrived as MP3. Decision: play the MP3 directly (Metro bundles `.mp3` by default and
+  `expo-audio` plays it on Android, Expo Go included) rather than convert to `.m4a`: no re-encode, no new tool step.
+  Placeholders and `scripts/make_voice_placeholders.py` deleted.

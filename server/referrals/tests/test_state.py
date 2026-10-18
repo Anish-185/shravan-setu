@@ -67,12 +67,12 @@ def test_lost_needs_reason(make_case):
     assert case.lost_reason == "family moved"
 
 
-def test_missed_logs_stubbed_reminder_with_telugu_fallback(make_case):
+def test_missed_logs_stubbed_reminder_in_both_languages(make_case):
     case = make_case(PATH["missed"])
     log = ReminderLog.objects.get(case=case)
     assert log.status == "would_send_stubbed"
-    assert "not a diagnosis" in log.text_en
-    assert log.text_te.startswith("[TODO_TE]")
+    assert "not a diagnosis" in log.text_en and "camp." in log.text_en  # no camp booked: no date
+    assert ") చెవి పరీక్ష క్యాంప్‌కు" in log.text_te and "  " not in log.text_te
 
 
 def test_events_are_append_only(make_case):
