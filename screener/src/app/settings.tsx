@@ -45,6 +45,7 @@ export default function Settings() {
     kvSet(db, 'school_name', sc.name);
     setSchool(sc.name);
     setSchools([]);
+    setMsg(`School set: ${sc.name}.`); // replaces "Logged in. Pick your school."
   }
 
   function saveDevice() {
