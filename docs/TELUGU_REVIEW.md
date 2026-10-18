@@ -2,7 +2,7 @@
 **Status: Reviewed by Anish, native Telugu speaker, 18-10-2026. Approved for use in the app.**
 **Machine checks by Claude, 18-10-2026 (three passes plus a final check). 30 lines changed compared with the first draft: 8 for meaning, medical safety or privacy (⚠️), 14 for grammar or clarity (✏️), and 8 where "triage" became ప్రాథమిక పరిశీలన at the reviewer's request (✅). Final check found no further errors. Automated checks passed: all 167 IDs, English texts and {placeholders} unchanged; protected English terms (PASS/RETEST/REFER, PHC, DEIC, CSV, PDF, JSON, Wi-Fi, L/R) kept; the voice-line table matches #156–#160 exactly; the "not a diagnosis" wording is identical in #1, #104 and #167; ట్రయాజ్ no longer appears anywhere.**
 **Developer action still needed: #167 needs the app to insert a Telugu-style date such as "24-10-2026 న", or nothing at all.**
-Drafted by Claude (Anthropic) from `docs/TELUGU_STRINGS.md` at commit 4d6326c. All 167 texts are included, in the same order and with the same IDs. Rows #168–#185 (rule reasons) were added on 18-10-2026, written by Anish.
+Drafted by Claude (Anthropic) from `docs/TELUGU_STRINGS.md` at commit 4d6326c. All 167 texts are included, in the same order and with the same IDs. Rows #168–#185 (rule reasons) were added on 18-10-2026, written by Anish. Row #186 (reminder date form) was added on 18-10-2026, approved by Anish.
 ## How to review
 1. Read every Telugu line aloud. Ask: is it correct, natural, and easy for a government-school teacher (or, for the voice lines, a 6–10-year-old child) to understand?
 2. If a line is wrong or awkward, edit it directly in the **Telugu** column. Don't touch the ID or English columns.
@@ -200,6 +200,7 @@ Drafted by Claude (Anthropic) from `docs/TELUGU_STRINGS.md` at commit 4d6326c. A
 | 183 | `reason.500.noisy` | 500 Hz skipped: room too noisy for low tones. | Room noise step, after measuring | 500 Hz వదిలేశాం: తక్కువ పిచ్ టోన్లకు గదిలో శబ్దం ఎక్కువగా ఉంది. | Added 18-10-2026 (ERR-030). Written by Anish, native Telugu speaker. |
 | 184 | `reason.triage.likely_treatable_cause` | Likely treatable cause reported (for example wax or infection): PHC first. Triage, not diagnosis. | Triage result after saving the checklist (route to PHC). English must match config/screening.json triage.rules | చికిత్స చేయగల కారణం ఉండే అవకాశం ఉంది (ఉదా. గులిమి లేదా ఇన్ఫెక్షన్): ముందుగా PHC కి. ప్రాథమిక పరిశీలన మాత్రమే, వ్యాధి నిర్ధారణ కాదు. | Added 18-10-2026 (ERR-030). Written by Anish, native Telugu speaker. |
 | 185 | `reason.triage.default` | No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis. | Triage result after saving the checklist (route to DEIC). English must match config/screening.json triage.default_reason | ప్రశ్నల్లో చికిత్స చేయగల కారణం ఏదీ కనిపించలేదు: తదుపరి వినికిడి పరీక్ష కోసం DEIC కి. ప్రాథమిక పరిశీలన మాత్రమే, వ్యాధి నిర్ధారణ కాదు. | Added 18-10-2026 (ERR-030). Written by Anish, native Telugu speaker. |
+| 186 | `reminders.missed_camp.date` |  on {date} | Fills {date} in the reminder (#167) when a camp date is known ({date} = 24 Oct 2026 in English, 24-10-2026 in Telugu) | {date} న | Added 18-10-2026 (ERR-029); the form suggested in #167. Approved by Anish, native Telugu speaker, 18-10-2026. |
 
 ## Voice lines to record (same text as #156–#160)
 
