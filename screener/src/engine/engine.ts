@@ -26,7 +26,8 @@ export type Snapshot = {
 };
 
 type Item = { kind: 'tone' | 'catch'; ear?: Ear; freq?: number; replays: number };
-type Current = { item: Item; onset: number; tap: number | null; samples: Sample[] };
+// onset = the play() call; playStart = when the player reported playing; tapAt = absolute tap time.
+type Current = { item: Item; onset: number; playStart: number | null; tapAt: number | null; samples: Sample[] };
 
 export type EngineOptions = {
   include500: boolean; // from apply500HzPolicy on the pre-test ambient level
@@ -95,7 +96,7 @@ export function createEngine(cfg: Config, port: Port, opts: EngineOptions, onCha
   function present() {
     const item = queue[0];
     if (!earphones) return pause('no earphones'); // never play a test tone through the loudspeaker
-    current = { item, onset: port.now(), tap: null, samples: [] };
+    current = { item, onset: port.now(), playStart: null, tapAt: null, samples: [] };
     last = null;
     if (item.kind === 'tone') {
       log(`tone ${item.ear} ${item.freq} round ${round}`);
@@ -103,15 +104,22 @@ export function createEngine(cfg: Config, port: Port, opts: EngineOptions, onCha
     } else {
       log(`catch round ${round}`);
     }
-    later(endWindow, Math.max(v(cfg, 'response', 'response_window_ms'), v(cfg, 'tone', 'duration_ms')));
+    later(endWindow, windowMs());
     emit();
   }
+
+  const windowMs = () => Math.max(v(cfg, 'response', 'response_window_ms'), v(cfg, 'tone', 'duration_ms'));
+  const fromPlayback = () => v(cfg, 'response', 'timing_origin') === 'playback_start';
+  /** Where response time starts for this presentation (config response.timing_origin). */
+  const origin = (c: Current) => (fromPlayback() && c.playStart !== null ? c.playStart : c.onset);
 
   function endWindow() {
     const cur = current as Current;
     current = null;
-    lastOnset = cur.onset;
+    lastOnset = origin(cur);
     const { item } = cur;
+    const tap = cur.tapAt === null ? null : cur.tapAt - origin(cur);
+    const latency = cur.playStart === null ? null : cur.playStart - cur.onset;
     if (item.kind === 'tone') {
       const nv = noiseVerdict(cur.samples, opts.micStartMs, deviceChanges, cfg);
       log(`noise ${nv.verdict} valid=${nv.valid} max=${nv.max_db}`);
@@ -122,11 +130,11 @@ export function createEngine(cfg: Config, port: Port, opts: EngineOptions, onCha
           return next();
         }
       } else {
-        last = { round, kind: 'tone', ear: item.ear, freq: item.freq, responded: cur.tap !== null, response_ms: cur.tap };
+        last = { round, kind: 'tone', ear: item.ear, freq: item.freq, responded: tap !== null, response_ms: tap, play_latency_ms: latency };
         trials.push(last);
       }
     } else {
-      last = { round, kind: 'catch', responded: cur.tap !== null, response_ms: cur.tap };
+      last = { round, kind: 'catch', responded: tap !== null, response_ms: tap };
       trials.push(last);
     }
     queue.shift();
@@ -176,13 +184,22 @@ export function createEngine(cfg: Config, port: Port, opts: EngineOptions, onCha
       }
     },
     onTap(t: number) {
-      if (current && current.tap === null) current.tap = t - current.onset;
+      if (current && current.tapAt === null) current.tapAt = t;
       else if (!current && last && !last.responded) {
         // late tap in the gap: counts against reliability (out of window / false alarm), never as heard
         last.responded = true;
         last.response_ms = t - lastOnset;
       }
       log('tap');
+    },
+    /** The player reported that playback started; `t` is our best estimate of that moment (JS clock). */
+    onPlaybackStart(t: number) {
+      const c = current;
+      if (!c || c.item.kind !== 'tone' || c.playStart !== null || t < c.onset) return;
+      c.playStart = t;
+      log(`playing +${Math.round(t - c.onset)}ms`);
+      // the window runs from playback start too, so a late start doesn't shorten it
+      if (fromPlayback()) later(endWindow, Math.max(0, t + windowMs() - port.now()));
     },
     /** Wired earphones appeared or disappeared (audio device list). Any change pauses and invalidates the tone. */
     onEarphones(connected: boolean, t: number) {

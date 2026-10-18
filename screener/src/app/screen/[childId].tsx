@@ -71,7 +71,7 @@ export default function Screen() {
               if (sn.phase === 'done') setStep('result');
             });
             engine.current = e;
-            audio.setListeners({ onSample: e.onSample, onEarphones: e.onEarphones });
+            audio.setListeners({ onSample: e.onSample, onEarphones: e.onEarphones, onPlaybackStart: e.onPlaybackStart });
             e.start();
           }}
           onTap={() => engine.current?.onTap(Date.now())}

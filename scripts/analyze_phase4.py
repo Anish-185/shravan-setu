@@ -4,7 +4,9 @@
 
 Per session: outcome, room noise (re: reference), in-app duration (first to last engine event), reliability counts,
 tones replayed because of during-tone noise, and tap times after tone onset. Tap times are measured from the JS
-`play()` call, so they include any audio output latency as well as the tester's reaction time.
+`play()` call (config response.timing_origin = play_call), so they include any audio start delay as well as the
+tester's reaction time. Sessions from Phase 5 on also log `play_latency_ms` per tone: player-reported playback start
+minus the play() call (ERR-026); "-" for older sessions.
 """
 import json
 import statistics
@@ -23,18 +25,24 @@ def summary(d):
         "catch": f'{rel["false_alarms"]}/{rel["catch_trials"]}',
         "out_of_window": f'{rel["out_of_window"]}/{rel["tone_trials"]}',
         "noise_replays": len(d["noise_events"]),
-        "tap_ms": (min(taps), round(statistics.median(taps)), max(taps)) if taps else None,
+        "tap_ms": spread(taps),
+        "latency_ms": spread([t["play_latency_ms"] for t in d["trials"] if t.get("play_latency_ms") is not None]),
     }
 
 
+def spread(xs):
+    return (min(xs), round(statistics.median(xs)), max(xs)) if xs else None
+
+
 def main(paths):
-    print("| File | Outcome | Room noise | Duration (s) | Catch taps | Out of window | Noise replays | Tap ms min / median / max |")
-    print("|---|---|---|---|---|---|---|---|")
+    print("| File | Outcome | Room noise | Duration (s) | Catch taps | Out of window | Noise replays "
+          "| Tap ms min / median / max | Play latency ms min / median / max |")
+    print("|---|---|---|---|---|---|---|---|---|")
     for p in sorted(paths):
         s = summary(json.loads(Path(p).read_text()))
-        tap = " / ".join(map(str, s["tap_ms"])) if s["tap_ms"] else "-"
+        tap, lat = (" / ".join(map(str, s[k])) if s[k] else "-" for k in ("tap_ms", "latency_ms"))
         print(f'| {Path(p).name} | {s["outcome"]} | {s["ambient"]:+} | {s["duration_s"]} | {s["catch"]} | '
-              f'{s["out_of_window"]} | {s["noise_replays"]} | {tap} |')
+              f'{s["out_of_window"]} | {s["noise_replays"]} | {tap} | {lat} |')
 
 
 if __name__ == "__main__":

@@ -17,6 +17,8 @@ type Child = {
   noisy?: (ear: Ear, freq: number, attempt: number) => boolean; // loud room noise during this presentation
   tapEveryMs?: number; // taps at random-ish moments regardless of tones
   earphones?: boolean;
+  playLatencyMs?: number; // the player reports playback start this long after play(); undefined = never reports
+  config?: typeof cfg;
 };
 
 function run(child: Child = {}, during?: (h: Harness) => void) {
@@ -29,7 +31,9 @@ function run(child: Child = {}, during?: (h: Harness) => void) {
 
 type Harness = ReturnType<typeof harness>;
 
-function harness({ hears = () => true, responseMs = 600, noisy = () => false, tapEveryMs, earphones = true }: Child) {
+function harness({
+  hears = () => true, responseMs = 600, noisy = () => false, tapEveryMs, earphones = true, playLatencyMs, config = cfg,
+}: Child) {
   let seed = 1;
   const attempts = new Map<string, number>();
   const plays: { ear: Ear; freq: number; round: number; t: number }[] = [];
@@ -53,11 +57,15 @@ function harness({ hears = () => true, responseMs = 600, noisy = () => false, ta
       plays.push({ ear, freq, round: h.snap.round, t: Date.now() });
       loud = noisy(ear, freq, attempt);
       setTimeout(() => { loud = false; }, DURATION);
+      if (playLatencyMs !== undefined) {
+        h.engine.onPlaybackStart(Date.now() - 5000); // a stale report from before this tone: must be ignored
+        setTimeout(() => h.engine.onPlaybackStart(Date.now()), playLatencyMs);
+      }
       if (!tapEveryMs && hears(ear, freq, h.snap.round)) setTimeout(() => h.engine.onTap(Date.now()), responseMs);
     },
     stop() { stops++; loud = false; },
   };
-  h.engine = createEngine(cfg, port, { include500: false, micStartMs: -10_000, earphones }, (s) => { h.snap = s; });
+  h.engine = createEngine(config, port, { include500: false, micStartMs: -10_000, earphones }, (s) => { h.snap = s; });
   setInterval(() => h.engine.onSample(loud ? -10 : -33, Date.now()), cfg.noise.meter_poll_ms.value);
   if (tapEveryMs) setInterval(() => h.engine.onTap(Date.now()), tapEveryMs);
   return h;
@@ -162,4 +170,27 @@ test('floor (-160) metering during a tone is not quiet: the tone is replayed', (
   }
   expect(h.engine.log().noise_events[0]).toMatchObject({ round: 1 });
   expect(h.plays[0]).toMatchObject({ ear: h.plays[1].ear, freq: h.plays[1].freq });
+});
+
+// Playback-start timing (ERR-026)
+const tones = (h: Harness) => h.engine.log().trials.filter((t) => t.kind === 'tone');
+const withOrigin = (o: string) => ({ ...cfg, response: { ...cfg.response, timing_origin: { value: o, source: 'test' } } });
+
+test('player-reported start is logged per tone; by default response time still runs from play()', () => {
+  const h = run({ playLatencyMs: 300, responseMs: 600 });
+  expect(h.snap.result?.outcome).toBe('PASS');
+  expect(tones(h).every((t) => t.play_latency_ms === 300 && t.response_ms === 600)).toBe(true);
+});
+
+test('timing_origin playback_start: response and window run from playback start', () => {
+  const late = cfg.response.response_window_ms.value + 500; // after play(): too late from the play() call...
+  const h = run({ playLatencyMs: 800, responseMs: late, config: withOrigin('playback_start') });
+  expect(h.snap.result?.outcome).toBe('PASS'); // ...but in the window from actual playback start
+  expect(tones(h).every((t) => t.response_ms === late - 800 && t.play_latency_ms === 800)).toBe(true);
+});
+
+test('no playback report: latency is null and response time falls back to play()', () => {
+  const h = run({ responseMs: 600, config: withOrigin('playback_start') });
+  expect(h.snap.result?.outcome).toBe('PASS');
+  expect(tones(h).every((t) => t.play_latency_ms === null && t.response_ms === 600)).toBe(true);
 });

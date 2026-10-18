@@ -26,7 +26,8 @@
   "response": {
     "min_response_ms": {"value": 150, "source": "PLACEHOLDER: taps faster than this after tone onset are treated as anticipation, not hearing."},
     "response_window_ms": {"value": 2500, "source": "PLACEHOLDER: a tap must come within this time after tone onset to count."},
-    "inter_stimulus_interval_ms": {"value": [1500, 4000], "source": "PLACEHOLDER: random gap range between presentations, so the child can't predict the rhythm."}
+    "inter_stimulus_interval_ms": {"value": [1500, 4000], "source": "PLACEHOLDER: random gap range between presentations, so the child can't predict the rhythm."},
+    "timing_origin": {"value": "play_call", "source": "Design choice (ERR-026): where response time and the response window start. play_call = when the app calls play(); playback_start = when the player reports playing (falls back to play_call if no report). Both are logged per trial. Switch only if device sessions show a consistent start delay (scripts/analyze_phase4.py). Allowed: play_call | playback_start."}
   },
 
   "presentations_per_point": {"value": 2, "source": "PLACEHOLDER: tone presentations per ear and frequency per round."},

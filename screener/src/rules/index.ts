@@ -10,6 +10,8 @@ export type Trial = {
   freq?: number;
   responded: boolean;
   response_ms: number | null;
+  /** Tone trials: player-reported playback start minus the play() call, null if not reported (log only). */
+  play_latency_ms?: number | null;
 };
 export type NoiseEvent = { round: number; ear: Ear; freq: number };
 /** One mic metering reading (relative, uncalibrated). */

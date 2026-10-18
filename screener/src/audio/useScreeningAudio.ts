@@ -64,7 +64,11 @@ function newAudio() {
   };
 }
 
-type Listeners = { onSample?: (db: number | null, t: number) => void; onEarphones?: (on: boolean, t: number) => void };
+type Listeners = {
+  onSample?: (db: number | null, t: number) => void;
+  onEarphones?: (on: boolean, t: number) => void;
+  onPlaybackStart?: (t: number) => void;
+};
 
 export function useScreeningAudio(cfg: Config) {
   const { players, recorder, mic } = useMemo(() => newAudio(), []);
@@ -75,6 +79,16 @@ export function useScreeningAudio(cfg: Config) {
   const changes = useRef<number[]>([]);
 
   const disposed = useRef(false);
+
+  // Actual playback start (ERR-026): the player's status says playing (ExoPlayer onIsPlayingChanged); the start
+  // is the event's arrival minus the position already played. Periodic "playing" updates repeat this; the engine
+  // keeps only the first per tone.
+  useEffect(() => {
+    const subs = Object.values(players).map((p) => p.addListener('playbackStatusUpdate', (st) => {
+      if (st.playing) listeners.current.onPlaybackStart?.(Date.now() - st.currentTime * 1000);
+    }));
+    return () => subs.forEach((x) => x.remove());
+  }, [players]);
 
   // Leaving the screen: free the players, then stop the mic, delete the recording and release it, in that order.
   useEffect(() => () => {

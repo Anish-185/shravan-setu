@@ -67,7 +67,13 @@ What this shows:
 - **500 Hz (owner note, no exported file):** trial run Student A1 got a 500 Hz REFER (left) in a low-to-medium noise
   room, while A-2 heard 500 Hz in a quiet room. Keep in mind when tuning `policy_500hz` in Phase 6.
 
-Not reported yet: steps 3–5 (earphone detection, ERR-019) and 9–10 (sync). See "Remaining checks".
+First sync (owner tapped Sync once, result not noted), checked in `server/db.sqlite3` on 2026-10-18: all 4 phone
+children arrived (Student A1, student A-2, A-3, A-4, synced 06:17 UTC) with their consents, one session and one result
+each (A1 REFER left ear, A-2 PASS, A-3 PASS, A-4 RETEST) and A1's case in `referred` with its screened → referred
+event. A1 has two consent records (one probably from an attempt that stopped after consent; harmless). Note: the
+seed data also has a "Student A1", so names are not unique; the server tells them apart by ID.
+
+Not reported yet: steps 3–5 (earphone detection, ERR-019) and step 9's second tap / step 10 (sync retry and offline).
 
 ## Remaining checks (send results back)
 

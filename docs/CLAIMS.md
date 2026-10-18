@@ -13,5 +13,6 @@ must not appear in docs, slides or the UI. Phase 6 will generate/check this tabl
 | P4-01 | Random tapping caught by silent (catch) trials → RETEST | 4 of 5 catch trials tapped; outcome RETEST | Phase 4 device trial, Redmi 2201117TI, Samsung wired earphones, uncalibrated volume, one tester, one session, 2026-10-18 | `scripts/analyze_phase4.py` | Real, device trial only (n = 1) |
 | P4-02 | Honest tapping, quiet and mildly noisy room → PASS | 2 of 2 sessions PASS, 0 catch taps | Same as P4-01; room noise −7.7 and +1.3 re: reference | `scripts/analyze_phase4.py` | Real, device trial only (n = 2) |
 | P4-03 | Tap time after the JS `play()` call, honest sessions | min ~1.45 s, median ~1.8 s; 2/16 out of the 2.5 s window per session | Same as P4-01; includes audio output latency + reaction time, not separable | `scripts/analyze_phase4.py` | Real, device trial only (n = 2) |
+| P5-01 | Audio start delay: player-reported playback start minus the JS play() call | TODO(source): needs a device session with the Phase 5 build (ERR-026) | Redmi 2201117TI, Expo Go SDK 57 | `scripts/analyze_phase4.py` (play latency column) | Real, pending |
 
 These are spike observations used to choose design parameters. They are **not** accuracy, sensitivity or hearing claims.

@@ -297,3 +297,14 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Verification: `npx expo lint` exit 0
 - Lesson: create native objects in a module-level factory, not inline in a hook.
 
+### ERR-026: response times include an unmeasured audio start delay
+- Phase / date: Phase 5 / 2026-10-18 (from the Phase 4 session analysis)
+- Symptom: honest taps were never faster than ~1.45 s after the beep (CLAIMS P4-03); 2/16 taps per honest session fell outside the 2.5 s window. Wrong behaviour risk: a slower child could exceed the 25% out-of-window limit and get RETEST.
+- Where: `screener/src/engine/engine.ts` (onset = the JS `play()` call)
+- Root cause (suspected, not yet measured): response time started at the JS `play()` call, which comes before the audio actually plays (bridge, `seekTo`, ExoPlayer start). The log couldn't separate that delay from reaction time.
+- Fix (done): the hook listens to each player's `playbackStatusUpdate`; the first `playing: true` for a tone gives the playback start (event arrival minus `currentTime`). The engine logs `playing +Nms` and `play_latency_ms` on every tone trial, next to `response_ms`, so the session JSON has both. Config `response.timing_origin` (`play_call` | `playback_start`) picks where response time and the window start; it stays `play_call` until device data shows a consistent delay. `scripts/analyze_phase4.py` reports play latency min / median / max. Remaining blind spot: the output buffer after the player reports "playing" (tens of ms on typical Android devices; not observable from JS).
+- Status: NEEDS-HUMAN (one device session with the new build; then set `timing_origin` from the data)
+- Verification: `npx jest src/engine`: latency logged with response time from play() by default; `playback_start` measures response and window from the reported start; no report falls back to play(); a stale report from before the tone is ignored.
+- Next step: run checklist item F, then `python scripts/analyze_phase4.py <new files>`. If play latency is consistent (narrow min–max), switch `timing_origin` to `playback_start` and record the numbers in CLAIMS P5-01. Thresholds stay unchanged.
+- Lesson: timestamp the event you mean (sound starts), not the call that requests it.
+
