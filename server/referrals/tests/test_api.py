@@ -238,14 +238,17 @@ def test_camp_request_rejects_wrong_status_or_school(api, school, make_case):
 
 def test_camp_export_csv(api, camp):
     camp_id, cases = camp
+    models.Case.objects.filter(pk=cases[1].pk).update(triage_route="")
     r = api.get(f"/api/camp-requests/{camp_id}/csv/")
     assert r.status_code == 200 and r["Content-Type"] == "text/csv"
     rows = list(csv.reader(io.StringIO(r.content.decode())))
     assert rows[0] == ["SCREENING, NOT DIAGNOSIS"]
     assert ["School: Test School (FAKE)"] in rows
-    assert ["Child (pseudonym)", "ID", "Class", "Ear(s)", "Outcome", "Triage route", "Status"] in rows
-    assert ["Student C1", str(cases[0].child.pk)[:8], "", "left+right", "REFER", "PHC", "camp_scheduled"] in rows
-    assert ["Student C2", str(cases[1].child.pk)[:8], "", "left", "REFER", "PHC", "camp_scheduled"] in rows
+    assert ["Child (pseudonym)", "ID", "Ear(s)", "Outcome", "Triage route", "Status"] in rows
+    assert ["Student C1", str(cases[0].child.pk)[:8], "left+right", "REFER", "PHC", "camp_scheduled"] in rows
+    assert ["Student C2", str(cases[1].child.pk)[:8], "left", "REFER", "not done", "camp_scheduled"] in rows
+    generated = next(r[0] for r in rows if r and "Generated:" in r[0])
+    assert generated.endswith(" IST")
 
 
 def test_camp_export_pdf(api, camp):

@@ -150,20 +150,20 @@ class CampRequestViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet)
             transition(case, "camp_scheduled", actor=self.request.user, note=f"camp request {camp.pk}")
 
     def export_rows(self, camp):
-        columns = ["Child (pseudonym)", "ID", "Class", "Ear(s)", "Outcome", "Triage route", "Status"]
+        # No class column: the phone doesn't record a class (minimum data); add one when schools ask for it.
+        columns = ["Child (pseudonym)", "ID", "Ear(s)", "Outcome", "Triage route", "Status"]
         rows = []
-        for case in camp.cases.select_related("child__classroom", "screening_result").order_by("child__display_name"):
+        for case in camp.cases.select_related("child", "screening_result").order_by("child__display_name"):
             res = case.screening_result
             ears = [e for e, o in (res.ear_outcomes if res else {}).items() if o == "REFER"]
             rows.append([
                 case.child.display_name, str(case.child.pk)[:8],
-                case.child.classroom.name if case.child.classroom else "",
-                "+".join(ears) or "-", res.outcome if res else "-", case.triage_route or "-", case.status,
+                "+".join(ears) or "-", res.outcome if res else "-", case.triage_route or "not done", case.status,
             ])
         header = [
             f"School: {camp.school.name}",
             f"Camp date: {camp.camp_date:%d %b %Y}    Facility: {camp.facility or 'not set'}",
-            f"Request: {camp.pk}    Generated: {timezone.now():%Y-%m-%d %H:%M} UTC",
+            f"Request: {camp.pk}    Generated: {timezone.localtime():%Y-%m-%d %H:%M %Z}",
             "Screening and referral list only. Outcomes are screening results, not diagnoses.",
         ]
         return header, columns, rows
