@@ -43,3 +43,25 @@ Reply with the letter and yes/no (+ a note where something looks wrong). Screens
   treatment first.") → Closed. Sync. On the laptop, `http://localhost:8000/admin/` shows the case as Closed?
 - **M. Missed + reminder.** Another referred case: camp request → "Missed camp": the case shows "Reminders (stubbed:
   logged, not sent)" with the reminder text? Then "Rescheduled" works?
+
+## Phase 5 part 2: case screens + fixes (ERR-031–033) (NEEDS YOU)
+
+**Setup:** `git pull`; **restart** `runserver` (the time-zone setting changed); fully close Expo Go (swipe it away),
+then reopen and reload. React shows the old red error at most once per app run, so N must be the first REFER after
+the restart.
+
+- **N. Result screen (ERR-032).** Screen a child and get a REFER (don't tap for one ear). Any red or yellow box on the
+  result? Triage and "Export session JSON" appear?
+- **O. Case list (ERR-031).** Home → Referral cases: every row shows "name: status · route" on one or two lines, no big
+  gaps? Tap a checkbox: it fills blue with a white ✓; tap again: empty?
+- **P. Open a case.** Tap the row text: the case opens. History times are your phone's time (IST), not 5½ h behind?
+- **Q. Status moves.** On a referred case only "Camp scheduled" and "Closed: lost to follow-up" show; lost without a
+  reason → "Write a reason first."; then do L (Seen → Treated, needs a treatment → Closed).
+- **R. Missed camp + reminder.** Another referred case in a camp request → "Missed camp": "Reminders (stubbed: logged,
+  not sent)" with the text (in Telugu mode too)? Then "Rescheduled" works?
+- **S. Children list.** A child with a case shows "Case · Status: …" under its name; it opens the case. After a status
+  move, back on Children: the status is updated? Tapping the name still starts a new test.
+- **T. PDF.** Sync, Download PDF: "Generated: … IST" in your time; no Class column; a case without triage says
+  "not done".
+- **U. B-1's log.** Open B-1's case → "Export session JSON" → put the file in `data/raw/phase5/` (this gives the catch
+  trial taps the server doesn't have).

@@ -232,7 +232,7 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Root cause: expo-audio 57 `getCurrentInput()` falls back to the recorder's cached `preferredDevice` (AudioRecorder.kt). expo-audio has no route-change or device-change event at all.
 - Fix (done): poll `getAvailableInputs()`, which re-queries `AudioManager.getDevices(GET_DEVICES_INPUTS)` on every call, every 100 ms; earphones = a `MicrophoneWired` device and no Bluetooth device. Any change pauses the engine and invalidates the tone (engine tests cover this).
 - Known limits: (a) earphones without an inline mic (3-pole) are never listed, so the test refuses to start (safe); (b) after an unplug, Android re-routes audio to the speaker immediately, so up to ~100 ms of the current tone can reach the speaker before our stop; (c) **not yet verified on the phone** that the H2W entry disappears from the list on unplug.
-- Status: NEEDS-HUMAN (verification c), then WORKAROUND. 2026-10-18: steps 3–4 of the Phase 4 checklist not reported yet, so still open.
+- Status: FIXED (owner, 2026-10-19, Redmi 2201117TI + Samsung wired earphones): unplugging mid-beep paused the test with "Earphones disconnected. Plug them back in.", no sound from the speaker, Resume disabled until replugged, test continued after replug. Limits (a) and (b) remain by design; the proper fix below stays on the roadmap.
 - Verification: `docs/PHASE4_DEVICE_CHECKLIST.md` steps 2–4.
 - Proper fix (deferred by owner 2026-10-18, listed in `docs/ROADMAP.md`; the inline-mic requirement is enough for the demo): a ~60-line local Expo module using `AudioManager.registerAudioDeviceCallback` and `ACTION_AUDIO_BECOMING_NOISY` for output-route events. Needs a development build (`npx expo prebuild` + Gradle, which needs a JDK and the Android SDK on the laptop; neither is installed now) instead of Expo Go.
 - Lesson: check the native source, not just the types, when an API's behaviour looks wrong.
@@ -253,7 +253,7 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Where: `screener/src/app/screen/[childId].tsx` unmount cleanup → `useScreeningAudio.stopMic()` → `recorder.stop()`
 - Root cause: on unmount React runs effect cleanups in declaration order. `useAudioRecorder` (called inside `useScreeningAudio`, i.e. before the screen's own effect) releases the recorder in its cleanup; the screen's cleanup then called `stopMic()` → `recorder.stop()` on the released object. `stopMic()` was async and nobody caught it, hence "Uncaught (in promise)". It fired on every exit, including after a result (where `stopMic` had already run once in `onSave`). Found on the way: native release only calls `reset()` and never deletes the file, and the crashed cleanup never reached our delete step, so **leaving mid-test could leave the audio recording in the app cache** (against "metering numbers only, never audio").
 - Fix: new `screener/src/audio/mic.ts`: one queue for start / stop / dispose with explicit state (`off` / `recording` / `released`). Stop is idempotent and never rejects; dispose = stop → delete the file → release, in that order; a start still in flight when the screen is left backs out and never records; stop and release failures are caught and logged with `console.log('[audio] …')` (not `console.warn`, whose toast would cover the screen). `useScreeningAudio` now creates the recorder itself (`new AudioModule.AudioRecorder(...)`, options flattened exactly like `useAudioRecorder` does) and disposes it in its own unmount effect; player `pause()` is skipped after the players are removed. The screen's cleanup now only aborts the engine.
-- Status: FIXED (unit-tested; device re-check in the remaining checklist)
+- Status: FIXED (device-verified by owner 2026-10-19)
 - Verification: `npx jest src/audio` (6 tests, fake recorder that throws on any call after release, like native): finishing a test, leaving mid-test, leaving right after the result, leaving while the mic starts, native stop failure, failed start. `npx tsc --noEmit`, `npx expo lint` clean.
 - Lesson: never let a hook that auto-releases a native object share teardown with a parent effect; own the object and sequence stop → cleanup → release in one place.
 
@@ -263,7 +263,7 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Where: `screener/src/app/_layout.tsx` (a bare `<Stack />`)
 - Root cause: expo-router uses the route name as the header title when no `title` option is set.
 - Fix: `Stack.Screen` entries with titles for every route in `_layout.tsx` (English; Telugu pending a human translator).
-- Status: FIXED (device re-check in the remaining checklist)
+- Status: FIXED (device-verified by owner 2026-10-19)
 - Verification: `npx tsc --noEmit`, `npx expo export --platform android` exit 0
 - Lesson: set titles when adding a route.
 
@@ -273,7 +273,7 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Where: `screener/src/app/settings.tsx` `pickSchool`
 - Root cause: `pickSchool` saved the school but never updated the shared `msg` state.
 - Fix: `pickSchool` sets `School set: <name>.`
-- Status: FIXED (device re-check in the remaining checklist)
+- Status: FIXED (device-verified by owner 2026-10-19)
 - Verification: `npx tsc --noEmit`
 - Lesson: every action that changes state the status line talks about must update the status line.
 
@@ -303,7 +303,8 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Where: `screener/src/engine/engine.ts` (onset = the JS `play()` call)
 - Root cause (suspected, not yet measured): response time started at the JS `play()` call, which comes before the audio actually plays (bridge, `seekTo`, ExoPlayer start). The log couldn't separate that delay from reaction time.
 - Fix (done): the hook listens to each player's `playbackStatusUpdate`; the first `playing: true` for a tone gives the playback start (event arrival minus `currentTime`). The engine logs `playing +Nms` and `play_latency_ms` on every tone trial, next to `response_ms`, so the session JSON has both. Config `response.timing_origin` (`play_call` | `playback_start`) picks where response time and the window start; it stays `play_call` until device data shows a consistent delay. `scripts/analyze_phase4.py` reports play latency min / median / max. Remaining blind spot: the output buffer after the player reports "playing" (tens of ms on typical Android devices; not observable from JS).
-- Status: NEEDS-HUMAN (one device session with the new build; then set `timing_origin` from the data)
+- Status: OPEN, decision for the owner (data in, 2026-10-19). One honest PASS session on the Phase 5 build (B-3, `data/raw/phase5/session-d292718b-….json`, CLAIMS P5-01/P5-02): play latency 144 / 486 / 2243 ms (min / median / max), so it is **not** consistent, and the "switch only if consistent" rule above was the wrong test. A variable delay is exactly the case where `play_call` timing is wrong: the first tone started 2243 ms after play(), leaving 257 ms of the 2500 ms window, and its tap (3414 ms) was the session's only out-of-window response. Measured from the reported start, taps were 806 / 1098 / 1481 ms against 1168 / 1554 / 3414 ms from play(), so the reported start tracks when the sound was heard.
+- Proposed fix: set `response.timing_origin` to `playback_start` in `config/screening.json` (no threshold changes), regenerate fixtures, and re-check on the next device sessions. Not applied: one session; waiting for the owner's go-ahead (Phase 6 Step 0 plan).
 - Verification: `npx jest src/engine`: latency logged with response time from play() by default; `playback_start` measures response and window from the reported start; no report falls back to play(); a stale report from before the tone is ignored.
 - Next step: run checklist item F, then `python scripts/analyze_phase4.py <new files>`. If play latency is consistent (narrow min–max), switch `timing_origin` to `playback_start` and record the numbers in CLAIMS P5-01. Thresholds stay unchanged.
 - Lesson: timestamp the event you mean (sound starts), not the call that requests it.
@@ -348,3 +349,33 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED (Telugu for the 18 new strings written by Anish, native Telugu speaker, 18-10-2026; docs/TELUGU_REVIEW.md #168–#185)
 - Verification: `npx jest src/i18n`: every reason in the shared fixtures and the triage config matches a template and fills back to the exact English; all 18 templates are hit by at least one fixture.
 - Lesson: anything a rule returns as text is UI text; route it through the translation helper where it is shown.
+
+### ERR-031: referral case rows showed only a checkbox, no text, very tall
+- Phase / date: Phase 5 device trial / 2026-10-19
+- Symptom: on the Cases screen, rows for referred cases showed a checkbox with no name/status/route and big blank gaps; ticking worked ("Create camp request (1 selected)") but the tick was hard to see; with no text to tap, a case could not be opened.
+- Where: `screener/src/ui.tsx` `Check`, used with `label=""` in `screener/src/app/cases/index.tsx`
+- Root cause: `Check`'s label had `flex: 1`. In a row, Yoga lets a box whose child has flex-grow fill all the width it is offered, so the empty-label checkbox took the whole row and the case link next to it got ~0 width: its text wrapped one character per line (tall rows) and was invisible. The tick was a ☑/☐ font glyph, whose look depends on the phone's fonts.
+- Fix: label is `flexShrink: 1` (shrinks, never grows) and is not rendered when empty; the box is drawn (bordered square, filled with a white ✓ when ticked) instead of a glyph. One shared fix, so the device-step checkboxes get it too.
+- Status: FIXED (device re-check in `docs/PHASE5_DEVICE_CHECKLIST.md` part 2)
+- Verification: `npx tsc --noEmit`, `npx expo lint` clean; layout is only visible on a device.
+- Lesson: in a shared row component, never give a child `flex: 1` unless the component is meant to fill its parent; use `flexShrink`.
+
+### ERR-032: red "Cannot update a component (Screen) while rendering a different component (ResultStep)"
+- Phase / date: Phase 5 device trial / 2026-10-19
+- Symptom: `Cannot update a component (Screen(./screen/[childId].tsx)) while rendering a different component (ResultStep)`; stack `stopMic (useScreeningAudio.ts:168) ← ResultStep.props.onSave ([childId].tsx:100) ← ResultStep ([childId].tsx:304)`. Seen on B-1 (REFER), not on the later sessions.
+- Where: `ResultStep` in `screener/src/app/screen/[childId].tsx`
+- Root cause: `ResultStep` saved the session with `useState(onSave)`, i.e. during render. Saving calls `audio.stopMic()`, which calls `setMicOn(false)` in the parent screen: a parent state update during a child's render. It happens on every result, not only REFER: React prints this warning once per component pair per app run, so the later B-3 sessions in the same run were silent.
+- Fix: `ResultStep` moved to `screener/src/result.tsx`; it saves in a `useEffect` (onSave is idempotent: the screen keeps the ids in a ref) and shows triage and Export once the ids are back. One `eslint-disable-next-line react-hooks/set-state-in-effect` with the reason (the effect does the external work; the state only stores its result).
+- Status: FIXED
+- Verification: `npx jest src/__tests__/result.test.tsx`: a parent whose onSave sets its own state (like stopMic) renders ResultStep on REFER with no "Cannot update a component" error. Fails with the exact device error when the old `useState(onSave)` is put back (checked).
+- Lesson: never call a function that may set state (yours or a parent's) from render, including `useState(initialiser)`.
+
+### ERR-033: exports and case history showed UTC times; empty Class column; "-" for no triage
+- Phase / date: Phase 5 device trial / 2026-10-19
+- Symptom: camp request PDF/CSV "Generated: … UTC"; Class column always empty; "-" when triage wasn't done. Found on the way: the phone's case history printed the stored UTC timestamp too (`e.at.slice(0, 16)`).
+- Where: `server/referrals/views.py` `CampRequestViewSet.export_rows`, `server/backend/settings.py`, `screener/src/app/cases/[caseId].tsx`
+- Root cause: `TIME_ZONE = "UTC"` and a hard-coded "UTC" label; the phone never records a class, so the server's classroom field is always empty; triage fallback was "-"; the phone sliced the UTC ISO string instead of formatting local time.
+- Fix: `TIME_ZONE = "Asia/Kolkata"` (database still stores UTC, `USE_TZ = True`) and `timezone.localtime()` with `%Z` → "… IST"; Class column dropped (minimum data: a class field can be added when schools ask); "not done" when there's no triage route. Phone history uses the phone's local time (`localTime()`).
+- Status: FIXED
+- Verification: pytest `test_api.py::test_camp_export_csv` (no Class column, "not done" for a case without triage, "Generated: … IST"); full pytest 213 passed.
+- Lesson: format times in the user's zone at the edge where they're shown; store UTC.
