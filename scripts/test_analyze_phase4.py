@@ -19,3 +19,4 @@ def test_summary_counts_only_tone_taps():
     assert s["catch"] == "1/2" and s["out_of_window"] == "1/3"
     assert s["tap_ms"] == (1500, 2200, 2900)
     assert s["latency_ms"] == (120, 120, 120)  # trials without the field (older sessions) are skipped
+    assert s["tap_from_start_ms"] == (1380, 1380, 1380)
