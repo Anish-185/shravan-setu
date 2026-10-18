@@ -232,7 +232,7 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Root cause: expo-audio 57 `getCurrentInput()` falls back to the recorder's cached `preferredDevice` (AudioRecorder.kt). expo-audio has no route-change or device-change event at all.
 - Fix (done): poll `getAvailableInputs()`, which re-queries `AudioManager.getDevices(GET_DEVICES_INPUTS)` on every call, every 100 ms; earphones = a `MicrophoneWired` device and no Bluetooth device. Any change pauses the engine and invalidates the tone (engine tests cover this).
 - Known limits: (a) earphones without an inline mic (3-pole) are never listed, so the test refuses to start (safe); (b) after an unplug, Android re-routes audio to the speaker immediately, so up to ~100 ms of the current tone can reach the speaker before our stop; (c) **not yet verified on the phone** that the H2W entry disappears from the list on unplug.
-- Status: NEEDS-HUMAN (verification c), then WORKAROUND
+- Status: NEEDS-HUMAN (verification c), then WORKAROUND. 2026-10-18: steps 3–4 of the Phase 4 checklist not reported yet, so still open.
 - Verification: `docs/PHASE4_DEVICE_CHECKLIST.md` steps 2–4.
 - Proper fix (deferred by owner 2026-10-18, listed in `docs/ROADMAP.md`; the inline-mic requirement is enough for the demo): a ~60-line local Expo module using `AudioManager.registerAudioDeviceCallback` and `ACTION_AUDIO_BECOMING_NOISY` for output-route events. Needs a development build (`npx expo prebuild` + Gradle, which needs a JDK and the Android SDK on the laptop; neither is installed now) instead of Expo Go.
 - Lesson: check the native source, not just the types, when an API's behaviour looks wrong.
@@ -246,3 +246,54 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: `ip -4 -o addr show scope global` prints the Wi-Fi address
 - Lesson: use `ip addr` for the LAN IP; it works on every Linux distro.
+
+### ERR-021: red "Uncaught (in promise) … AudioRecorder.stop … shared object that was already released" after a test
+- Phase / date: Phase 4 device trial / 2026-10-18 (owner saw it twice, ~11:24 and ~11:32, going back to the children list)
+- Symptom: `Call to function 'AudioRecorder.stop' has been rejected. → The 1st argument cannot be cast to type class expo.modules.audio.AudioRecorder (received class java.lang.Integer) → Cannot use shared object that was already released.` (CodedError.ts)
+- Where: `screener/src/app/screen/[childId].tsx` unmount cleanup → `useScreeningAudio.stopMic()` → `recorder.stop()`
+- Root cause: on unmount React runs effect cleanups in declaration order. `useAudioRecorder` (called inside `useScreeningAudio`, i.e. before the screen's own effect) releases the recorder in its cleanup; the screen's cleanup then called `stopMic()` → `recorder.stop()` on the released object. `stopMic()` was async and nobody caught it, hence "Uncaught (in promise)". It fired on every exit, including after a result (where `stopMic` had already run once in `onSave`). Found on the way: native release only calls `reset()` and never deletes the file, and the crashed cleanup never reached our delete step, so **leaving mid-test could leave the audio recording in the app cache** (against "metering numbers only, never audio").
+- Fix: new `screener/src/audio/mic.ts`: one queue for start / stop / dispose with explicit state (`off` / `recording` / `released`). Stop is idempotent and never rejects; dispose = stop → delete the file → release, in that order; a start still in flight when the screen is left backs out and never records; stop and release failures are caught and logged with `console.log('[audio] …')` (not `console.warn`, whose toast would cover the screen). `useScreeningAudio` now creates the recorder itself (`new AudioModule.AudioRecorder(...)`, options flattened exactly like `useAudioRecorder` does) and disposes it in its own unmount effect; player `pause()` is skipped after the players are removed. The screen's cleanup now only aborts the engine.
+- Status: FIXED (unit-tested; device re-check in the remaining checklist)
+- Verification: `npx jest src/audio` (6 tests, fake recorder that throws on any call after release, like native): finishing a test, leaving mid-test, leaving right after the result, leaving while the mic starts, native stop failure, failed start. `npx tsc --noEmit`, `npx expo lint` clean.
+- Lesson: never let a hook that auto-releases a native object share teardown with a parent effect; own the object and sequence stop → cleanup → release in one place.
+
+### ERR-022: screen titles show route file names ("index", "settings", "screen/[childId]")
+- Phase / date: Phase 4 device trial / 2026-10-18
+- Symptom: header titles were the file paths.
+- Where: `screener/src/app/_layout.tsx` (a bare `<Stack />`)
+- Root cause: expo-router uses the route name as the header title when no `title` option is set.
+- Fix: `Stack.Screen` entries with titles for every route in `_layout.tsx` (English; Telugu pending a human translator).
+- Status: FIXED (device re-check in the remaining checklist)
+- Verification: `npx tsc --noEmit`, `npx expo export --platform android` exit 0
+- Lesson: set titles when adding a route.
+
+### ERR-023: Settings keeps showing "Logged in. Pick your school." after a school is picked
+- Phase / date: Phase 4 device trial / 2026-10-18
+- Symptom: stale status message under the device settings.
+- Where: `screener/src/app/settings.tsx` `pickSchool`
+- Root cause: `pickSchool` saved the school but never updated the shared `msg` state.
+- Fix: `pickSchool` sets `School set: <name>.`
+- Status: FIXED (device re-check in the remaining checklist)
+- Verification: `npx tsc --noEmit`
+- Lesson: every action that changes state the status line talks about must update the status line.
+
+### ERR-024: wrong test expectation: file deleted once
+- Phase / date: Phase 4 fixes / 2026-10-18
+- Symptom: `mic.test.ts` "native stop failure": `expect(f.deleted.length).toBe(1)` received 2
+- Where: `screener/src/audio/__tests__/mic.test.ts`
+- Root cause: my expectation. Dispose deletes after stop and again for a start that prepared a file; the real `deleteFile` checks `exists`, so the second call is a no-op. The code is right.
+- Fix: assert the file was deleted (`toContain`), not the call count.
+- Status: FIXED
+- Verification: `npx jest src/audio` 6 passed
+- Lesson: assert the outcome (file gone), not how many calls produced it.
+
+### ERR-025: lint errors in the new recorder code
+- Phase / date: Phase 4 fixes / 2026-10-18
+- Symptom: `'AudioRecorder' not found in imported namespace 'AudioModule'` (import/namespace); `Cannot call impure function during render` for a `Date.now` closure inside `useMemo` (react-hooks/purity); then `Expected the first argument to be an inline function expression` (react-hooks/use-memo).
+- Where: `screener/src/audio/useScreeningAudio.ts`
+- Root cause: (1) eslint-plugin-import treats the re-exported `AudioModule` (a native module object from `requireNativeModule`) as an ES namespace; `tsc` confirms `AudioModule.AudioRecorder` exists, so it's a false positive. (2) the React Compiler lint analyses closures created inside `useMemo` as render code.
+- Fix: (1) one-line `eslint-disable-next-line import/namespace` with the reason; (2) moved the factory to module level (`newAudio()`), called as `useMemo(() => newAudio(), [])`.
+- Status: FIXED
+- Verification: `npx expo lint` exit 0
+- Lesson: create native objects in a module-level factory, not inline in a hook.
+

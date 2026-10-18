@@ -180,3 +180,11 @@ Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state mach
 ### Token storage
 
 - expo-secure-store 57.0.4 (MIT), included in Expo Go, so no limitation to document.
+
+### Mic recorder lifecycle (bug fix ERR-021, 2026-10-18)
+
+- Candidates: expo-audio 57 `useAudioRecorder` (MIT, in use), which caused the bug: it releases the recorder in its
+  own cleanup, with no hook for "stop and delete the file first". No library adds ordered teardown for an
+  expo-audio recorder; it's a few lines of promise chaining.
+- Decision: (c) build `screener/src/audio/mic.ts` (~85 lines, a start/stop/dispose queue) on expo-audio's own
+  `AudioModule.AudioRecorder` class. No new dependency.
