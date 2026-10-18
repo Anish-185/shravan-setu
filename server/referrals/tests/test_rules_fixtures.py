@@ -32,6 +32,10 @@ def call(fn, inp, cfg):
         return rules.apply_500hz_policy(inp["ambient_db_re_baseline"], cfg)
     if fn in ("noise_verdict", "ambient_level"):
         return getattr(rules, fn)(inp["samples"], inp["mic_start_ms"], inp["device_changes_ms"], cfg)
+    if fn == "next_statuses":
+        return rules.next_statuses(inp["from_status"])
+    if fn == "check_transition":
+        return rules.check_transition(inp["from_status"], inp["to_status"], inp["treatment"], inp["reason"])
     if fn == "triage_route":
         return rules.triage_route(inp["answers"], cfg)
     raise AssertionError(fn)

@@ -1,0 +1,95 @@
+{
+ "function": "next_statuses",
+ "cases": [
+  {
+   "name": "from screened",
+   "input": {
+    "from_status": "screened"
+   },
+   "expected": [
+    "referred"
+   ]
+  },
+  {
+   "name": "from referred",
+   "input": {
+    "from_status": "referred"
+   },
+   "expected": [
+    "camp_scheduled",
+    "closed_lost_to_followup"
+   ]
+  },
+  {
+   "name": "from camp_scheduled",
+   "input": {
+    "from_status": "camp_scheduled"
+   },
+   "expected": [
+    "closed_lost_to_followup",
+    "missed",
+    "seen"
+   ]
+  },
+  {
+   "name": "from missed",
+   "input": {
+    "from_status": "missed"
+   },
+   "expected": [
+    "closed_lost_to_followup",
+    "rescheduled"
+   ]
+  },
+  {
+   "name": "from rescheduled",
+   "input": {
+    "from_status": "rescheduled"
+   },
+   "expected": [
+    "camp_scheduled",
+    "closed_lost_to_followup"
+   ]
+  },
+  {
+   "name": "from seen",
+   "input": {
+    "from_status": "seen"
+   },
+   "expected": [
+    "closed_lost_to_followup",
+    "treated"
+   ]
+  },
+  {
+   "name": "from treated",
+   "input": {
+    "from_status": "treated"
+   },
+   "expected": [
+    "closed"
+   ]
+  },
+  {
+   "name": "from closed",
+   "input": {
+    "from_status": "closed"
+   },
+   "expected": []
+  },
+  {
+   "name": "from closed_lost_to_followup",
+   "input": {
+    "from_status": "closed_lost_to_followup"
+   },
+   "expected": []
+  },
+  {
+   "name": "from no_such_status",
+   "input": {
+    "from_status": "no_such_status"
+   },
+   "expected": []
+  }
+ ]
+}

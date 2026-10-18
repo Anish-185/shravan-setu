@@ -188,3 +188,38 @@ Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state mach
   expo-audio recorder; it's a few lines of promise chaining.
 - Decision: (c) build `screener/src/audio/mic.ts` (~85 lines, a start/stop/dispose queue) on expo-audio's own
   `AudioModule.AudioRecorder` class. No new dependency.
+
+## Phase 5
+
+### i18n (English + Telugu, language toggle)
+
+- Queries: GitHub `expo i18n`, `react-native i18n lightweight`, `react native localization`; npm i18next, react-i18next,
+  i18n-js, expo-localization (2026-10-18).
+
+| Candidate | Licence | Last release | Size (unpacked) | Verdict |
+|---|---|---|---|---|
+| i18next 26.5.2 + react-i18next 17.1.0 | MIT | 2026-10-17 | 540 KB + 969 KB | Works offline, but plurals, namespaces and lazy loading aren't needed for two languages with flat strings |
+| i18n-js 4.5.4 | MIT | 2026-10-07 | 1.7 MB | Same, larger |
+| stefalda/ReactNativeLocalization | MIT | 2026-10-09 | — | Native module setup, not needed |
+| expo-localization 58.0.4 | MIT | 2026-10-15 | 145 KB | Only reads the device locale; the teacher picks the language explicitly, so not needed |
+
+- Decision: (c) build `screener/src/i18n.tsx` (~40 lines): flat English dictionary, Telugu dictionary whose missing
+  entries are `TODO_TE` and fall back to English visibly, language kept in the local kv table, a React context to re-render.
+
+### Telugu font
+
+- Candidate: `@expo-google-fonts/noto-sans-telugu` 0.4.2 (MIT code + OFL-1.1 font), 2.6 MB unpacked (all weights).
+- Decision: not added yet. Android ships a Telugu system font (Noto Sans Telugu on stock Android) as the fallback for
+  Telugu script, so text renders without bundling one. Device check G verifies this once [TELUGU_SPEAKER]'s strings are in;
+  add the package (Regular + Bold only, loaded with the already-installed expo-font) if rendering is broken.
+
+### Child-mode balloon tap target
+
+- Queries: GitHub `react native balloon pop`, `react native tap game animation`, `balloon pop children game react native`:
+  no results.
+- Decision: (c) build: a big round Pressable with React Native's built-in `Animated` (scale bounce on tap). No dependency.
+
+### Voice placeholders
+
+- Silent `.m4a` placeholders generated locally with ffmpeg (already on the laptop; not a project dependency) by
+  `scripts/make_voice_placeholders.sh`. Real recordings by [TELUGU_SPEAKER] replace them file for file.

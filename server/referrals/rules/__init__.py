@@ -194,3 +194,39 @@ def triage_route(answers, cfg):
         if any(answers.get(q) is True for q in rule["if_any_yes"]):
             return {"route": rule["route"], "rule": rule["id"], "reason": rule["reason"]}
     return {"route": v(cfg, "triage", "default_route"), "rule": "default", "reason": v(cfg, "triage", "default_reason")}
+
+
+# Referral case state machine: the follow-up protocol, not a tunable threshold, so it lives here and not in config.
+#   screened -> referred -> camp_scheduled -> seen -> treated -> closed
+#   camp_scheduled -> missed -> rescheduled -> camp_scheduled
+#   any open status after screening -> closed_lost_to_followup (reason required)
+LOST = "closed_lost_to_followup"
+TRANSITIONS = {
+    "screened": {"referred"},
+    "referred": {"camp_scheduled", LOST},
+    "camp_scheduled": {"seen", "missed", LOST},
+    "missed": {"rescheduled", LOST},
+    "rescheduled": {"camp_scheduled", LOST},
+    "seen": {"treated", LOST},
+    "treated": {"closed"},
+    "closed": set(),
+    LOST: set(),
+}
+TREATMENTS = ("wax_removed", "infection_treated", "hearing_aid", "further_audiology")
+
+
+def next_statuses(from_status):
+    """Legal next statuses, sorted (the phone shows one button per entry)."""
+    return sorted(TRANSITIONS.get(from_status, ()))
+
+
+def check_transition(from_status, to_status, treatment="", reason=""):
+    """{"allowed": True}, or {"allowed": False, "why": "illegal" | "needs_treatment" | "needs_reason"}."""
+    if to_status not in TRANSITIONS.get(from_status, ()):
+        return {"allowed": False, "why": "illegal"}
+    if to_status == "treated" and treatment not in TREATMENTS:
+        return {"allowed": False, "why": "needs_treatment"}
+    if to_status == LOST and not (reason or "").strip():
+        return {"allowed": False, "why": "needs_reason"}
+    return {"allowed": True}
+

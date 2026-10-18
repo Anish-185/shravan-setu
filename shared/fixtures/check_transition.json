@@ -1,0 +1,169 @@
+{
+ "function": "check_transition",
+ "cases": [
+  {
+   "name": "referred -> camp_scheduled",
+   "input": {
+    "from_status": "referred",
+    "to_status": "camp_scheduled",
+    "treatment": "",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": true
+   }
+  },
+  {
+   "name": "camp_scheduled -> missed",
+   "input": {
+    "from_status": "camp_scheduled",
+    "to_status": "missed",
+    "treatment": "",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": true
+   }
+  },
+  {
+   "name": "missed -> rescheduled -> (camp_scheduled ok)",
+   "input": {
+    "from_status": "rescheduled",
+    "to_status": "camp_scheduled",
+    "treatment": "",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": true
+   }
+  },
+  {
+   "name": "seen -> treated with a treatment",
+   "input": {
+    "from_status": "seen",
+    "to_status": "treated",
+    "treatment": "wax_removed",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": true
+   }
+  },
+  {
+   "name": "seen -> treated without a treatment",
+   "input": {
+    "from_status": "seen",
+    "to_status": "treated",
+    "treatment": "",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": false,
+    "why": "needs_treatment"
+   }
+  },
+  {
+   "name": "seen -> treated with an unknown treatment",
+   "input": {
+    "from_status": "seen",
+    "to_status": "treated",
+    "treatment": "magic",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": false,
+    "why": "needs_treatment"
+   }
+  },
+  {
+   "name": "lost with a reason",
+   "input": {
+    "from_status": "missed",
+    "to_status": "closed_lost_to_followup",
+    "treatment": "",
+    "reason": "moved away"
+   },
+   "expected": {
+    "allowed": true
+   }
+  },
+  {
+   "name": "lost with a blank reason",
+   "input": {
+    "from_status": "missed",
+    "to_status": "closed_lost_to_followup",
+    "treatment": "",
+    "reason": "   "
+   },
+   "expected": {
+    "allowed": false,
+    "why": "needs_reason"
+   }
+  },
+  {
+   "name": "referred -> closed skips the loop",
+   "input": {
+    "from_status": "referred",
+    "to_status": "closed",
+    "treatment": "",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": false,
+    "why": "illegal"
+   }
+  },
+  {
+   "name": "closed is final",
+   "input": {
+    "from_status": "closed",
+    "to_status": "referred",
+    "treatment": "",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": false,
+    "why": "illegal"
+   }
+  },
+  {
+   "name": "lost is final",
+   "input": {
+    "from_status": "closed_lost_to_followup",
+    "to_status": "referred",
+    "treatment": "",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": false,
+    "why": "illegal"
+   }
+  },
+  {
+   "name": "screened -> lost is not allowed (not referred yet)",
+   "input": {
+    "from_status": "screened",
+    "to_status": "closed_lost_to_followup",
+    "treatment": "",
+    "reason": "x"
+   },
+   "expected": {
+    "allowed": false,
+    "why": "illegal"
+   }
+  },
+  {
+   "name": "illegal beats a missing treatment",
+   "input": {
+    "from_status": "referred",
+    "to_status": "treated",
+    "treatment": "",
+    "reason": ""
+   },
+   "expected": {
+    "allowed": false,
+    "why": "illegal"
+   }
+  }
+ ]
+}

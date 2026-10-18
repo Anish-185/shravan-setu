@@ -205,3 +205,33 @@ export function triageRoute(answers: Record<string, unknown>, cfg: Config) {
   }
   return { route: v(cfg, 'triage', 'default_route'), rule: 'default', reason: v(cfg, 'triage', 'default_reason') };
 }
+
+// Referral case state machine: the follow-up protocol (port of the table in referrals/rules), not a threshold.
+export const LOST = 'closed_lost_to_followup';
+export const TRANSITIONS: Record<string, string[]> = {
+  screened: ['referred'],
+  referred: ['camp_scheduled', LOST],
+  camp_scheduled: ['seen', 'missed', LOST],
+  missed: ['rescheduled', LOST],
+  rescheduled: ['camp_scheduled', LOST],
+  seen: ['treated', LOST],
+  treated: ['closed'],
+  closed: [],
+  [LOST]: [],
+};
+export const TREATMENTS = ['wax_removed', 'infection_treated', 'hearing_aid', 'further_audiology'] as const;
+
+/** Legal next statuses, sorted like Python's sorted() (code-point order). */
+export function nextStatuses(fromStatus: string): string[] {
+  return [...(TRANSITIONS[fromStatus] ?? [])].sort();
+}
+
+export function checkTransition(fromStatus: string, toStatus: string, treatment = '', reason = '') {
+  if (!(TRANSITIONS[fromStatus] ?? []).includes(toStatus)) return { allowed: false, why: 'illegal' };
+  if (toStatus === 'treated' && !(TREATMENTS as readonly string[]).includes(treatment)) {
+    return { allowed: false, why: 'needs_treatment' };
+  }
+  if (toStatus === LOST && !reason.trim()) return { allowed: false, why: 'needs_reason' };
+  return { allowed: true };
+}
+

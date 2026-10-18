@@ -288,12 +288,57 @@ AMBIENT = [
 ]
 
 
+LOST = "closed_lost_to_followup"
+# Hand-written from the protocol in referrals/rules (screened -> referred -> camp_scheduled -> seen -> treated -> closed;
+# camp_scheduled -> missed -> rescheduled -> camp_scheduled; open statuses -> lost with a reason).
+NEXT = [
+    {"name": f"from {frm}", "input": {"from_status": frm}, "expected": exp}
+    for frm, exp in (
+        ("screened", ["referred"]),
+        ("referred", ["camp_scheduled", LOST]),
+        ("camp_scheduled", [LOST, "missed", "seen"]),
+        ("missed", [LOST, "rescheduled"]),
+        ("rescheduled", ["camp_scheduled", LOST]),
+        ("seen", [LOST, "treated"]),
+        ("treated", ["closed"]),
+        ("closed", []),
+        (LOST, []),
+        ("no_such_status", []),
+    )
+]
+
+
+def chk(name, frm, to, expected, treatment="", reason=""):
+    return {"name": name, "input": {"from_status": frm, "to_status": to, "treatment": treatment, "reason": reason},
+            "expected": expected}
+
+
+OK = {"allowed": True}
+CHECK = [
+    chk("referred -> camp_scheduled", "referred", "camp_scheduled", OK),
+    chk("camp_scheduled -> missed", "camp_scheduled", "missed", OK),
+    chk("missed -> rescheduled -> (camp_scheduled ok)", "rescheduled", "camp_scheduled", OK),
+    chk("seen -> treated with a treatment", "seen", "treated", OK, treatment="wax_removed"),
+    chk("seen -> treated without a treatment", "seen", "treated", {"allowed": False, "why": "needs_treatment"}),
+    chk("seen -> treated with an unknown treatment", "seen", "treated", {"allowed": False, "why": "needs_treatment"},
+        treatment="magic"),
+    chk("lost with a reason", "missed", LOST, OK, reason="moved away"),
+    chk("lost with a blank reason", "missed", LOST, {"allowed": False, "why": "needs_reason"}, reason="   "),
+    chk("referred -> closed skips the loop", "referred", "closed", {"allowed": False, "why": "illegal"}),
+    chk("closed is final", "closed", "referred", {"allowed": False, "why": "illegal"}),
+    chk("lost is final", LOST, "referred", {"allowed": False, "why": "illegal"}),
+    chk("screened -> lost is not allowed (not referred yet)", "screened", LOST, {"allowed": False, "why": "illegal"},
+        reason="x"),
+    chk("illegal beats a missing treatment", "referred", "treated", {"allowed": False, "why": "illegal"}),
+]
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / "config" / "screening.json", OUT / "fixture_config.json")
     for fn, cases in (("decide_outcome", DECIDE), ("rescreen_plan", RESCREEN), ("apply_500hz_policy", POLICY),
                       ("triage_route", TRIAGE), ("reliability_score", RELIABILITY), ("noise_verdict", NOISE),
-                      ("ambient_level", AMBIENT)):
+                      ("ambient_level", AMBIENT), ("next_statuses", NEXT), ("check_transition", CHECK)):
         path = OUT / f"{fn}.json"
         path.write_text(json.dumps({"function": fn, "cases": cases}, indent=1) + "\n")
         print(f"{path.relative_to(ROOT)}: {len(cases)} cases")

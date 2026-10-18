@@ -89,3 +89,10 @@ def test_events_are_append_only(make_case):
 def test_full_history_in_order(make_case):
     case = make_case(PATH["closed"])
     assert [e.to_status for e in case.events.all()] == PATH["closed"]
+
+
+def test_rule_engine_treatments_and_statuses_match_the_model():
+    from referrals import rules
+    assert set(rules.TREATMENTS) == {k for k, _ in Case.TREATMENTS}
+    assert set(rules.TRANSITIONS) == set(ALL)
+
