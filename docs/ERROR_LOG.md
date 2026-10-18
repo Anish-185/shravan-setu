@@ -339,3 +339,12 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Verification: `npx jest src/__tests__/demoPath.test.ts` (Telugu text contains "24-10-2026 న చెవి పరీక్ష క్యాంప్‌కు"); pytest `test_demo_path.py::test_demo_missed_branch_logs_stubbed_reminder` and `test_state.py::test_missed_logs_stubbed_reminder_in_both_languages` (no-date case, no double space)
 - Lesson: any value inserted into translated text (dates, names of things) needs its own per-language form; word order differs.
 
+### ERR-030: rule reasons were shown in English in Telugu mode
+- Phase / date: Phase 5 follow-up (Telugu text) / 2026-10-18
+- Symptom: result reasons ("Left ear 4000 Hz: not heard."), the 500 Hz reason and the triage reason appeared in English, with no `[TODO_TE]` marker, on the Telugu UI.
+- Where: `screener/src/app/screen/[childId].tsx` (room-noise step, result step), `screener/src/triage.tsx`
+- Root cause: the rule engines return English sentences (they must: both engines are compared word for word by the shared fixtures, and the server stores them); the screens printed them directly without going through the translation helper.
+- Fix: `reason.*` templates in `screener/src/i18n/strings.json` (Telugu `TODO_TE` for now); `reasonText()` / `t.reason()` in `screener/src/i18n/strings.ts` matches a stored English reason to its template and fills the Telugu (ear names via `lr.left` / `lr.right`). An unmatched reason shows `[TODO_TE]` + English. Rule engines and stored records unchanged.
+- Status: FIXED (Telugu for the 18 new strings still needed from the native speaker)
+- Verification: `npx jest src/i18n`: every reason in the shared fixtures and the triage config matches a template and fills back to the exact English; all 18 templates are hit by at least one fixture.
+- Lesson: anything a rule returns as text is UI text; route it through the translation helper where it is shown.

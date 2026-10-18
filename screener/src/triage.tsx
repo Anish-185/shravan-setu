@@ -46,7 +46,7 @@ export function TriageForm({ caseId, onSaved }: { caseId: string; onSaved?: () =
         <>
           <Text style={s.ok}>{t('triage.saved')}</Text>
           <P>{t(saved.route === 'PHC' ? 'triage.routePHC' : 'triage.routeDEIC', { facility: saved.facility?.name ?? t('triage.noFacility') })}</P>
-          <P>{saved.reason}</P>
+          <P>{t.reason(saved.reason)}</P>
         </>
       )}
     </View>

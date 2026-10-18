@@ -238,7 +238,7 @@ function AmbientStep({ audio, voice, micStart, onDone }: {
       {result && (
         <>
           <P>{result.db === null ? t('ambient.couldNot') : t('ambient.value', { value: result.db.toFixed(1) })}</P>
-          <P>{result.reason}</P>
+          <P>{t.reason(result.reason)}</P>
           {noisy && <Text style={s.warn}>{t('ambient.noisy')}</Text>}
           <Btn title={t('ambient.continue')} onPress={() => onDone(result)} />
         </>
@@ -306,7 +306,7 @@ function ResultStep({ snap, calibrated, onSave }: {
     <View style={s.screen}>
       <H>{t('result.h', { outcome: r.outcome ?? '-' })}</H>
       <P>{t('result.ears', { left: r.ear_outcomes.left ?? '-', right: r.ear_outcomes.right ?? '-' })}</P>
-      {r.reasons.map((x) => <P key={x}>• {x}</P>)}
+      {r.reasons.map((x) => <P key={x}>• {t.reason(x)}</P>)}
       {!calibrated && <Text style={s.warn}>{t('result.uncalibrated')}</Text>}
       {r.outcome === 'REFER' && <P>{t('result.refer')}</P>}
       {r.outcome === 'RETEST' && <P>{t('result.retest')}</P>}

@@ -5,9 +5,9 @@ import { Pressable, Text } from 'react-native';
 import { db } from '@/db';
 import { kvGet, kvSet } from '@/db/store';
 
-import { pick, tr, type Key, type Lang, type Text as T } from './strings';
+import { pick, reasonText, tr, type Key, type Lang, type Text as T } from './strings';
 
-export { pick, tr, type Key, type Lang } from './strings';
+export { pick, reasonText, tr, type Key, type Lang } from './strings';
 
 const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void }>({ lang: 'en', setLang: () => {} });
 
@@ -22,11 +22,13 @@ export function LangProvider({ children }: { children: ReactNode }) {
 
 export const useLang = () => useContext(Ctx);
 
-/** t('key', {vars}) for UI strings; tx({en, te}) for text that lives in config (triage questions, reminders). */
+/** t('key', {vars}) for UI strings; t.x({en, te}) for text that lives in config (triage questions, reminders);
+ *  t.reason(text) for a stored English rule reason. */
 export function useT() {
   const { lang } = useContext(Ctx);
   return Object.assign((key: Key, vars?: Record<string, string | number>) => tr(lang, key, vars), {
     x: (text: T, vars?: Record<string, string | number>) => pick(text, lang, vars),
+    reason: (text: string) => reasonText(lang, text),
   });
 }
 

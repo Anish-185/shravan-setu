@@ -813,5 +813,95 @@
   "en": "Play voice line",
   "te": "వాయిస్ లైన్ ప్లే చేయండి",
   "where": "Speaker button (read by screen readers)"
+ },
+ "reason.fewCatch": {
+  "en": "Retest: only {n} silent check trials were done ({needed} needed).",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons"
+ },
+ "reason.unreliable": {
+  "en": "Retest: responses were not reliable, so this test cannot refer.",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons"
+ },
+ "reason.falseAlarms": {
+  "en": "{n} of {total} silent check trials got a tap.",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons, after the 'not reliable' line"
+ },
+ "reason.outOfWindow": {
+  "en": "{n} of {total} tone trials got a tap outside the response window.",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons, after the 'not reliable' line"
+ },
+ "reason.notHeardConfirmed": {
+  "en": "{ear} ear {freq} Hz: not heard, confirmed on rescreen.",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
+ },
+ "reason.notHeard": {
+  "en": "{ear} ear {freq} Hz: not heard.",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
+ },
+ "reason.heardOnRescreen": {
+  "en": "{ear} ear {freq} Hz: missed at first, heard on rescreen.",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
+ },
+ "reason.noisy": {
+  "en": "{ear} ear {freq} Hz: too noisy to test ({n} tones discarded for noise).",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
+ },
+ "reason.notTested": {
+  "en": "{ear} ear {freq} Hz: not tested.",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
+ },
+ "reason.rescreenMissing": {
+  "en": "{ear} ear {freq} Hz: missed in the first round and not rescreened yet.",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons ({ear} = Left or Right, shown with the Telugu word from the left/right check; {freq} = tone in Hz)"
+ },
+ "reason.allHeard": {
+  "en": "All tones were heard in both ears.",
+  "te": "TODO_TE",
+  "where": "Screening result, list of reasons (PASS)"
+ },
+ "reason.500.always": {
+  "en": "500 Hz policy: always tested.",
+  "te": "TODO_TE",
+  "where": "Room noise step, after measuring"
+ },
+ "reason.500.never": {
+  "en": "500 Hz policy: never tested.",
+  "te": "TODO_TE",
+  "where": "Room noise step, after measuring"
+ },
+ "reason.500.noMeasure": {
+  "en": "500 Hz skipped: no room noise measurement.",
+  "te": "TODO_TE",
+  "where": "Room noise step, after measuring"
+ },
+ "reason.500.quiet": {
+  "en": "500 Hz tested: room noise below the limit.",
+  "te": "TODO_TE",
+  "where": "Room noise step, after measuring"
+ },
+ "reason.500.noisy": {
+  "en": "500 Hz skipped: room too noisy for low tones.",
+  "te": "TODO_TE",
+  "where": "Room noise step, after measuring"
+ },
+ "reason.triage.likely_treatable_cause": {
+  "en": "Likely treatable cause reported (for example wax or infection): PHC first. Triage, not diagnosis.",
+  "te": "TODO_TE",
+  "where": "Triage result after saving the checklist (route to PHC). English must match config/screening.json triage.rules"
+ },
+ "reason.triage.default": {
+  "en": "No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis.",
+  "te": "TODO_TE",
+  "where": "Triage result after saving the checklist (route to DEIC). English must match config/screening.json triage.default_reason"
  }
 }
