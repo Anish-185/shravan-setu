@@ -38,7 +38,7 @@ class Classroom(Base):
 
 
 class Child(Base):
-    AGE_BANDS = [("3-5", "3-5"), ("6-8", "6-8"), ("9-11", "9-11"), ("12-14", "12-14"), ("15-18", "15-18")]
+    AGE_BANDS = [("6-8", "6-8"), ("9-11", "9-11"), ("12-14", "12-14"), ("15-18", "15-18")]
     SEX = [("", "Not recorded"), ("F", "Female"), ("M", "Male"), ("O", "Other")]
 
     school = models.ForeignKey(School, on_delete=models.CASCADE, related_name="children")

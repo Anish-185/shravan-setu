@@ -8,7 +8,7 @@ import { db } from '@/db';
 import { kvGet, list, put } from '@/db/store';
 import { Btn, Chips, H, P, s } from '@/ui';
 
-const AGE_BANDS = ['3-5', '6-8', '9-11', '12-14', '15-18'] as const;
+const AGE_BANDS = ['6-8', '9-11', '12-14', '15-18'] as const;
 type Child = { display_name: string; age_band: string; school: string };
 
 export default function Children() {

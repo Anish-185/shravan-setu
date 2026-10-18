@@ -120,9 +120,12 @@ def test_sync_reports_per_record_errors(api, school):
         {"type": "spaceship", "id": str(uuid.uuid4()), "data": {}},  # unknown type
         {"type": "child", "id": new_child, "data": {
             "school": str(school.pk), "display_name": "Student S2", "age_band": "6-8"}},  # valid
+        {"type": "child", "id": str(uuid.uuid4()), "data": {
+            "school": str(school.pk), "display_name": "Student S3", "age_band": "3-5"}},  # below school age
     ]}
     res = api.post("/api/sync/", batch, format="json").json()["results"]
-    assert [x["status"] for x in res] == ["error", "error", "error", "created"]
+    assert [x["status"] for x in res] == ["error", "error", "error", "created", "error"]
+    assert "age_band" in res[4]["errors"]
     assert "method" in res[0]["errors"]
     assert "not allowed" in res[1]["errors"]
     assert models.Child.objects.filter(pk=new_child).exists()
