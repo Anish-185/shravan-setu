@@ -5,10 +5,15 @@ same Wi-Fi. Results are SCREENING TRIAL DATA at an **uncalibrated** volume: not 
 
 ## Setup
 
+0. Let the phone reach the laptop (once per network):
+   - `server/.env` must list the laptop's LAN IP in `DJANGO_ALLOWED_HOSTS` (now `192.168.29.165`). If the Wi-Fi
+     hands out a new address, check it with `ip -4 addr show scope global` (`hostname -I` is not available on
+     this laptop) and update the line.
+   - Open the firewall port yourself: `sudo ufw allow 8000/tcp`.
 1. `cd server && .venv/bin/python manage.py migrate && .venv/bin/python manage.py seed_demo` (fake schools/children),
    then `.venv/bin/python manage.py runserver 0.0.0.0:8000`. Create a login if you have none:
    `.venv/bin/python manage.py createsuperuser`.
-2. `cd screener && npx expo start`, open in Expo Go. Settings: server `http://<laptop-ip>:8000`, log in, pick a
+2. `cd screener && npx expo start`, open in Expo Go. Settings: server `http://192.168.29.165:8000`, log in, pick a
    school, enter the earphone model and the media-volume setting (write the exact steps, e.g. "zero, then up 8").
 
 ## Earphone detection (ERR-019)
@@ -35,7 +40,6 @@ For each, write down: outcome shown, room-noise value shown, roughly how long th
 
 ## Also please answer
 
-- Spike clip `quiet-on-1kL-1.00`: you said it actually played 4k R, but the app's log says 1k L vol=1.00. Which is right?
 - Phone name from Settings → About phone, earphone model, and the media-volume steps used in the spike.
 
 Put the JSONs in `data/raw/phase4/` (gitignored), or tell me where they are.

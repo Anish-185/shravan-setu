@@ -234,5 +234,15 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Known limits: (a) earphones without an inline mic (3-pole) are never listed, so the test refuses to start (safe); (b) after an unplug, Android re-routes audio to the speaker immediately, so up to ~100 ms of the current tone can reach the speaker before our stop; (c) **not yet verified on the phone** that the H2W entry disappears from the list on unplug.
 - Status: NEEDS-HUMAN (verification c), then WORKAROUND
 - Verification: `docs/PHASE4_DEVICE_CHECKLIST.md` steps 2–4.
-- Proper fix (proposed, not done): a ~60-line local Expo module using `AudioManager.registerAudioDeviceCallback` and `ACTION_AUDIO_BECOMING_NOISY` for output-route events. Needs a development build (`npx expo prebuild` + Gradle, which needs a JDK and the Android SDK on the laptop; neither is installed now) instead of Expo Go.
+- Proper fix (deferred by owner 2026-10-18, listed in `docs/ROADMAP.md`; the inline-mic requirement is enough for the demo): a ~60-line local Expo module using `AudioManager.registerAudioDeviceCallback` and `ACTION_AUDIO_BECOMING_NOISY` for output-route events. Needs a development build (`npx expo prebuild` + Gradle, which needs a JDK and the Android SDK on the laptop; neither is installed now) instead of Expo Go.
 - Lesson: check the native source, not just the types, when an API's behaviour looks wrong.
+
+### ERR-020: `hostname -I` is not supported on this laptop
+- Phase / date: Phase 4 fixes / 2026-10-18
+- Symptom: `hostname: invalid option -- 'I'`
+- Where: getting the laptop's LAN IP for `DJANGO_ALLOWED_HOSTS`
+- Root cause: this Arch-based system ships the inetutils `hostname`, which has no `-I` flag (that flag is from Debian's `hostname`).
+- Fix: use `ip -4 addr show scope global` (iproute2) → `wlp0s20f3 192.168.29.165/24`. The checklist and `server/README.md` give both commands.
+- Status: FIXED
+- Verification: `ip -4 -o addr show scope global` prints the Wi-Fi address
+- Lesson: use `ip addr` for the LAN IP; it works on every Linux distro.
