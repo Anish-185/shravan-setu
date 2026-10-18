@@ -2,12 +2,13 @@
 // Earphones are detected from the live audio device list (expo-audio getAvailableInputs = AudioManager.getDevices),
 // never from getCurrentInput(), which the spike showed stays "H2W" after unplugging (docs/SPIKE.md §5.1).
 import {
-  createAudioPlayer, requestRecordingPermissionsAsync, setAudioModeAsync, useAudioRecorder, RecordingPresets,
-  type AudioPlayer,
+  AudioModule, createAudioPlayer, requestRecordingPermissionsAsync, setAudioModeAsync, RecordingPresets,
+  type AudioPlayer, type AudioRecorder,
 } from 'expo-audio';
 import { File } from 'expo-file-system';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { createMic } from '@/audio/mic';
 import type { Port } from '@/engine/engine';
 import { v, type Config, type Ear } from '@/rules';
 
@@ -31,21 +32,56 @@ export function playback(cfg: Config) {
   return { volume: v(cfg, 'tone', 'uncalibrated_player_volume') as number, calibrated: false };
 }
 
+// Not useAudioRecorder: that hook releases the recorder in its own cleanup, before ours can stop it (ERR-021).
+// Options flattened for Android exactly as useAudioRecorder does (expo-audio build/utils/options.js).
+function newRecorder(): AudioRecorder {
+  const { extension, sampleRate, numberOfChannels, bitRate, android } = RecordingPresets.LOW_QUALITY;
+  // eslint-disable-next-line import/namespace -- AudioModule is the native module object, not an ES namespace; tsc checks this
+  return new AudioModule.AudioRecorder({ extension, sampleRate, numberOfChannels, bitRate, isMeteringEnabled: true, ...android });
+}
+
+/** Tone players, the recorder and its lifecycle. Created once per screening screen, freed on unmount. */
+function newAudio() {
+  const recorder = newRecorder();
+  return {
+    players: Object.fromEntries(Object.entries(TONES).map(([k, src]) => [k, createAudioPlayer(src)])) as Record<string, AudioPlayer>,
+    recorder,
+    mic: createMic({
+      recorder,
+      setup: async () => {
+        const perm = await requestRecordingPermissionsAsync();
+        if (!perm.granted) throw new Error('Microphone permission denied');
+        await setAudioModeAsync({ playsInSilentMode: true, allowsRecording: true });
+      },
+      deleteFile: (uri) => {
+        const f = new File(uri);
+        if (f.exists) f.delete();
+      },
+      now: () => Date.now(),
+      // console.log, not warn: a warning toast must not cover the screen during a demo.
+      warn: (msg, e) => console.log(`[audio] ${msg}:`, e),
+    }),
+  };
+}
+
 type Listeners = { onSample?: (db: number | null, t: number) => void; onEarphones?: (on: boolean, t: number) => void };
 
 export function useScreeningAudio(cfg: Config) {
-  const recorder = useAudioRecorder({ ...RecordingPresets.LOW_QUALITY, isMeteringEnabled: true });
-  const players = useMemo(
-    () => Object.fromEntries(Object.entries(TONES).map(([k, src]) => [k, createAudioPlayer(src)])) as Record<string, AudioPlayer>,
-    [],
-  );
+  const { players, recorder, mic } = useMemo(() => newAudio(), []);
   const [micOn, setMicOn] = useState(false);
   const [earphones, setEarphones] = useState(false);
   const [error, setError] = useState('');
   const listeners = useRef<Listeners>({});
   const changes = useRef<number[]>([]);
 
-  useEffect(() => () => Object.values(players).forEach((p) => p.remove()), [players]);
+  const disposed = useRef(false);
+
+  // Leaving the screen: free the players, then stop the mic, delete the recording and release it, in that order.
+  useEffect(() => () => {
+    disposed.current = true;
+    Object.values(players).forEach((p) => p.remove());
+    void mic.dispose();
+  }, [players, mic]);
 
   // One tick: a metering sample and an earphone check. Bluetooth is never accepted (CLAUDE.md: wired only).
   useEffect(() => {
@@ -66,7 +102,9 @@ export function useScreeningAudio(cfg: Config) {
     return () => clearInterval(id);
   }, [micOn, recorder, cfg]);
 
-  const stopAll = () => Object.values(players).forEach((p) => p.pause());
+  const stopAll = () => {
+    if (!disposed.current) Object.values(players).forEach((p) => p.pause()); // players are gone after unmount
+  };
 
   const setVolume = (p: AudioPlayer, volume: number) => {
     // expo-audio's documented volume API is assignment on the native player object (see ERR-004).
@@ -98,28 +136,23 @@ export function useScreeningAudio(cfg: Config) {
     calibrated,
     deviceChanges: () => [...changes.current],
     setListeners: (l: Listeners) => { listeners.current = l; },
-    /** Starts the mic for the rest of the session. Returns the mic start time (for the settle window). */
+    /** Starts the mic for the rest of the session. Returns the mic start time (for the settle window), or null if
+     *  the screen was left while starting. */
     async startMic() {
       try {
-        const perm = await requestRecordingPermissionsAsync();
-        if (!perm.granted) throw new Error('Microphone permission denied');
-        await setAudioModeAsync({ playsInSilentMode: true, allowsRecording: true });
-        await recorder.prepareToRecordAsync();
-        recorder.record();
-        setMicOn(true);
-        return Date.now();
+        const t = await mic.start();
+        if (t !== null) setMicOn(true);
+        return t;
       } catch (e) {
         setError(String(e));
         throw e;
       }
     },
-    /** Stops the mic and deletes the recording: we keep metering numbers only, never audio. */
-    async stopMic() {
+    /** Stops the mic and deletes the recording: we keep metering numbers only, never audio. Never rejects. */
+    stopMic() {
       stopAll();
       setMicOn(false);
-      await recorder.stop();
-      const file = recorder.uri ? new File(recorder.uri) : null;
-      if (file?.exists) file.delete();
+      return mic.stop();
     },
   };
 }

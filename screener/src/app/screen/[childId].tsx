@@ -35,12 +35,9 @@ export default function Screen() {
   const engine = useRef<Engine | null>(null);
   const sessionId = useRef('');
 
-  // Leaving mid-session stops tones and the mic, and deletes the recording.
-  useEffect(() => () => {
-    engine.current?.abort();
-    audio.stopMic();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Leaving mid-session stops the engine's timers. useScreeningAudio itself stops the mic, deletes the recording
+  // and releases the recorder on unmount, in that order (ERR-021).
+  useEffect(() => () => engine.current?.abort(), []);
 
   if (!child) return <P>Child not found.</P>;
 
@@ -130,7 +127,7 @@ function DeviceStep({ audio, onMic, onDone }: {
 
   useEffect(() => {
     // The mic runs from here to the end of the session: earphone detection and noise gating both need it.
-    audio.startMic().then(onMic).catch(() => {});
+    audio.startMic().then((t) => t !== null && onMic(t)).catch(() => {}); // the error is shown via audio.error
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
