@@ -43,13 +43,14 @@ export async function warmUp(
 }
 
 /** Player volume per frequency. Uncalibrated (no screening level yet): the placeholder volume, sessions marked
- *  UNCALIBRATED. Calibrated: team baseline (dB re full scale) + screening level (dB re: team baseline). Checked for
- *  every frequency the test can play before any test starts, so a gap fails at screen load, never mid-test. */
-export function playback(cfg: Config): { volumeFor: (freq: number) => number; calibrated: boolean } {
+ *  UNCALIBRATED. Calibrated: team baseline (dB re full scale) + screening level (dB re: team baseline); `provisional`
+ *  while config calibration.provisional is set (ERR-044). Checked for every frequency the test can play before any
+ *  test starts, so a gap fails at screen load, never mid-test. */
+export function playback(cfg: Config): { volumeFor: (freq: number) => number; calibrated: boolean; provisional: boolean } {
   const level = v(cfg, 'screening_level_db_re_team_baseline') as number | null;
   if (level === null) {
     const vol = v(cfg, 'tone', 'uncalibrated_player_volume') as number;
-    return { volumeFor: () => vol, calibrated: false };
+    return { volumeFor: () => vol, calibrated: false, provisional: false };
   }
   const base = v(cfg, 'calibration', 'baseline_dbfs') as Record<string, number | null>;
   const vols: Record<string, number> = {};
@@ -59,5 +60,5 @@ export function playback(cfg: Config): { volumeFor: (freq: number) => number; ca
     if (b + level > 0) throw new Error(`${f} Hz: baseline ${b} + level ${level} dB is above full scale; cannot play it.`);
     vols[String(f)] = volumeAt(b + level);
   }
-  return { volumeFor: (freq) => vols[String(freq)], calibrated: true };
+  return { volumeFor: (freq) => vols[String(freq)], calibrated: true, provisional: v(cfg, 'calibration', 'provisional') === true };
 }

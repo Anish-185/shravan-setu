@@ -57,6 +57,7 @@
 
   "calibration": {
     "baseline_dbfs": {"value": {"500": null, "1000": null, "2000": null, "4000": null}, "source": "Team baseline per frequency: median threshold of normal-hearing adult volunteers (both ears pooled), in dB re the tone file's full scale at player volume 1.0, at the fixed media volume below, on the standard device. Filled from scripts/calibrate.py after the team calibration (docs/TEAM_TEST_PROTOCOL.md). null = not calibrated: the app plays tone.uncalibrated_player_volume and marks sessions UNCALIBRATED. It is a team baseline, not an ISO audiometric zero, so levels are dB re: team baseline, never dB HL."},
+    "provisional": {"value": false, "source": "Fixture copy: the rules do not read it."},
     "device": {"value": "Redmi 2201117TI + Samsung wired earphones (inline mic)", "source": "Owner: standard device for Phase 6 (CLAUDE.md calibration context). Baseline values apply to this pair only."},
     "media_volume_steps": {"value": 6, "source": "docs/TEAM_TEST_PROTOCOL.md step 1 (loudness safety), owner, 2026-10-19: media volume at zero then up 6 steps; the loudest calibration level was comfortable. Redmi 2201117TI + Samsung wired earphones only. Every later session must use the same setting."},
     "start_db": {"value": -40, "source": "PLACEHOLDER: first presentation level of the threshold search, dB re full scale (player volume 0.01; the spike's comfortable worn level was 0.10 = -20 dB, docs/SPIKE.md)."},

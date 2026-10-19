@@ -23,6 +23,7 @@ FREQS = (500, 1000, 2000, 4000)
 OUTLIER_DB = CAL["outlier_db_above_group"]["value"]
 OUTLIER_POINTS = CAL["outlier_min_points"]["value"]
 STEP_UP = CAL["step_up_db"]["value"]
+PROVISIONAL = CAL["provisional"]["value"]
 
 
 def thresholds(d):
@@ -114,6 +115,11 @@ def markdown(r):
                   "Real thresholds differ between people, so this is probably the phone's playback floor, not hearing "
                   "(docs/ERROR_LOG.md ERR-044). Confirm before pasting the baseline."]
     cfg = {str(f): r["baseline"][f] for f in FREQS}
+    if PROVISIONAL:
+        lines += ["", f"Config now: PROVISIONAL baseline {json.dumps(CAL['baseline_dbfs']['value'])} "
+                  "(`calibration.provisional`, ERR-044). 1-4 kHz values are upper bounds limited by the phone's playback "
+                  "floor, so those tones may be louder than intended and the screen may miss milder loss until the "
+                  "Stage 2 recalibration (docs/ROADMAP.md)."]
     lines += ["", "Paste into config/screening.json `calibration.baseline_dbfs.value` (and record the source):", "",
               f"    {json.dumps(cfg)}", "",
               "Then set `screening_level_db_re_team_baseline.value` to 20 (owner decision 2026-10-19). With both set, the "

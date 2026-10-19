@@ -65,7 +65,7 @@ function screenChild(db: Db, childId: string, hears: (ear: Ear, freq: number) =>
   const { result, log } = screen(hears);
   return saveSession(db, {
     childId, school: 'school-1', consentId, startedAt: new Date().toISOString(), lrPassed: true, ambientDb: -8,
-    ambientReason: 'test', calibrated: false, result, log, device: { brand: 'Fake', model: 'Fake', os: 'test' },
+    ambientReason: 'test', calibrated: false, provisional: false, result, log, device: { brand: 'Fake', model: 'Fake', os: 'test' },
     appVersion: 'test', configVersion: cfg.config_version,
   });
 }

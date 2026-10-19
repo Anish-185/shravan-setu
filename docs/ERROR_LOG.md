@@ -496,6 +496,14 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Where: `data/raw/calibration/*.json`, `scripts/calibrate.py`, playback via `volumeAt()` (`screener/src/engine/calibration.ts`) and expo-audio `player.volume`
 - Root cause (probable, not yet proven): the phone plays nothing audible below player volume ~0.001 (-60 dB) at media volume 6 steps, so the search stops at the playback floor instead of the listener's threshold. Seven people at three frequencies with almost no spread, and a drop from 87% heard to 5% in one 5 dB step, look like a device limit rather than hearing; real thresholds vary by person and by frequency, and the earphone's output varies by frequency. The tone files are fine (16-bit, -1.0 dBFS peak, one channel silent). Where exactly the floor comes from (Android mixer volume resolution, expo-audio, or the earphone) is not known.
 - Fix (proposed, not done): do not set `calibration.baseline_dbfs` from this run. Either (a) move the attenuation into the tone files (for example tones at -30 dBFS, so the player volume stays well above 0.001 at threshold) or raise the media volume, then re-run calibration run 1; or (b) keep -60 only as an upper bound and say the screening level is "at least" 20 dB re team baseline. Before either: a 2-minute phone check to confirm the floor (raise the media volume a few steps, play 1 kHz at -55, -60, -65, -70: if -60 is clearly loud and -65 is silent, it's the floor).
-- Status: NEEDS-HUMAN (owner decision on (a) or (b), plus the phone check)
+- Owner report 2026-10-20 (memory check): near the quietest beeps the sound faded gradually rather than vanishing.
+- Owner decision 2026-10-20: option (b), no recalibration and no floor check before submission. `config/screening.json`
+  `calibration.baseline_dbfs` = the measured run-1 medians, unmodified (500 Hz -35; 1000/2000/4000 Hz -60, recorded
+  as upper bounds), `calibration.provisional` = true, `screening_level_db_re_team_baseline` = 20 (AAA 2011,
+  assumption). The result screen shows "Provisional calibration: 1–4 kHz may be louder than intended." while
+  provisional (`screener/src/__tests__/result.test.tsx`). Labelled the same way in CLAIMS CAL-01..03, README, ROADMAP.
+- Status: WORKAROUND (provisional baseline). Proper fix, Stage 2 (`docs/ROADMAP.md`): quieter 1-4 kHz tone set
+  (about 20 dB), recalibrate with volunteers, then a clinical audiometer check; then set `calibration.provisional`
+  to false.
 - Verification: CLAIMS CAL-02 shows the clustering (`python -m eval.report --check`); after the fix, the re-run's 1-4 kHz thresholds should spread across people and sit above the confirmed floor.
 - Lesson: when a threshold search lands on the same level for everyone, check the playback floor before trusting it; give every search a known audible floor well below the expected threshold.

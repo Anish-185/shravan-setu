@@ -4,6 +4,8 @@ School hearing **screening and referral** for the Seva First Innovation Challeng
 diagnosis. This repo is a fork of DhwaniSarathi (SIH 2023, Apache-2.0); the original team's README follows below,
 unchanged. Credits: `ATTRIBUTION.md`.
 
+**Calibration is provisional.** Tone levels come from a team baseline measured with 7 consenting adult volunteers on one phone and earphone model (Redmi 2201117TI + Samsung wired earphones, media volume 6 steps, 2026-10-19), not from children and not against an audiometer. At 500 Hz the baseline is a measured median. At 1, 2 and 4 kHz the phone could not play quietly enough to find the volunteers' real thresholds, so the baseline there is an upper bound. In plain words: the 1-4 kHz tones may be louder than intended, so the screen may miss milder hearing loss until the Stage 2 recalibration (`docs/ROADMAP.md`; `docs/CLAIMS.md` CAL-01..03; `docs/ERROR_LOG.md` ERR-044). Levels are dB re: team baseline, never dB HL.
+
 ## Design: Direction B "Setu Line" (chosen, v2)
 
 Mock-ups for the visual polish pass, rendered from HTML with the real fonts, icons and illustrations. **These are not

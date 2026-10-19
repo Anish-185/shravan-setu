@@ -17,7 +17,9 @@ import { Btn, C, Card, F, Note, OUTCOME, P, Pill, s } from '@/ui';
 
 type Saved = { sessionId: string; caseId: string | null };
 
-export function ResultStep({ snap, calibrated, onSave }: { snap: Snapshot; calibrated: boolean; onSave: () => Saved }) {
+export function ResultStep({ snap, calibrated, provisional = false, onSave }: {
+  snap: Snapshot; calibrated: boolean; provisional?: boolean; onSave: () => Saved;
+}) {
   const t = useT();
   const r = snap.result!;
   const [ids, setIds] = useState<Saved | null>(null);
@@ -31,6 +33,7 @@ export function ResultStep({ snap, calibrated, onSave }: { snap: Snapshot; calib
       <Badge outcome={r.outcome} label={t('result.h', { outcome: r.outcome ?? '-' })} />
       <Ears left={r.ear_outcomes.left} right={r.ear_outcomes.right} />
       {!calibrated && <Note icon="triangle-alert" color={C.amber} text={t('result.uncalibrated')} />}
+      {calibrated && provisional && <Note icon="triangle-alert" color={C.amber} text={t('result.provisional')} />}
       <SetuLine color="#C9C6E8" height={34} stroke={2} style={{ marginHorizontal: -20, marginVertical: -6 }} />
       {r.reasons.length > 0 && (
         <Card>

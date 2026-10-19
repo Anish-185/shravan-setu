@@ -499,6 +499,11 @@
   "te": "ఎడమ చెవి: {left} · కుడి చెవి: {right}",
   "where": "Result step; values stay PASS / RETEST / REFER"
  },
+ "result.provisional": {
+  "en": "Provisional calibration: 1–4 kHz may be louder than intended.",
+  "te": "తాత్కాలిక క్యాలిబ్రేషన్: 1–4 kHz టోన్లు ఉద్దేశించిన దానికంటే ఎక్కువ శబ్దంగా ఉండవచ్చు.",
+  "where": "Result step note while the team baseline is provisional (ERR-044)"
+ },
  "result.uncalibrated": {
   "en": "UNCALIBRATED test level (development volume). Not valid for real screening yet.",
   "te": "హెచ్చరిక: పరీక్ష స్థాయి క్యాలిబ్రేట్ చేయబడలేదు (డెవలప్‌మెంట్ వాల్యూమ్). ఈ ఫలితం నిజమైన స్క్రీనింగ్‌కు ఇంకా చెల్లదు.",

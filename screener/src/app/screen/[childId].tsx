@@ -113,13 +113,14 @@ export default function Screen() {
         <ResultStep
           snap={snap}
           calibrated={audio.calibrated}
+          provisional={audio.provisional}
           onSave={() => {
             if (saved.current) return saved.current;
             const log = engine.current?.log();
             audio.stopMic();
             saved.current = saveSession(db, {
               childId, school: child.school, consentId, startedAt, lrPassed, ambientDb: ambient?.db ?? null,
-              calibrated: audio.calibrated, result: snap.result!, log, ambientReason: ambient?.reason ?? '',
+              calibrated: audio.calibrated, provisional: audio.provisional, result: snap.result!, log, ambientReason: ambient?.reason ?? '',
               device: { brand: Device.brand, model: Device.modelName, os: `${Device.osName} ${Device.osVersion}` },
               appVersion: Constants.expoConfig?.version ?? '', configVersion: CONFIG_VERSION,
             });

@@ -7,7 +7,7 @@ import type { decideOutcome } from '@/rules';
 
 export type SessionInput = {
   childId: string; school: string; consentId: string; startedAt: string; lrPassed: boolean | null;
-  ambientDb: number | null; ambientReason: string; calibrated: boolean;
+  ambientDb: number | null; ambientReason: string; calibrated: boolean; provisional: boolean;
   result: ReturnType<typeof decideOutcome>; log: Record<string, unknown> | undefined;
   device: { brand: string | null; model: string | null; os: string }; appVersion: string; configVersion: string;
 };
@@ -32,7 +32,7 @@ export function saveSession(db: Db, x: SessionInput) {
     // Full engine log stays on the phone (export only): trials, metering numbers, device changes. Never audio.
     put(db, 'session_log', sessionId, {
       note: 'Screening session log. Screening only, not a diagnosis. Metering is relative and uncalibrated.',
-      device: x.device, config_version: x.configVersion, calibrated: x.calibrated,
+      device: x.device, config_version: x.configVersion, calibrated: x.calibrated, calibration_provisional: x.provisional,
       ambient_db_re_reference: x.ambientDb, ambient_reason: x.ambientReason, lr_check_passed: x.lrPassed,
       result: x.result, ...x.log,
     });

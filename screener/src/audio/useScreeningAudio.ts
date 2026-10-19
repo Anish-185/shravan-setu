@@ -115,7 +115,7 @@ export function useScreeningAudio(cfg: Config) {
     if (!disposed.current) Object.values(players).forEach(rewind); // players are gone after unmount
   };
 
-  const { volumeFor, calibrated } = useMemo(() => playback(cfg), [cfg]);
+  const { volumeFor, calibrated, provisional } = useMemo(() => playback(cfg), [cfg]);
 
   const port: Port = {
     now: () => Date.now(),
@@ -140,6 +140,7 @@ export function useScreeningAudio(cfg: Config) {
     micOn,
     error,
     calibrated,
+    provisional,
     deviceChanges: () => [...changes.current],
     /** Calibration tool only: one tone at an explicit player volume. */
     playAt(ear: Ear, freq: number, volume: number) {

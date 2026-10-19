@@ -2,6 +2,11 @@
 
 Items planned for later rounds; none of them is built in this version.
 
+- **Stage 2: quieter 1–4 kHz tone set (about 20 dB), recalibrate with volunteers, then a clinical audiometer check.**
+  Today's calibration is provisional (ERR-044, `docs/CLAIMS.md` CAL-01..03): at 1-4 kHz the phone's playback floor
+  stopped the threshold search, so the baseline there is an upper bound and those tones may be louder than intended;
+  the screen may miss milder loss until this is done.
+
 - **Development build with a local audio-route module (ERR-019).** The demo runs in Expo Go and requires wired
   earphones with an inline mic, because expo-audio only sees earphones through the input-device list. A
   development build (`npx expo prebuild` + Gradle, local, no EAS paid plan) would allow a ~60-line local Expo module

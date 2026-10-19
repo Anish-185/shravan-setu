@@ -247,6 +247,8 @@ As built after the owner's changes of 2026-10-19 and 2026-10-20 (`Note` in `scre
 - **UNCALIBRATED:** a small amber note (warning triangle, 13 dp amber `#7A4F00` text, no box) directly under the ear
   results, before the reasons. It shows until `calibration.baseline_dbfs` and `screening_level_db_re_team_baseline`
   are both set; then it goes away by itself (`src/__tests__/result.test.tsx`).
+- **Provisional calibration:** same amber style and place, "Provisional calibration: 1–4 kHz may be louder than
+  intended.", shown while `calibration.provisional` is true (owner decision 2026-10-20, ERR-044).
 
 ### Test flow structure
 

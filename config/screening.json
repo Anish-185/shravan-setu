@@ -1,5 +1,5 @@
 {
-  "config_version": "0.2.0",
+  "config_version": "0.3.0",
   "_about": "Single source of truth for screening and triage rules. Every value has a source. PLACEHOLDER = no evidence yet; tune from team tests (Phase 6) and record the evidence here. Levels are in dB re: team baseline, never dB HL.",
 
   "ears": {
@@ -11,8 +11,8 @@
     "source": "American Academy of Audiology (2011), Childhood Hearing Screening Guidelines, Summary of recommendations, pure tone screening, item 3: pure tone sweep at 1000, 2000 and 4000 Hz (at 20 dB HL). 500 Hz is controlled separately by policy_500hz."
   },
   "screening_level_db_re_team_baseline": {
-    "value": null,
-    "source": "Owner decision 2026-10-19: set to 20 once calibration.baseline_dbfs is filled from the team calibration (docs/TEAM_TEST_PROTOCOL.md step 2), mirroring the 20 dB HL school screening level of American Academy of Audiology (2011), Childhood Hearing Screening Guidelines, Summary of recommendations, pure tone screening item 3. ASSUMPTION: the team baseline (median threshold of a small adult sample on one phone+earphone pair) approximates audiometric zero; it is not an ISO reference, so levels stay dB re: team baseline, never dB HL. null until then (setting it without a baseline stops the test from starting)."
+    "value": 20,
+    "source": "ASSUMPTION (owner decisions 2026-10-19 and 2026-10-20): 20, mirroring the 20 dB HL school screening level of American Academy of Audiology (2011), Childhood Hearing Screening Guidelines, Summary of recommendations, pure tone screening item 3. Assumes the team baseline (calibration.baseline_dbfs: 7 adults, one phone+earphone pair, provisional) approximates audiometric zero; it is not an ISO reference, so levels are dB re: team baseline, never dB HL. At 1-4 kHz the baseline is an upper bound, so the tone may be more than 20 dB above the adults' real threshold."
   },
 
   "tone": {
@@ -56,7 +56,8 @@
   },
 
   "calibration": {
-    "baseline_dbfs": {"value": {"500": null, "1000": null, "2000": null, "4000": null}, "source": "Team baseline per frequency: median threshold of normal-hearing adult volunteers (both ears pooled), in dB re the tone file's full scale at player volume 1.0, at the fixed media volume below, on the standard device. Filled from scripts/calibrate.py after the team calibration (docs/TEAM_TEST_PROTOCOL.md). null = not calibrated: the app plays tone.uncalibrated_player_volume and marks sessions UNCALIBRATED. It is a team baseline, not an ISO audiometric zero, so levels are dB re: team baseline, never dB HL."},
+    "baseline_dbfs": {"value": {"500": -35, "1000": -60, "2000": -60, "4000": -60}, "source": "7 consenting adult volunteers, Redmi 2201117TI + Samsung wired earphones, media volume 6 steps, run 1, 2026-10-19; provisional. Measured run-1 medians of V1-V7, unmodified (scripts/calibrate.py; docs/CLAIMS.md CAL-01..03), both ears pooled, in dB re the tone file's full scale at player volume 1.0. 500 Hz is a measured median. 1000/2000/4000 Hz are UPPER BOUNDS limited by the phone's playback floor (docs/ERROR_LOG.md ERR-044), not true thresholds, so tones there may play louder than intended. A team baseline, not an ISO audiometric zero: levels are dB re: team baseline, never dB HL. null = not calibrated (tone.uncalibrated_player_volume, sessions marked UNCALIBRATED)."},
+    "provisional": {"value": true, "source": "Owner decision 2026-10-20 (ERR-044): the baseline is provisional until the Stage 2 recalibration with a quieter 1-4 kHz tone set. While true (and calibrated), the result screen shows the result.provisional note."},
     "device": {"value": "Redmi 2201117TI + Samsung wired earphones (inline mic)", "source": "Owner: standard device for Phase 6 (CLAUDE.md calibration context). Baseline values apply to this pair only."},
     "media_volume_steps": {"value": 6, "source": "docs/TEAM_TEST_PROTOCOL.md step 1 (loudness safety), owner, 2026-10-19: media volume at zero then up 6 steps; the loudest calibration level was comfortable. Redmi 2201117TI + Samsung wired earphones only. Every later session must use the same setting."},
     "start_db": {"value": -40, "source": "PLACEHOLDER: first presentation level of the threshold search, dB re full scale (player volume 0.01; the spike's comfortable worn level was 0.10 = -20 dB, docs/SPIKE.md)."},

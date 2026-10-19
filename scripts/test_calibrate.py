@@ -74,3 +74,10 @@ def test_no_spread_between_people_is_flagged_as_a_possible_playback_floor():
     assert spread["flat"] == [] and "WARNING" not in c.markdown(spread)
     same = c.analyse([export(v, 1, {**BASE, 500: BASE[500] + d}) for v, d in (("V1", 0), ("V2", -10), ("V3", 10))])
     assert same["flat"] == [1000, 2000, 4000] and "no spread at 1000 Hz, 2000 Hz, 4000 Hz" in c.markdown(same)
+
+
+def test_provisional_config_is_labelled(monkeypatch):
+    monkeypatch.setattr(c, "PROVISIONAL", True)
+    assert "PROVISIONAL baseline" in c.markdown(c.analyse([]))
+    monkeypatch.setattr(c, "PROVISIONAL", False)
+    assert "PROVISIONAL" not in c.markdown(c.analyse([]))

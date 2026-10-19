@@ -39,7 +39,7 @@ export function LangToggle({ onNight }: { onNight?: boolean }) {
   );
 }
 
-/** Small icon + text line with no box (UNCALIBRATED). */
+/** Small icon + text line with no box (UNCALIBRATED, provisional calibration). */
 export function Note({ icon, color, text }: { icon: IconName; color: string; text: string }) {
   return (
     <View style={s.note}>
