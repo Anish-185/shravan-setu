@@ -17,7 +17,8 @@ type Child = {
   noisy?: (ear: Ear, freq: number, attempt: number) => boolean; // loud room noise during this presentation
   tapEveryMs?: number; // taps at random-ish moments regardless of tones
   earphones?: boolean;
-  playLatencyMs?: number; // the player reports playback start this long after play(); undefined = never reports
+  playLatencyMs?: number | null | ((attempt: number) => number); // player reports start this long after play(); null = never
+  catchTapMs?: number; // taps this long after each silent catch clip starts
   config?: typeof cfg;
 };
 
@@ -32,15 +33,27 @@ function run(child: Child = {}, during?: (h: Harness) => void) {
 type Harness = ReturnType<typeof harness>;
 
 function harness({
-  hears = () => true, responseMs = 600, noisy = () => false, tapEveryMs, earphones = true, playLatencyMs, config = cfg,
+  hears = () => true, responseMs = 600, noisy = () => false, tapEveryMs, earphones = true, playLatencyMs = 300, catchTapMs,
+  config = cfg,
 }: Child) {
   let seed = 1;
   const attempts = new Map<string, number>();
   const plays: { ear: Ear; freq: number; round: number; t: number }[] = [];
+  const silences: number[] = [];
   let loud = false;
   let stops = 0;
+  let catchAttempt = 0;
+  // the player reports playback start `latency` ms after play() (plus a stale report that must be ignored)
+  const reportStart = (attempt: number) => {
+    const latency = typeof playLatencyMs === 'function' ? playLatencyMs(attempt) : playLatencyMs;
+    if (latency === null) return null;
+    h.engine.onPlaybackStart(Date.now() - 5000);
+    setTimeout(() => h.engine.onPlaybackStart(Date.now()), latency);
+    return latency;
+  };
   const h = {
     plays,
+    silences,
     get stops() { return stops; },
     snap: { phase: 'ready' } as Snapshot,
     engine: null as unknown as ReturnType<typeof createEngine>,
@@ -55,13 +68,18 @@ function harness({
       const attempt = (attempts.get(key) ?? 0) + 1;
       attempts.set(key, attempt);
       plays.push({ ear, freq, round: h.snap.round, t: Date.now() });
-      loud = noisy(ear, freq, attempt);
-      setTimeout(() => { loud = false; }, DURATION);
-      if (playLatencyMs !== undefined) {
-        h.engine.onPlaybackStart(Date.now() - 5000); // a stale report from before this tone: must be ignored
-        setTimeout(() => h.engine.onPlaybackStart(Date.now()), playLatencyMs);
+      const latency = reportStart(attempt) ?? 0;
+      if (noisy(ear, freq, attempt)) { // loud while the tone actually sounds
+        setTimeout(() => { loud = true; }, latency);
+        setTimeout(() => { loud = false; }, latency + DURATION);
       }
-      if (!tapEveryMs && hears(ear, freq, h.snap.round)) setTimeout(() => h.engine.onTap(Date.now()), responseMs);
+      // responseMs runs from the actual sound start, like a real child
+      if (!tapEveryMs && hears(ear, freq, h.snap.round)) setTimeout(() => h.engine.onTap(Date.now()), latency + responseMs);
+    },
+    playSilence() {
+      silences.push(Date.now());
+      const latency = reportStart(++catchAttempt);
+      if (catchTapMs !== undefined && latency !== null) setTimeout(() => h.engine.onTap(Date.now()), latency + catchTapMs);
     },
     stop() { stops++; loud = false; },
   };
@@ -174,23 +192,93 @@ test('floor (-160) metering during a tone is not quiet: the tone is replayed', (
 
 // Playback-start timing (ERR-026)
 const tones = (h: Harness) => h.engine.log().trials.filter((t) => t.kind === 'tone');
+const catches = (h: Harness) => h.engine.log().trials.filter((t) => t.kind === 'catch');
 const withOrigin = (o: string) => ({ ...cfg, response: { ...cfg.response, timing_origin: { value: o, source: 'test' } } });
+const LIMIT = cfg.response.max_play_latency_ms.value;
+const WINDOW = cfg.response.response_window_ms.value;
+const MAX_REPLAYS = cfg.noise.max_replays_per_tone.value;
 
-test('player-reported start is logged per tone; by default response time still runs from play()', () => {
-  const h = run({ playLatencyMs: 300, responseMs: 600 });
-  expect(h.snap.result?.outcome).toBe('PASS');
-  expect(tones(h).every((t) => t.play_latency_ms === 300 && t.response_ms === 600)).toBe(true);
+test('config: response time runs from playback start (owner decision, 2026-10-19) and the export says so', () => {
+  expect(cfg.response.timing_origin.value).toBe('playback_start');
+  expect(run().engine.log().timing_origin).toBe('playback_start');
 });
 
-test('timing_origin playback_start: response and window run from playback start', () => {
-  const late = cfg.response.response_window_ms.value + 500; // after play(): too late from the play() call...
-  const h = run({ playLatencyMs: 800, responseMs: late, config: withOrigin('playback_start') });
-  expect(h.snap.result?.outcome).toBe('PASS'); // ...but in the window from actual playback start
-  expect(tones(h).every((t) => t.response_ms === late - 800 && t.play_latency_ms === 800)).toBe(true);
+test('playback_start: response and window run from playback start, latency logged', () => {
+  // a child answering WINDOW - 100 ms after the sound: from play() that is past the window, from the start it is in
+  const h = run({ playLatencyMs: 800, responseMs: WINDOW - 100 });
+  expect(h.snap.result?.outcome).toBe('PASS');
+  expect(tones(h).every((t) => t.response_ms === WINDOW - 100 && t.play_latency_ms === 800)).toBe(true);
 });
 
-test('no playback report: latency is null and response time falls back to play()', () => {
-  const h = run({ responseMs: 600, config: withOrigin('playback_start') });
+test('timing_origin play_call: response time still runs from play()', () => {
+  const h = run({ playLatencyMs: 300, responseMs: 600, config: withOrigin('play_call') });
   expect(h.snap.result?.outcome).toBe('PASS');
-  expect(tones(h).every((t) => t.play_latency_ms === null && t.response_ms === 600)).toBe(true);
+  expect(tones(h).every((t) => t.play_latency_ms === 300 && t.response_ms === 900)).toBe(true);
+});
+
+test('start at exactly the latency limit is valid; no replays', () => {
+  const h = run({ playLatencyMs: LIMIT });
+  expect(h.snap.result?.outcome).toBe('PASS');
+  expect(h.plays).toHaveLength(POINTS * PER_POINT);
+  expect(h.engine.log().events.some((e) => e.event.includes('late start'))).toBe(false);
+});
+
+test('late start (over the limit): tone stopped at once, discarded, logged and replayed like a noise-gated tone', () => {
+  // every presentation starts late on its first attempt only
+  const h = harness({ playLatencyMs: (attempt) => (attempt === 1 ? LIMIT + 1 : 200) });
+  h.engine.start();
+  jest.advanceTimersByTime(cfg.response.inter_stimulus_interval_ms.value[1] + LIMIT + 2); // first late report is in
+  expect(h.stops).toBeGreaterThanOrEqual(1);
+  expect(h.engine.log().events.map((e) => e.event)).toContain(`discarded ${h.plays.length ? 'tone' : 'catch'} (late start +${LIMIT + 1}ms)`);
+  for (let i = 0; i < 1200 && h.snap.phase !== 'done'; i++) jest.advanceTimersByTime(1000);
+  expect(h.snap.result?.outcome).toBe('PASS');
+  // the harness counts attempts per point, so the first presentation of each point was late once
+  expect(h.plays).toHaveLength(POINTS * PER_POINT + POINTS);
+  expect(tones(h)).toHaveLength(POINTS * PER_POINT);
+  expect(tones(h).every((t) => t.play_latency_ms === 200)).toBe(true); // only valid presentations become trials
+  expect(h.engine.log().noise_events).toHaveLength(0); // a late start is not noise
+});
+
+test('always late: replayed up to the limit, then dropped -> points not tested -> RETEST, never REFER', () => {
+  const h = run({ playLatencyMs: LIMIT + 500 });
+  expect(h.plays).toHaveLength(POINTS * PER_POINT * (1 + MAX_REPLAYS));
+  expect(h.engine.log().trials).toHaveLength(0);
+  expect(h.snap.result?.outcome).toBe('RETEST');
+});
+
+test('no playback report at all: the presentation is invalid (never counted from play()) and replayed', () => {
+  const h = run({ playLatencyMs: null });
+  expect(h.engine.log().trials).toHaveLength(0);
+  expect(h.engine.log().events.some((e) => e.event.includes('(no playback report)'))).toBe(true);
+  expect(h.snap.result?.outcome).toBe('RETEST');
+});
+
+test('catch trials play the silent clip and are timed from its playback start, like tones', () => {
+  const h = run({ playLatencyMs: 700 });
+  expect(h.silences).toHaveLength(CATCH);
+  expect(catches(h).every((t) => t.play_latency_ms === 700 && !t.responded)).toBe(true);
+
+  // a tap WINDOW - 100 ms after the clip starts lands inside the catch window measured from the clip's start
+  const g = run({ playLatencyMs: 700, catchTapMs: WINDOW - 100 });
+  const c = catches(g);
+  expect(c.length).toBeGreaterThanOrEqual(CATCH);
+  expect(c.every((t) => t.responded && t.response_ms === WINDOW - 100)).toBe(true);
+  expect(g.snap.result?.outcome).toBe('RETEST'); // every silent trial tapped: unreliable
+});
+
+test('a late-starting catch clip is replayed too', () => {
+  const h = run({ playLatencyMs: (attempt) => (attempt === 1 ? LIMIT + 1 : 300) });
+  expect(catches(h)).toHaveLength(CATCH);
+  expect(h.silences).toHaveLength(CATCH + 1); // only the first catch clip was late (attempt counter is per session)
+});
+
+test('noise is judged while the tone actually sounds: noise before a late start does not discard', () => {
+  const h = harness({ playLatencyMs: 800 });
+  const real = h.engine.onSample;
+  // loud only in the 700 ms after each play(), i.e. before the sound starts at +800
+  h.engine.onSample = (db, t) => real(h.plays.length && t - h.plays[h.plays.length - 1].t < 700 ? -10 : db, t);
+  h.engine.start();
+  for (let i = 0; i < 1200 && h.snap.phase !== 'done'; i++) jest.advanceTimersByTime(1000);
+  expect(h.engine.log().noise_events).toHaveLength(0);
+  expect(h.snap.result?.outcome).toBe('PASS');
 });

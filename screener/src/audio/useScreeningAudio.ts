@@ -9,6 +9,7 @@ import { File } from 'expo-file-system';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { createMic } from '@/audio/mic';
+import { playFromStart, rewind, warmUp } from '@/audio/tones';
 import type { Port } from '@/engine/engine';
 import { v, type Config, type Ear } from '@/rules';
 
@@ -22,6 +23,7 @@ const TONES: Record<string, number> = {
   'right-2000': require('@/assets/tones/generated/tone_2000Hz_right.wav'),
   'left-4000': require('@/assets/tones/generated/tone_4000Hz_left.wav'),
   'right-4000': require('@/assets/tones/generated/tone_4000Hz_right.wav'),
+  silence: require('@/assets/tones/generated/silence.wav'), // catch trials: same path and start delay, no sound
 };
 
 /** Player volume. Calibrated levels come in Phase 6; until then every session is marked uncalibrated. */
@@ -82,10 +84,11 @@ export function useScreeningAudio(cfg: Config) {
 
   // Actual playback start (ERR-026): the player's status says playing (ExoPlayer onIsPlayingChanged); the start
   // is the event's arrival minus the position already played. Periodic "playing" updates repeat this; the engine
-  // keeps only the first per tone.
+  // keeps only the first per tone. A finished tone is rewound at once, so its next play() needs no seek.
   useEffect(() => {
     const subs = Object.values(players).map((p) => p.addListener('playbackStatusUpdate', (st) => {
       if (st.playing) listeners.current.onPlaybackStart?.(Date.now() - st.currentTime * 1000);
+      if (st.didJustFinish && !disposed.current) rewind(p);
     }));
     return () => subs.forEach((x) => x.remove());
   }, [players]);
@@ -117,12 +120,7 @@ export function useScreeningAudio(cfg: Config) {
   }, [micOn, recorder, cfg]);
 
   const stopAll = () => {
-    if (!disposed.current) Object.values(players).forEach((p) => p.pause()); // players are gone after unmount
-  };
-
-  const setVolume = (p: AudioPlayer, volume: number) => {
-    // expo-audio's documented volume API is assignment on the native player object (see ERR-004).
-    p.volume = volume;
+    if (!disposed.current) Object.values(players).forEach(rewind); // players are gone after unmount
   };
 
   const { volume, calibrated } = playback(cfg);
@@ -134,10 +132,12 @@ export function useScreeningAudio(cfg: Config) {
     random: Math.random,
     play(ear: Ear, freq: number) {
       stopAll();
-      const p = players[`${ear}-${freq}`];
-      setVolume(p, volume);
-      p.seekTo(0);
-      p.play();
+      // expo-audio's documented volume API is assignment on the native player object (see ERR-004).
+      playFromStart(players[`${ear}-${freq}`], volume);
+    },
+    playSilence() {
+      stopAll();
+      playFromStart(players.silence, volume);
     },
     stop: stopAll,
   };
@@ -149,6 +149,15 @@ export function useScreeningAudio(cfg: Config) {
     error,
     calibrated,
     deviceChanges: () => [...changes.current],
+    /** Silent warm-up of every player before the test (ERR-026); call once the audio mode is set (mic started). */
+    warmUp: () => warmUp(
+      Object.values(players),
+      (p, fn) => {
+        const sub = (p as AudioPlayer).addListener('playbackStatusUpdate', (st) => { if (st.playing) fn(); });
+        return () => sub.remove();
+      },
+      v(cfg, 'response', 'max_play_latency_ms') + v(cfg, 'tone', 'duration_ms'),
+    ).then(stopAll), // rewinds every player (skipped if the screen was left meanwhile)
     setListeners: (l: Listeners) => { listeners.current = l; },
     /** Starts the mic for the rest of the session. Returns the mic start time (for the settle window), or null if
      *  the screen was left while starting. */

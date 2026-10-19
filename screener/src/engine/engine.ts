@@ -12,6 +12,7 @@ export type Port = {
   clearTimeout(handle: unknown): void;
   random(): number; // [0, 1)
   play(ear: Ear, freq: number): void; // starts one tone of tone.duration_ms
+  playSilence(): void; // starts the silent clip for a catch trial: same player path and start delay as a tone
   stop(): void; // silences any tone now
 };
 
@@ -27,7 +28,7 @@ export type Snapshot = {
 
 type Item = { kind: 'tone' | 'catch'; ear?: Ear; freq?: number; replays: number };
 // onset = the play() call; playStart = when the player reported playing; tapAt = absolute tap time.
-type Current = { item: Item; onset: number; playStart: number | null; tapAt: number | null; samples: Sample[] };
+type Current = { item: Item; onset: number; playStart: number | null; tapAt: number | null };
 
 export type EngineOptions = {
   include500: boolean; // from apply500HzPolicy on the pre-test ambient level
@@ -96,13 +97,14 @@ export function createEngine(cfg: Config, port: Port, opts: EngineOptions, onCha
   function present() {
     const item = queue[0];
     if (!earphones) return pause('no earphones'); // never play a test tone through the loudspeaker
-    current = { item, onset: port.now(), playStart: null, tapAt: null, samples: [] };
+    current = { item, onset: port.now(), playStart: null, tapAt: null };
     last = null;
     if (item.kind === 'tone') {
       log(`tone ${item.ear} ${item.freq} round ${round}`);
       port.play(item.ear as Ear, item.freq as number);
     } else {
       log(`catch round ${round}`);
+      port.playSilence();
     }
     later(endWindow, windowMs());
     emit();
@@ -113,30 +115,44 @@ export function createEngine(cfg: Config, port: Port, opts: EngineOptions, onCha
   /** Where response time starts for this presentation (config response.timing_origin). */
   const origin = (c: Current) => (fromPlayback() && c.playStart !== null ? c.playStart : c.onset);
 
+  /** Throws away the presentation at the head of the queue: replayed after the next gap, up to
+   *  noise.max_replays_per_tone; after that it is dropped without a trial (the point becomes noisy / not tested). */
+  function discard(item: Item, reason: string) {
+    log(`discarded ${item.kind} (${reason})`);
+    if (item.replays < v(cfg, 'noise', 'max_replays_per_tone')) {
+      item.replays++;
+      return next();
+    }
+    log(`dropped ${item.kind} after ${item.replays} replays`);
+    queue.shift();
+    done++;
+    next();
+  }
+
   function endWindow() {
     const cur = current as Current;
     current = null;
-    lastOnset = origin(cur);
     const { item } = cur;
+    // never confirmed playing: we can't say the tone (or silent clip) was presented, so the trial is invalid
+    if (cur.playStart === null) return discard(item, 'no playback report');
+    lastOnset = origin(cur);
     const tap = cur.tapAt === null ? null : cur.tapAt - origin(cur);
-    const latency = cur.playStart === null ? null : cur.playStart - cur.onset;
+    const latency = cur.playStart - cur.onset;
     if (item.kind === 'tone') {
-      const nv = noiseVerdict(cur.samples, opts.micStartMs, deviceChanges, cfg);
+      // noise is judged while the tone actually sounded, from the same origin as the response time
+      const o = origin(cur);
+      const during = samples.filter((sm) => sm.t >= o && sm.t <= o + v(cfg, 'tone', 'duration_ms'));
+      const nv = noiseVerdict(during, opts.micStartMs, deviceChanges, cfg);
       log(`noise ${nv.verdict} valid=${nv.valid} max=${nv.max_db}`);
       if (nv.verdict !== 'ok') {
         noise.push({ round, ear: item.ear as Ear, freq: item.freq as number });
-        if (item.replays < v(cfg, 'noise', 'max_replays_per_tone')) {
-          item.replays++; // stays at the head of the queue: replayed after the next gap
-          return next();
-        }
-      } else {
-        last = { round, kind: 'tone', ear: item.ear, freq: item.freq, responded: tap !== null, response_ms: tap, play_latency_ms: latency };
-        trials.push(last);
+        return discard(item, 'noise');
       }
+      last = { round, kind: 'tone', ear: item.ear, freq: item.freq, responded: tap !== null, response_ms: tap, play_latency_ms: latency };
     } else {
-      last = { round, kind: 'catch', responded: tap !== null, response_ms: tap };
-      trials.push(last);
+      last = { round, kind: 'catch', responded: tap !== null, response_ms: tap, play_latency_ms: latency };
     }
+    trials.push(last);
     queue.shift();
     done++;
     next();
@@ -179,9 +195,6 @@ export function createEngine(cfg: Config, port: Port, opts: EngineOptions, onCha
     /** One mic metering reading. `db` null or at the floor is kept and treated as invalid by the noise rule. */
     onSample(db: number | null, t: number) {
       samples.push({ t, db });
-      if (current && t >= current.onset && t <= current.onset + v(cfg, 'tone', 'duration_ms')) {
-        current.samples.push({ t, db });
-      }
     },
     onTap(t: number) {
       if (current && current.tapAt === null) current.tapAt = t;
@@ -192,12 +205,21 @@ export function createEngine(cfg: Config, port: Port, opts: EngineOptions, onCha
       }
       log('tap');
     },
-    /** The player reported that playback started; `t` is our best estimate of that moment (JS clock). */
+    /** The player reported that playback started; `t` is our best estimate of that moment (JS clock).
+     *  Tones and the silent catch clip alike, so catch trials are timed from the same reference. */
     onPlaybackStart(t: number) {
       const c = current;
-      if (!c || c.item.kind !== 'tone' || c.playStart !== null || t < c.onset) return;
+      if (!c || c.playStart !== null || t < c.onset) return;
+      const latency = Math.round(t - c.onset);
+      if (latency > v(cfg, 'response', 'max_play_latency_ms')) {
+        // started too late (pipeline stall): stop it and replay, like a noise-gated tone
+        port.stop();
+        port.clearTimeout(timer);
+        current = null;
+        return discard(c.item, `late start +${latency}ms`);
+      }
       c.playStart = t;
-      log(`playing +${Math.round(t - c.onset)}ms`);
+      log(`playing +${latency}ms`);
       // the window runs from playback start too, so a late start doesn't shorten it
       if (fromPlayback()) later(endWindow, Math.max(0, t + windowMs() - port.now()));
     },
@@ -224,7 +246,10 @@ export function createEngine(cfg: Config, port: Port, opts: EngineOptions, onCha
       emit();
     },
     snapshot,
-    log: () => ({ trials, noise_events: noise, device_changes_ms: deviceChanges, samples, events }),
+    log: () => ({
+      timing_origin: v(cfg, 'response', 'timing_origin') as string,
+      trials, noise_events: noise, device_changes_ms: deviceChanges, samples, events,
+    }),
   };
 }
 

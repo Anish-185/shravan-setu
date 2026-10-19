@@ -216,6 +216,7 @@ function AmbientStep({ audio, voice, micStart, onDone }: {
     const samples: Sample[] = [];
     setMeasuring(true);
     audio.setListeners({ onSample: (dB, at) => samples.push({ t: at, db: dB }) });
+    void audio.warmUp(); // silent (volume 0), done well within the measurement; cuts the first tone's start delay
     const wait = Math.max(0, micStart + v(cfg, 'noise', 'mic_settle_ms') - Date.now()) + v(cfg, 'noise', 'ambient_measure_ms');
     setTimeout(() => {
       audio.setListeners({});

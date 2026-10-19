@@ -35,6 +35,7 @@ function screen(hears: (ear: Ear, freq: number) => boolean) {
       setTimeout(() => engine.onPlaybackStart(Date.now()), 120);
       if (hears(ear, freq)) setTimeout(() => engine.onTap(Date.now()), 700);
     },
+    playSilence: () => { setTimeout(() => engine.onPlaybackStart(Date.now()), 120); },
     stop: () => {},
   };
   const engine = createEngine(cfg, port, { include500: false, micStartMs: -10_000, earphones: true }, (s) => { snap = s; });

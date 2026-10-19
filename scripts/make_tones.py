@@ -1,7 +1,7 @@
 """Generate per-ear pure-tone WAVs with raised-cosine onset/offset ramps (fixes ERR-005: clicks in the original tones).
 
 All parameters come from config/screening.json (tone.*, frequencies_hz, plus 500 Hz for the 500 Hz policy).
-Stdlib only. Output: one stereo 16-bit WAV per frequency and ear, the other channel silent.
+Stdlib only. Output: one stereo 16-bit WAV per frequency and ear, the other channel silent, plus silence.wav for catch trials.
 
     python scripts/make_tones.py [out_dir]      (default: screener/assets/tones/generated)
 """
@@ -54,6 +54,11 @@ def main(out_dir):
             path = out_dir / f"tone_{freq}Hz_{ear}.wav"
             write_tone(path, samples, ear, rate)
             print(path.relative_to(ROOT) if path.is_relative_to(ROOT) else path)
+    # Catch trials play this all-zero clip of the same length through the same player path, so their timing
+    # reference (reported playback start) is comparable to a tone's (ERR-026).
+    path = out_dir / "silence.wav"
+    write_tone(path, [0] * round(rate * v("tone", "duration_ms") / 1000), "left", rate)
+    print(path.relative_to(ROOT) if path.is_relative_to(ROOT) else path)
 
 
 if __name__ == "__main__":

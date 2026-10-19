@@ -15,7 +15,10 @@ def test_tones_have_ramps_correct_channel_and_level(tmp_path):
     rate = mt.v("tone", "sample_rate_hz")
     ramp = round(rate * mt.v("tone", "ramp_ms") / 1000)
     peak = 32767 * 10 ** (mt.v("tone", "peak_dbfs") / 20)
-    files = sorted(tmp_path.glob("*.wav"))
+    silent = read(tmp_path / "silence.wav")
+    assert silent[:2] == (rate, 2) and not any(silent[2]) and not any(silent[3])
+    assert len(silent[2]) == round(rate * mt.v("tone", "duration_ms") / 1000)
+    files = sorted(tmp_path.glob("tone_*.wav"))
     assert len(files) == 2 * len({500, *mt.v("frequencies_hz")})
     for f in files:
         r, ch, left, right = read(f)
