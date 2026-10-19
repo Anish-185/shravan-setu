@@ -13,7 +13,7 @@ import { exportSession } from '@/result';
 import { LOST, nextStatuses, TREATMENTS } from '@/rules';
 import { TriageForm } from '@/triage';
 import { Icon } from '@/icons';
-import { Banner, Btn, C, Card, Chips, H, P, s, StatusPill } from '@/ui';
+import { Btn, C, Card, Chips, H, P, s, StatusPill } from '@/ui';
 
 export default function CaseDetail() {
   const t = useT();
@@ -44,7 +44,6 @@ export default function CaseDetail() {
 
   return (
     <ScrollView contentContainerStyle={s.screen}>
-      <Banner />
       <H>{name}</H>
       <View accessible accessibilityLabel={t('case.status', { status: t(`status.${c.status}` as never) })}>
         <StatusPill status={c.status} text={t(`status.${c.status}` as never)} />

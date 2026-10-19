@@ -27,7 +27,7 @@ data/raw/     downloaded public data (gitignored; fetched by script with checksu
 1. **No LLMs anywhere.** No OpenAI/Anthropic/Gemini/Llama/any hosted or local LLM, and no ML cloud APIs. Rules, simple statistics and classical algorithms only.
 2. **No custom hardware.** Android phone + standard wired earphones only. No Bluetooth earphones.
 3. **Offline-first.** The full screening flow, triage, case creation and status updates must work with no internet. Sync to the backend later.
-4. **Screening and referral tool, never diagnostic.** Every screen that shows a result and every doc must say so. Use "PASS / RETEST / REFER", never "normal hearing" or "hearing loss diagnosed". Triage is "likely treatable cause → PHC", never a diagnosis.
+4. **Screening and referral tool, never diagnostic.** The camp-request PDF and every doc (README, concept note) must say so; app screens don't repeat it (owner decision 2026-10-20: testers and judges know it's a prototype). Use "PASS / RETEST / REFER", never "normal hearing" or "hearing loss diagnosed". Triage is "likely treatable cause → PHC", never a diagnosis.
 5. **Honesty standard.**
    - Never invent a statistic, facility name, address, citation, or study result. If a number isn't in the brief or produced by our scripts, write `TODO(source)`.
    - Every quotable number comes from one reproducible script and is recorded in `docs/CLAIMS.md` with its condition.

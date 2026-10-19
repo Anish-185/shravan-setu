@@ -12,7 +12,7 @@ import { useT } from '@/i18n';
 import { TRANSITIONS } from '@/rules';
 import { shareText } from '@/share';
 import { Icon } from '@/icons';
-import { Banner, Btn, C, Card, Check, Chips, F, H, Pill, s, StatusPill } from '@/ui';
+import { Btn, C, Card, Check, Chips, F, H, Pill, s, StatusPill } from '@/ui';
 
 const STATUSES = ['all', ...Object.keys(TRANSITIONS)] as const;
 const CAMPABLE = ['referred', 'rescheduled'];
@@ -34,7 +34,6 @@ export default function Cases() {
   const label = (st: string) => (st === 'all' ? t('cases.all') : t(`status.${st}` as never));
   return (
     <ScrollView contentContainerStyle={s.screen}>
-      <Banner />
       <Chips options={STATUSES.filter((x) => x === 'all' || rows.some((r) => r.status === x))} value={filter}
         onChange={setFilter} label={label} />
       {shown.length === 0 && (

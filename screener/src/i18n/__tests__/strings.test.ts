@@ -1,4 +1,4 @@
-import { pick, reasonMatch, reasonText, STRINGS, tr } from '../strings';
+import { pick, reasonMatch, reasonText, STRINGS } from '../strings';
 
 test('English text with placeholders filled', () => {
   expect(pick({ en: 'Hi {name}, {n} left', te: 'TODO_TE' }, 'en', { name: 'A1', n: 3 })).toBe('Hi A1, 3 left');
@@ -20,7 +20,6 @@ test('every string has English, a Telugu slot and a "where" note for the transla
   for (const [key, v] of Object.entries(STRINGS)) {
     expect([key, v.en.trim().length > 0, v.te.trim().length > 0, v.where.trim().length > 0]).toEqual([key, true, true, true]);
   }
-  expect(tr('en', 'banner')).toBe('Screening only, not a diagnosis');
 });
 
 test('every rule reason in the shared fixtures and the triage config has a reason.* template', () => {

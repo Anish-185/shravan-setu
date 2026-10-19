@@ -83,7 +83,7 @@ indigo, and compared them:
   once, not animated. Only the balloon, its ring and the celebration move, on the UI thread.
 - **Banners unchanged in strength.** "Screening only, not a diagnosis" stays at the top of every screen that has it
   today, including child mode (on a white 85% strip so it reads over the sky). UNCALIBRATED stays directly under the
-  ears card on the result. *Changed by the owner on 2026-10-19, see "Banners" below.*
+  ears card on the result. *Changed by the owner on 2026-10-19 and again on 2026-10-20, see "Banners" below.*
 - New strings "Developer" (డెవలపర్) and "Well done!" (చాలా బాగా చేశావు!, same as voice line `voice.done`): Telugu by
   Anish, native Telugu speaker (`docs/TELUGU_REVIEW.md` #187, #188).
 
@@ -210,7 +210,8 @@ What we won't take: their logos, wordmarks, illustrations, product imagery, page
   - Reduced-motion setting respected.
 - **Never softened.** The "Screening only, not a diagnosis" banner and the UNCALIBRATED warning keep at least their
   current prominence on every screen they're on now. *Owner decision 2026-10-19: both softened in style, never removed
-  from a teacher screen; see "Banners".*
+  from a teacher screen; see "Banners". Owner decision 2026-10-20: the screening-only note is removed from all app
+  screens.*
 - **Offline.** Every font, icon and picture is bundled. No remote URLs.
 
 ## 3. Shared across both directions
@@ -238,12 +239,11 @@ strings define it today. The Telugu explanation sits under it, from `strings.jso
 
 ### Banners
 
-As built after the owner's change of 2026-10-19 (`Banner` and `Note` in `screener/src/ui.tsx`):
+As built after the owner's changes of 2026-10-19 and 2026-10-20 (`Note` in `screener/src/ui.tsx`):
 
-- **Screening only:** a calm one-line note at the top of the screen: 15 dp info icon and 13 dp dusk text, no box.
-  13 dp is below the 16 dp body minimum on purpose (owner request); contrast dusk on paper passes AA.
-  - On Home, every teacher step of the test, the result and triage, Cases, a case, and camp requests; the server PDF
-    keeps its own line. Not on the child-mode screens (balloon, "Well done!"): the child doesn't need it.
+- **Screening only:** not on any app screen (owner decision 2026-10-20: testers and judges know it's a prototype).
+  Stated in the camp-request PDF (server banner) and the docs (README, concept note). The triage label "Triage, not
+  diagnosis" on the triage screen is a separate string and stays.
 - **UNCALIBRATED:** a small amber note (warning triangle, 13 dp amber `#7A4F00` text, no box) directly under the ear
   results, before the reasons. It shows until `calibration.baseline_dbfs` and `screening_level_db_re_team_baseline`
   are both set; then it goes away by itself (`src/__tests__/result.test.tsx`).

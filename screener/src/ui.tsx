@@ -1,5 +1,5 @@
-// Shared bits for every screen: Direction B v2 "Setu Line" tokens and components (docs/DESIGN.md). The banner is
-// permanent on every teacher screen that shows a result (CLAUDE.md rule 4); the child-mode screens leave it out.
+// Shared bits for every screen: Direction B v2 "Setu Line" tokens and components (docs/DESIGN.md).
+// "Screening only, not a diagnosis" is stated in the camp-request PDF and the docs, not on app screens (CLAUDE.md rule 4).
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
@@ -39,13 +39,7 @@ export function LangToggle({ onNight }: { onNight?: boolean }) {
   );
 }
 
-/** "Screening only, not a diagnosis": a calm one-line note, never hidden on a teacher screen. */
-export function Banner() {
-  const t = useT();
-  return <Note icon="info" color={C.dusk} text={t('banner')} />;
-}
-
-/** Small icon + text line with no box (banner, UNCALIBRATED). */
+/** Small icon + text line with no box (UNCALIBRATED). */
 export function Note({ icon, color, text }: { icon: IconName; color: string; text: string }) {
   return (
     <View style={s.note}>

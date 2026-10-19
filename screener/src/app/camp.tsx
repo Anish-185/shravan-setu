@@ -13,7 +13,7 @@ import { db } from '@/db';
 import { get, kvGet, list } from '@/db/store';
 import { useT } from '@/i18n';
 import { shareText } from '@/share';
-import { Banner, Btn, Card, Chips, H, P, s } from '@/ui';
+import { Btn, Card, Chips, H, P, s } from '@/ui';
 
 const inAWeek = () => new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
 
@@ -56,7 +56,6 @@ export default function Camp() {
 
   return (
     <ScrollView contentContainerStyle={s.screen}>
-      <Banner />
       <H>{t('camp.h')}</H>
       <Card><P>{t('camp.cases', { n: rows.length, names: rows.map((r) => r.name).join(', ') })}</P></Card>
       {!camp ? (

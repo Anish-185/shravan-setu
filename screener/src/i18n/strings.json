@@ -1,9 +1,4 @@
 {
- "banner": {
-  "en": "Screening only, not a diagnosis",
-  "te": "ఇది స్క్రీనింగ్ మాత్రమే, వ్యాధి నిర్ధారణ కాదు",
-  "where": "Banner at the top of every screen that shows a result"
- },
  "lang.switchToTe": {
   "en": "Telugu",
   "te": "తెలుగు",

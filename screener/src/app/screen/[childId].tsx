@@ -20,7 +20,7 @@ import { Icon } from '@/icons';
 import { ambientLevel, apply500HzPolicy, v, type Ear, type Sample } from '@/rules';
 import { ResultStep } from '@/result';
 import { saveSession } from '@/session';
-import { Banner, Btn, C, Card, Check, Chips, F, H, P, Pill, s, VoiceBtn } from '@/ui';
+import { Btn, C, Card, Check, Chips, F, H, P, Pill, s, VoiceBtn } from '@/ui';
 
 type Step = 'consent' | 'device' | 'lr' | 'ambient' | 'test' | 'result';
 const STEPS: Key[] = ['consent.h', 'device.h', 'lr.h', 'ambient.h', 'test.h']; // the bridge-arch stepper's posts
@@ -66,7 +66,6 @@ export default function Screen() {
         <ChildMode snap={snap} error={audio.error ?? ''} onTap={() => engine.current?.onTap(Date.now())} />
       ) : (
     <ScrollView contentContainerStyle={s.screen}>
-      <Banner />
       {step === 'result' ? <H>{child.display_name}</H> : (
         <View style={st.who}>
           <Icon name="user-round" size={20} color={C.dusk} />

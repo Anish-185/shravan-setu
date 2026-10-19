@@ -10,7 +10,7 @@ import { db } from '@/db';
 import { list, outbox } from '@/db/store';
 import { useT, type Key } from '@/i18n';
 import { Icon, type IconName } from '@/icons';
-import { Banner, C, F, LangToggle, s, Tile } from '@/ui';
+import { C, F, LangToggle, s, Tile } from '@/ui';
 
 export default function Home() {
   const t = useT();
@@ -39,7 +39,6 @@ export default function Home() {
 
       <View style={st.body}>
         <Text style={s.muted}>{t('home.intro')}</Text>
-        <Banner />
         <Pressable accessibilityRole="button" onPress={() => router.push('/children')}
           style={({ pressed }) => [st.primary, pressed && s.pressed]}>
           <Muggu color={C.white} opacity={0.08} size={18} dot={1.6} />
