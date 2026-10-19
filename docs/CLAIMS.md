@@ -3,7 +3,7 @@
 Every quotable number, the condition it holds under, and the script that produces it. Numbers not in this table
 must not appear in docs, slides or the UI. The rows between the GENERATED markers are written by `python -m eval.report`
 (never edit them by hand); `python -m eval.report --check` (run by pytest) fails if any row disagrees with a fresh
-computation. Hand-written device-trial rows P5-01..P5-03 are rechecked against their raw files when present.
+computation. Hand-written device-trial rows P5-01..P5-03 and P6-01..P6-03 are rechecked against their raw files when present.
 
 | ID | Claim | Value | Condition | Script | Real / SIMULATED |
 |---|---|---|---|---|---|
@@ -18,6 +18,9 @@ computation. Hand-written device-trial rows P5-01..P5-03 are rechecked against t
 | P5-01 | Audio start delay: player-reported playback start minus the JS play() call | min 144 ms, median 486 ms, max 2243 ms (all 16 tone presentations, answered or not; not consistent) | Redmi 2201117TI, Samsung wired earphones, Expo Go SDK 57, media volume zero then 6 steps; one honest PASS session (B-3, `data/raw/phase5/`) | `scripts/analyze_phase4.py` (play latency column) | Real, device trial only (n = 1) |
 | P5-02 | Tap time measured from the reported playback start (what `timing_origin = playback_start` would use) | min 806 ms, median 1098 ms, max 1481 ms; from play() the same taps were 1168 / 1554 / 3414 ms | Same as P5-01; tester's reaction time plus the unobservable output buffer | `scripts/analyze_phase4.py` (tap from playback start column) | Real, device trial only (n = 1) |
 | P5-03 | Tone starts later than the Phase 6 limit (`response.max_play_latency_ms` = 1000 ms) | 3 of 16 (1078, 1208, 2243 ms; the last was the first tone) | Same as P5-01; recorded before preloading/warm-up existed, so it is the "before" figure, not the current app | `scripts/analyze_phase4.py` (starts over limit column) | Real, device trial only (n = 1) |
+| P6-01 | Audio start delay after the warm-up fix (ERR-026) | min 9 ms, median 60 ms, max 106 ms (all 20 presentations: 16 tones + 4 silent catch clips) | Redmi 2201117TI, Samsung wired earphones, Expo Go SDK 57, media volume zero then 6 steps, `timing_origin = playback_start`, players warmed up during the room-noise step; one adult-tester session in child mode (Student C1, fake record), PASS, room noise +0.5, 106 s, catch taps 0/4, out of window 1/16, noise replays 1 (`data/raw/phase6/childtest.json`) | `scripts/analyze_phase4.py` (play latency column) | Real, device trial only (n = 1) |
+| P6-02 | Tap time measured from the reported playback start | min 339 ms, median 1317 ms, max 2835 ms (the max is the one out-of-window tap) | Same as P6-01; tester's reaction time plus the unobservable output buffer | `scripts/analyze_phase4.py` (tap from playback start column) | Real, device trial only (n = 1) |
+| P6-03 | Presentations starting later than `response.max_play_latency_ms` = 1000 ms | 0 of 20 (late-start replays 0); before the fix 3 of 16 (P5-03) | Same as P6-01 | `scripts/analyze_phase4.py` (starts over limit column) | Real, device trial only (n = 1) |
 
 These are spike observations used to choose design parameters. They are **not** accuracy, sensitivity or hearing claims.
 

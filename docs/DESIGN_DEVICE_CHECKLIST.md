@@ -1,4 +1,4 @@
-# Phone checklist: design pass + N–T + V–Y, one sitting (NEEDS YOU)
+# Phone checklist: design pass + N–T + V–Y, one sitting (DONE 2026-10-19, all passed)
 
 Redmi 2201117TI, Samsung wired earphones, your fixed media volume. Pseudonyms only. Reply with the number and
 yes/no, plus a screenshot of anything cut off, overlapping or red.
@@ -60,3 +60,19 @@ Anything cut off, overlapping or squeezed is a fail.
 
 Optional, APK build only: the launcher icon (marigold wave on Night) and the Night splash. Expo Go shows its own
 loader.
+
+## Results (owner, 2026-10-19): all passed
+
+- 1-3 Home, Settings/Developer, Children/S: pass in English and Telugu; nothing cut off; డెవలపర్ shown.
+- 4 / V / W Test 1 (Student C1): arch stepper, silent warm-up, italics, calm child mode, "Well done!" then result.
+  PASS; numbers in `PHASE6_DEVICE_CHECKLIST.md` and CLAIMS P6-01..P6-03.
+- 5 / N Test 2 (Student C2, Remove animations on): REFER, no movement, same "Well done!", correct order, no red or
+  yellow box.
+- 6 / O-R: status and route chips; checkboxes only on referred cases and they toggle; history in IST; only legal
+  moves; lost to follow-up needs a reason; missed-camp reminder in both languages; rescheduled works; camp request
+  fine. C2's triage not saved (not all questions answered), as expected.
+- 7 / T: sync works; PDF shows IST, no Class column, "not done" without triage.
+
+Follow-up (owner request, same day): the Screening-only banner became a small one-line note and is gone from the
+child-mode screens; UNCALIBRATED became a small amber note under the ears. Phone look: `PHASE6_DEVICE_CHECKLIST.md`
+item Z. Item 5's "UNCALIBRATED directly under the ears" still holds.

@@ -24,6 +24,7 @@ import simulate_district  # noqa: E402
 CLAIMS = ROOT / "docs" / "CLAIMS.md"
 BEGIN, END = "<!-- BEGIN GENERATED: python -m eval.report -->", "<!-- END GENERATED -->"
 PHASE5 = ROOT / "data" / "raw" / "phase5"
+PHASE6_CHILD = ROOT / "data" / "raw" / "phase6" / "childtest.json"
 
 
 def compute():
@@ -34,7 +35,7 @@ def compute():
     p5 = sorted(PHASE5.glob("session-*.json"))
     cal = sorted((ROOT / "data" / "raw" / "calibration").glob("*.json"))
     return {"sim": sim, "cost": cost, "nhanes": nh, "phase5": p5, "calibration": cal,
-            "claims": claim_rows(sim, cost, nh), "device_checks": device_checks(p5)}
+            "claims": claim_rows(sim, cost, nh), "device_checks": device_checks(p5, PHASE6_CHILD)}
 
 
 def row(cid, claim, value, condition, script, kind):
@@ -112,13 +113,16 @@ def claim_rows(sim, cost, nh):
     return rows
 
 
-def device_checks(p5_files):
+def device_checks(p5_files, p6_child):
     """Hand-written device-trial rows rechecked against their raw files when present: {claim id: expected text}."""
-    if not p5_files:
-        return {}
-    s = analyze_phase4.summary(json.loads(p5_files[0].read_text()))
     fmt = lambda t: f"min {t[0]} ms, median {t[1]} ms, max {t[2]} ms"  # noqa: E731
-    return {"P5-01": fmt(s["latency_ms"]), "P5-02": fmt(s["tap_from_start_ms"]), "P5-03": s["over_limit"].replace("/", " of ")}
+    out = {}
+    for prefix, f in [("P5", p5_files[0] if p5_files else None), ("P6", p6_child if p6_child.exists() else None)]:
+        if f:
+            s = analyze_phase4.summary(json.loads(f.read_text()))
+            out |= {f"{prefix}-01": fmt(s["latency_ms"]), f"{prefix}-02": fmt(s["tap_from_start_ms"]),
+                    f"{prefix}-03": s["over_limit"].replace("/", " of ")}
+    return out
 
 
 def git_state():
