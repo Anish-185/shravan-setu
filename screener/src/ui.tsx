@@ -1,5 +1,5 @@
 // Shared bits for every screen: Direction B v2 "Setu Line" tokens and components (docs/DESIGN.md). The banner is
-// permanent on every result-bearing screen (CLAUDE.md rule 4).
+// permanent on every teacher screen that shows a result (CLAUDE.md rule 4); the child-mode screens leave it out.
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
@@ -11,7 +11,7 @@ export const C = {
   night: '#1D1A4E', paper: '#F7F7FB', white: '#FFFFFF', indigo: '#3B35B8', marigold: '#F4A300', dusk: '#5B5A7A',
   lilac: '#E2E1EE', lavender: '#D9D4FF', dawn: '#FFE1A8', coral: '#EF4E3A', bandText: '#CFCBF7',
   indigoTint: '#EEEDF8', marigoldTint: '#FFF0D1', greyTint: '#EDEDF2', routeTint: '#F1F0F7',
-  warnBg: '#FFE9DE', warnLine: '#B23C00', warnText: '#8F2A00', okText: '#2E6B47', okTint: '#E5F1EA',
+  warnBg: '#FFE9DE', warnLine: '#B23C00', warnText: '#8F2A00', okText: '#2E6B47', okTint: '#E5F1EA', amber: '#7A4F00',
 };
 
 /** Font families as loaded in app/_layout.tsx. Weights are separate families: Android ignores fontWeight for them. */
@@ -39,12 +39,18 @@ export function LangToggle({ onNight }: { onNight?: boolean }) {
   );
 }
 
-export function Banner({ onSky }: { onSky?: boolean }) {
+/** "Screening only, not a diagnosis": a calm one-line note, never hidden on a teacher screen. */
+export function Banner() {
   const t = useT();
+  return <Note icon="info" color={C.dusk} text={t('banner')} />;
+}
+
+/** Small icon + text line with no box (banner, UNCALIBRATED). */
+export function Note({ icon, color, text }: { icon: IconName; color: string; text: string }) {
   return (
-    <View style={[s.banner, onSky && { backgroundColor: 'rgba(255,255,255,0.85)' }]}>
-      <Icon name="info" size={20} />
-      <Text style={s.bannerText}>{t('banner')}</Text>
+    <View style={s.note}>
+      <Icon name={icon} size={15} color={color} />
+      <Text style={[s.noteText, { color }]}>{text}</Text>
     </View>
   );
 }
@@ -141,7 +147,7 @@ export function StatusPill({ status, text }: { status: string; text: string }) {
   return <Pill icon={st.icon} text={text} tint={st.tint} color={st.color} />;
 }
 
-/** Vermillion-bordered warning block (UNCALIBRATED, triage label). Never collapsed. */
+/** Vermillion-bordered warning block (triage label). Never collapsed. */
 export function Warn({ children }: { children: ReactNode }) {
   return (
     <View style={s.warnBox}>
@@ -160,9 +166,8 @@ export const s = StyleSheet.create({
   lang: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 40, paddingHorizontal: 14, borderRadius: 999,
     borderWidth: 1.5 },
   langText: { fontFamily: F.uiBold, fontSize: 14, lineHeight: 24 },
-  banner: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: C.indigoTint, borderColor: 'rgba(29,26,78,0.25)',
-    borderWidth: 1.5, borderRadius: 16, paddingVertical: 8, paddingHorizontal: 14 },
-  bannerText: { flex: 1, color: C.night, fontFamily: F.uiBold, fontSize: 14, lineHeight: 24 },
+  note: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  noteText: { flex: 1, fontFamily: F.ui, fontSize: 13, lineHeight: 22 },
   btn: { flexDirection: 'row', gap: 10, backgroundColor: C.indigo, minHeight: 54, paddingVertical: 10, paddingHorizontal: 22,
     borderRadius: 999, alignItems: 'center', justifyContent: 'center' },
   btnPlain: { backgroundColor: C.white, borderWidth: 1.5, borderColor: C.indigo },

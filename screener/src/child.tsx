@@ -15,7 +15,7 @@ import { Circle, Defs, Ellipse, G, LinearGradient, Path, Rect, Stop, Svg } from 
 
 import type { Snapshot } from '@/engine/engine';
 import { useT } from '@/i18n';
-import { Banner, C, F, s } from '@/ui';
+import { C, F, s } from '@/ui';
 
 const BALLOON = 300; // fixed, large hit area; only the drawing inside it moves
 
@@ -27,7 +27,6 @@ export function ChildMode({ snap, onTap, error }: { snap: Snapshot; onTap: () =>
     <View style={st.fill}>
       <Sky />
       <View style={[st.layer, { paddingTop: insets.top + 8, paddingBottom: insets.bottom + 14 }]}>
-        <Banner onSky />
         {!!error && <Text style={[s.warn, st.onSky]}>{error}</Text>}
         <View style={st.center}>
           <Balloon onTap={onTap} label={t('test.balloon')} />
@@ -164,7 +163,6 @@ export function Celebration({ onEnd }: { onEnd: () => void }) {
     <View style={[st.fill, st.over]} accessibilityLiveRegion="polite">
       <Sky />
       <View style={[st.layer, { paddingTop: insets.top + 8 }]}>
-        <Banner onSky />
         <View style={st.center}>
           {!reduce && <Animated.View style={up}><BalloonArt width={120} /></Animated.View>}
           <Animated.View style={[st.well, ring]}>

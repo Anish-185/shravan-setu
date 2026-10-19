@@ -13,7 +13,7 @@ import type { Snapshot } from '@/engine/engine';
 import { useT } from '@/i18n';
 import { TriageForm } from '@/triage';
 import { Icon } from '@/icons';
-import { Btn, C, Card, F, OUTCOME, P, Pill, s, Warn } from '@/ui';
+import { Btn, C, Card, F, Note, OUTCOME, P, Pill, s } from '@/ui';
 
 type Saved = { sessionId: string; caseId: string | null };
 
@@ -30,7 +30,7 @@ export function ResultStep({ snap, calibrated, onSave }: { snap: Snapshot; calib
     <View style={st.wrap}>
       <Badge outcome={r.outcome} label={t('result.h', { outcome: r.outcome ?? '-' })} />
       <Ears left={r.ear_outcomes.left} right={r.ear_outcomes.right} />
-      {!calibrated && <Warn>{t('result.uncalibrated')}</Warn>}
+      {!calibrated && <Note icon="triangle-alert" color={C.amber} text={t('result.uncalibrated')} />}
       <SetuLine color="#C9C6E8" height={34} stroke={2} style={{ marginHorizontal: -20, marginVertical: -6 }} />
       {r.reasons.length > 0 && (
         <Card>

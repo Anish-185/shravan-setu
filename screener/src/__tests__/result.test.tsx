@@ -1,8 +1,12 @@
 // ERR-032: the result screen saved the session (which stops the mic and sets the parent's state) during render.
+// Also: the UNCALIBRATED note follows the config, so it goes away by itself once the team baseline is filled in.
+import * as fs from 'fs';
+import * as path from 'path';
 import { useState } from 'react';
 import { Text } from 'react-native';
 import { act, create } from 'react-test-renderer';
 
+import { playback } from '../audio/tones';
 import type { Snapshot } from '../engine/engine';
 import { ResultStep } from '../result';
 
@@ -36,4 +40,25 @@ test('saving on REFER updates the parent after render, not during it', () => {
   expect(r!.root.findAllByType(Text).some((n) => n.props.children === 'mic off')).toBe(true);
   expect(save).toHaveBeenCalled();
   errors.mockRestore();
+});
+
+const cfg = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../../config/screening.json'), 'utf8'));
+const UNCAL = 'UNCALIBRATED test level (development volume). Not valid for real screening yet.';
+
+function shown(c: typeof cfg) {
+  let r: ReturnType<typeof create>;
+  act(() => { r = create(<ResultStep snap={snap} calibrated={playback(c).calibrated} onSave={() => ({ sessionId: 's', caseId: null })} />); });
+  return r!.root.findAllByType(Text).some((n) => n.props.children === UNCAL);
+}
+
+const withCal = (level: number | null, base: Record<string, number | null>) => ({
+  ...cfg,
+  screening_level_db_re_team_baseline: { value: level, source: 'test' },
+  calibration: { ...cfg.calibration, baseline_dbfs: { value: base, source: 'test' } },
+});
+
+test('UNCALIBRATED note: shown until calibrated, gone once the team baseline and screening level are in config', () => {
+  const none = { 500: null, 1000: null, 2000: null, 4000: null };
+  expect(shown(withCal(null, none))).toBe(true);
+  expect(shown(withCal(20, { 500: -60, 1000: -70, 2000: -72, 4000: -66 }))).toBe(false);
 });
