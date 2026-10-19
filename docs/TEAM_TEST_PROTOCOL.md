@@ -93,6 +93,11 @@ When someone is excluded:
 
 ## Step 3: screening sessions (visit 2)
 
+**Status: not run before submission; planned for the Stage 2 pilot** (owner decision 2026-10-20). Visit 1
+(calibration run 1, V1-V7) was done on 2026-10-19; no calibration run 2. Until visit 2 runs we make no claim about
+screening test-retest, minutes per test, or the random tapper / partial guesser outcomes. The one-tester device
+trials already in `docs/CLAIMS.md` (P4/P5/P6) are unchanged.
+
 For every volunteer, using a fake child record (Children list → "Student T1", "Student T2", ...; age band 15-18 is
 fine, it only labels the record):
 
@@ -122,6 +127,8 @@ gating and the 500 Hz policy against the quiet room.
   report: the 1000 ms limit or the warm-up needs another look.
 
 ## What we compute afterwards
+
+Visit 2 items (screening test-retest, minutes per test, tapper/guesser outcomes, L1/L2) wait for the Stage 2 pilot.
 
 - Team baseline and calibration test-retest: `scripts/calibrate.py`.
 - Screening test-retest: share of volunteers with the same outcome in sessions 1 and 2.
