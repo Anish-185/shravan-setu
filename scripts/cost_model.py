@@ -37,13 +37,16 @@ def throughput(p, students, per_phone):
 def scenario_cost(p, name, students, per_phone):
     s = p["scenarios"][name]
     t = throughput(p, students, per_phone)
-    kits = t["phones"] if s["kits"] == "per_phone_guideline" else math.ceil(students / p["students_per_class"])
+    per_kit = per_phone if s["kits"] == "per_phone_guideline" else p["students_per_class"]
+    kits = math.ceil(students / per_kit) if students else 0
+    # kits screen in parallel, so the school finishes when the busiest kit does
+    days = min(students, per_kit) / t["children_per_phone_per_day"]
     phone_year = p["phone_price_inr"] / p["phone_life_years"] if s["buys_phone"] else 0
     ear_year = p["earphone_price_inr"] / p["earphone_life_years"]
     upfront = kits * ((p["phone_price_inr"] if s["buys_phone"] else 0) + p["earphone_price_inr"])
     per_year = kits * (phone_year + ear_year)
     rate = p["teacher_cost_inr_per_hour"]
-    return {"kits": kits, "upfront_inr": upfront, "equipment_per_year_inr": per_year,
+    return {"kits": kits, "days_to_finish": days, "upfront_inr": upfront, "equipment_per_year_inr": per_year,
             "per_child_per_year_inr": per_year / students if students else None,
             "software_inr": p["software_cost_inr"],
             "teacher_minutes": t["teacher_minutes"],
@@ -94,11 +97,11 @@ def markdown(r):
         f"Guideline (PROPOSED): about {p['students_per_phone']['recommended']} students per calibrated phone, acceptable up to "
         f"{p['students_per_phone']['acceptable']}. Phones needed = ceil(students / {p['students_per_phone']['recommended']}).",
         "",
-        "| School size | Scenario (PROPOSED) | Kits | Upfront | Equipment per year | Per child per year | Software | Teacher time | Teacher cost |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| School size | Scenario (PROPOSED) | Kits | School days to finish | Upfront | Equipment per year | Per child per year | Software | Teacher time | Teacher cost |",
+        "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for c in r["costs"]:
-        lines.append(f"| {c['students']:,} | {p['scenarios'][c['scenario']]['label']} | {c['kits']} | {inr(c['upfront_inr'])} | "
+        lines.append(f"| {c['students']:,} | {p['scenarios'][c['scenario']]['label']} | {c['kits']} | {c['days_to_finish']:.1f} | {inr(c['upfront_inr'])} | "
                      f"{inr(c['equipment_per_year_inr'])} | {inr(c['per_child_per_year_inr'], 1)} | {inr(c['software_inr'])} | "
                      f"{c['teacher_minutes']:,} min | {inr(c['teacher_cost_inr'])} |")
     lines += ["", "Scenario notes:", ""]

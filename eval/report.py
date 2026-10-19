@@ -69,6 +69,12 @@ def claim_rows(sim, cost, nh):
         c = pc[(size, sc)]
         rows[cid] = row(cid, f"Equipment cost per child per year, scenario {label}, {size:,}-student school",
                         f"Rs {c['per_child_per_year_inr']:.1f} (software Rs 0)", cost_cond, "`scripts/cost_model.py`", "PROPOSED")
+    a1k, c1k = pc[(1000, "A_school_phone")], pc[(1000, "C_kit_per_class_teacher")]
+    rows["COST-06"] = row("COST-06", "School days to finish a 1,000-student school: scenario A vs scenario C",
+                          f"{a1k['days_to_finish']:.0f} vs {c1k['days_to_finish']:.1f}",
+                          f"A: {a1k['kits']} phones of 250 students in parallel; C: one kit per class of "
+                          f"{cost['params']['students_per_class']} (class size TODO(source)); 5 min per child, 1 h per kit per day",
+                          "`scripts/cost_model.py`", "PROPOSED")
     rows["COST-05"] = row("COST-05", "School days to screen 250 students on one phone",
                           f"{plan[250]['days']:.0f}", "5 min per child incl. setup, 1 h per phone per day (planning inputs)",
                           "`scripts/cost_model.py`", "PROPOSED")

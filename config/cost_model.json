@@ -38,7 +38,7 @@
         "label": "C. One earphone kit per class teacher, on their own phones",
         "buys_phone": false,
         "kits": "per_class",
-        "notes": "Cheaper than A (no phones bought), dearer than B (one kit per class instead of one per 250 students); each class teacher screens only their own class. The same calibration and privacy issues as B, multiplied by the number of phone models, and less convenient to manage."
+        "notes": "Its advantage is speed, not cost: every class teacher screens their own class at the same time, so the whole school finishes in about the days one class takes (see the days column). It costs more than B (one kit per class instead of one per 250 students) and less than A (no phones bought). The same calibration and privacy issues as B, multiplied by the number of phone models, and less convenient to manage."
       }
     },
     "source": "Team proposal, Oct 2026."

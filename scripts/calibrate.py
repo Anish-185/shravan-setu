@@ -4,8 +4,11 @@
 
 Prints, as Markdown: per-frequency team baseline (median of run-1 thresholds of all volunteers, both ears pooled, in
 dB re the tone file's full scale at player volume 1.0), test-retest agreement (run 1 vs run 2, same volunteer, ear and
-frequency), the within-run 1000 Hz repeat, and volunteers far from the median (review them: possible unknown hearing
-problem or a fitting issue). Ends with the `calibration.baseline_dbfs` value to paste into config/screening.json.
+frequency), the within-run 1000 Hz repeat, and the outlier rule (config calibration.outlier_*): a volunteer with at
+least `outlier_min_points` run-1 thresholds more than `outlier_db_above_group` dB above the median of the OTHER
+volunteers at that frequency is excluded from the baseline, with the reason (docs/TEAM_TEST_PROTOCOL.md says what the
+tester tells them). Much lower than the group is only flagged for review. Ends with the `calibration.baseline_dbfs`
+value to paste into config/screening.json.
 Team volunteers (adults), not children; levels are dB re: team baseline, never dB HL.
 """
 import json
@@ -14,8 +17,11 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+CAL = json.loads((ROOT / "config" / "screening.json").read_text())["calibration"]
 FREQS = (500, 1000, 2000, 4000)
-OUTLIER_DB = 15  # PLACEHOLDER: flag a volunteer threshold this far from the frequency's median
+OUTLIER_DB = CAL["outlier_db_above_group"]["value"]
+OUTLIER_POINTS = CAL["outlier_min_points"]["value"]
 
 
 def thresholds(d):
@@ -40,17 +46,37 @@ def analyse(files):
         repeats += [b - a for a, b in rep.values() if a is not None and b is not None]
         skipped += [f'{d["volunteer"]} run {d["run"]} {e} {f} Hz: {r["result"]}'
                     for r in d["results"] for e, f in [(r["ear"], r["freq"])] if r["result"] != "threshold"]
+    run1 = {who: vol[1] for who, vol in runs.items() if 1 in vol}
+
+    def values(f, who_list):
+        return [x for who in who_list for (e, ff), x in run1[who].items() if ff == f and x is not None]
+
+    excluded, review = {}, []
+    for who, th in run1.items():
+        others = [o for o in run1 if o != who]
+        high = []
+        for (e, f), x in sorted(th.items()):
+            ref = values(f, others)
+            if x is None or len(others) < 2 or not ref:  # too few other volunteers to judge
+                continue
+            med = statistics.median(ref)
+            if x - med > OUTLIER_DB:
+                high.append(f"{e} {f} Hz: {x} vs others' median {med}")
+            elif med - x > OUTLIER_DB:
+                review.append(f"{who} {e} {f} Hz: {x}, much lower than others' median {med} (check fitting/tapping)")
+        if len(high) >= OUTLIER_POINTS:
+            excluded[who] = high
+    kept = [w for w in run1 if w not in excluded]
     baseline, n = {}, {}
     for f in FREQS:
-        xs = [x for vol in runs.values() if 1 in vol for (e, ff), x in vol[1].items() if ff == f and x is not None]
+        xs = values(f, kept)
         baseline[f] = statistics.median(xs) if xs else None
         n[f] = len(xs)
     diffs = [r2[k] - r1[k] for vol in runs.values() if 1 in vol and 2 in vol
              for r1, r2 in [(vol[1], vol[2])] for k in r1 if r1[k] is not None and r2.get(k) is not None]
-    outliers = [f"{who} {e} {f} Hz: {x} vs median {baseline[f]}" for who, vol in runs.items() if 1 in vol
-                for (e, f), x in vol[1].items() if x is not None and baseline[f] is not None and abs(x - baseline[f]) > OUTLIER_DB]
     return {"volunteers": sorted(runs), "baseline": baseline, "n": n, "retest": stats(diffs),
-            "repeat_1000": stats(repeats), "outliers": outliers, "skipped": skipped}
+            "repeat_1000": stats(repeats), "excluded": excluded, "review": review, "skipped": skipped,
+            "can_judge": len(run1) >= 3}
 
 
 def stats(diffs):
@@ -69,8 +95,15 @@ def markdown(r):
         s = r[key]
         lines.append("" if s is None else f"\n{name}: {s['pairs']} pairs, mean absolute difference {s['mean_abs_db']:.1f} dB, "
                      f"{s['within_5_db']:.0%} within 5 dB, mean shift {s['mean_db']:+.1f} dB.")
-    if r["outliers"]:
-        lines += ["", f"Review (more than {OUTLIER_DB} dB from the median):", *[f"- {o}" for o in r["outliers"]]]
+    if not r["can_judge"]:
+        lines += ["", "Outlier rule not applied: fewer than 3 volunteers with run 1."]
+    if r["excluded"]:
+        lines += ["", f"Excluded from the baseline ({OUTLIER_POINTS}+ thresholds more than {OUTLIER_DB} dB above the other "
+                  "volunteers' median). Tester: tell them privately, using the wording in docs/TEAM_TEST_PROTOCOL.md, "
+                  "and record the reason in the CSV notes:"]
+        lines += [f"- {who}: " + "; ".join(why) for who, why in sorted(r["excluded"].items())]
+    if r["review"]:
+        lines += ["", "Review (not excluded):", *[f"- {x}" for x in r["review"]]]
     if r["skipped"]:
         lines += ["", "No threshold (not used):", *[f"- {x}" for x in r["skipped"]]]
     cfg = {str(f): r["baseline"][f] for f in FREQS}

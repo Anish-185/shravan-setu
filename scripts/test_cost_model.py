@@ -24,6 +24,9 @@ def test_scenario_costs():
     c = cm.scenario_cost(p, "C_kit_per_class_teacher", 1000, 250)
     assert c["kits"] == math.ceil(1000 / 40) and c["upfront_inr"] == 25 * 400
     assert b["equipment_per_year_inr"] < c["equipment_per_year_inr"] < a["equipment_per_year_inr"]
+    # C's advantage is speed: classes in parallel, so the school finishes in the days one class takes
+    assert c["days_to_finish"] == pytest.approx(40 / 12) and a["days_to_finish"] == pytest.approx(250 / 12)
+    assert cm.scenario_cost(p, "A_school_phone", 100, 250)["days_to_finish"] == pytest.approx(100 / 12)
     for x in (a, b, c):
         assert x["software_inr"] == 0 and x["teacher_minutes"] == 5000 and x["teacher_cost_inr"] is None
 

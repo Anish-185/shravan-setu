@@ -36,12 +36,30 @@ def test_retest_and_repeat_statistics():
     assert r["repeat_1000"]["pairs"] == 4 and r["repeat_1000"]["mean_db"] == 2.5  # run 1: +5 in both ears; run 2: 0
 
 
-def test_outliers_and_missing_thresholds_are_reported_not_used():
-    files = [export("V1", 1, BASE), export("V2", 1, BASE), export("V3", 1, {**BASE, 2000: -40}, missing={("left", 500)})]
+def test_outlier_rule_excludes_clearly_higher_volunteers_from_the_baseline():
+    hi = c.OUTLIER_DB + 5
+    files = [export("V1", 1, BASE), export("V2", 1, BASE), export("V3", 1, {k: x + 5 for k, x in BASE.items()}),
+             # V4: clearly higher at 2 frequencies (= 4 points, both ears) -> excluded
+             export("V4", 1, {**BASE, 2000: BASE[2000] + hi, 4000: BASE[4000] + hi}),
+             # V5: one stray high point only (one ear one frequency) -> kept
+             export("V5", 1, BASE, missing={("left", 500)})]
+    files[4]["results"][2]["threshold_db"] = BASE[4000] + hi  # left 4000
     r = c.analyse(files)
-    assert r["baseline"][2000] == -70 and any("V3" in o and "2000" in o for o in r["outliers"])
-    assert r["n"][500] == 5 and any("V3 run 1 left 500" in s for s in r["skipped"])
-    assert '"1000": -70' in c.markdown(r)
+    assert set(r["excluded"]) == {"V4"} and len(r["excluded"]["V4"]) == 4
+    assert r["baseline"][2000] == BASE[2000]  # V4 not in the baseline
+    assert r["n"][2000] == 8  # V1, V2, V3, V5 x 2 ears
+    md = c.markdown(r)
+    assert "Excluded from the baseline" in md and "V4:" in md and "docs/TEAM_TEST_PROTOCOL.md" in md
+    assert any("V5 run 1 left 500" in x for x in r["skipped"])
+
+
+def test_much_lower_is_flagged_not_excluded_and_small_groups_are_not_judged():
+    files = [export("V1", 1, BASE), export("V2", 1, BASE), export("V3", 1, {**BASE, 1000: BASE[1000] - 30})]
+    r = c.analyse(files)
+    assert r["excluded"] == {} and any("V3" in x and "much lower" in x for x in r["review"])
+    two = c.analyse([export("V1", 1, BASE), export("V2", 1, {k: x + 40 for k, x in BASE.items()})])
+    assert two["excluded"] == {} and not two["can_judge"]
+    assert "Outlier rule not applied" in c.markdown(two)
 
 
 def test_no_files():

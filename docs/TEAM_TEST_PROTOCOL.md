@@ -55,16 +55,39 @@ calibration itself) on a different day or after a 10-minute break.
    tap) every time you hear one, however faint. If anything is uncomfortable, take the earphones off."
 4. When it ends: Export calibration JSON → copy to `data/raw/calibration/` on the laptop. Note the stopwatch time.
 5. After all volunteers: `python scripts/calibrate.py data/raw/calibration/*.json`. Paste the printed baseline into
-   `config/screening.json` `calibration.baseline_dbfs` with its source (date, volunteers, script). Review any flagged
-   volunteer with the team lead (a volunteer far from the median may have an unknown hearing difference: tell them
-   privately that this was not a hearing test and that they may wish to see a doctor if they have concerns; their
-   values are left out of the baseline).
-6. Set `screening_level_db_re_team_baseline` to **20** (owner decision needed, see below). The app then plays
-   calibrated tones and sessions are no longer marked UNCALIBRATED.
+   `config/screening.json` `calibration.baseline_dbfs` with its source (date, volunteers, script, excluded volunteers).
+6. Set `screening_level_db_re_team_baseline` to **20** (owner decision, 2026-10-19). Source: American Academy of
+   Audiology (2011), *Childhood Hearing Screening Guidelines*, 20 dB HL. **Assumption**, written next to the value: the
+   team baseline (median threshold of a small adult sample on one phone+earphone pair) approximates audiometric zero.
+   It is not an ISO reference, so levels stay "dB re: team baseline", never dB HL. The app then plays calibrated tones
+   and sessions are no longer marked UNCALIBRATED.
 
-Owner decision needed before step 6: 20 dB re: team baseline mirrors the 20 dB HL school screening level of the
-American Academy of Audiology (2011) guideline, on the assumption that our baseline (median of a few adults on one
-device) stands in for audiometric zero. It is an assumption, recorded as such; levels stay "dB re: team baseline".
+### Outlier rule: a volunteer whose thresholds are clearly higher than the group's
+
+`scripts/calibrate.py` applies it automatically (parameters in `config/screening.json` `calibration.outlier_*`):
+
+- For each volunteer, each run-1 threshold (2 ears x 4 frequencies) is compared with the **median of the other
+  volunteers** at that frequency (both ears pooled), so the volunteer can't pull the median towards themselves.
+- A threshold more than **15 dB above** that median is "clearly higher" (three 5 dB steps, beyond the usual
+  test-retest spread).
+- A volunteer with **2 or more** clearly-higher thresholds is **excluded from the baseline**. One stray answer alone
+  never excludes anyone.
+- The rule needs at least 3 volunteers with run 1; with fewer, it is not applied (the script says so).
+- Much *lower* than the group is only flagged for review (often a fitting or tapping issue), never excluded.
+
+When someone is excluded:
+
+1. Record it in `data/raw/team_tests.csv` (`notes`: "excluded from baseline: outlier rule, <points>") and in the
+   `baseline_dbfs` source text (code only, never a name).
+2. The tester tells them **privately and kindly**, in their own words, along these lines:
+
+   > "Thank you for helping us. Some of your answers were a little different from the rest of the group, so we
+   > won't use them to set the app's levels. Please don't read anything into it: this was a rough check on a phone
+   > that isn't calibrated yet, not a hearing test, and it can't diagnose anything. Lots of things change the result,
+   > like how the earphones sat or a noisy moment. If you've ever wondered about your hearing, a proper hearing test
+   > with an audiologist or at a hospital ENT clinic may be worthwhile."
+
+3. Don't show them numbers or compare them with others, and don't tell anyone else.
 
 ## Step 3: screening sessions (visit 2)
 

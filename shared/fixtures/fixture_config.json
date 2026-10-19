@@ -12,7 +12,7 @@
   },
   "screening_level_db_re_team_baseline": {
     "value": null,
-    "source": "TODO(source): set after biological calibration on [PHONE_MODEL] + [EARPHONE_MODEL] (docs/TEAM_TEST_PROTOCOL.md, Phase 6). The school screening level is 20 dB HL at 1, 2 and 4 kHz (American Academy of Audiology (2011), Childhood Hearing Screening Guidelines, Summary of recommendations, pure tone screening, item 3; scripts/eval_nhanes.py assumes it). We cannot claim dB HL without instrument calibration."
+    "source": "Owner decision 2026-10-19: set to 20 once calibration.baseline_dbfs is filled from the team calibration (docs/TEAM_TEST_PROTOCOL.md step 2), mirroring the 20 dB HL school screening level of American Academy of Audiology (2011), Childhood Hearing Screening Guidelines, Summary of recommendations, pure tone screening item 3. ASSUMPTION: the team baseline (median threshold of a small adult sample on one phone+earphone pair) approximates audiometric zero; it is not an ISO reference, so levels stay dB re: team baseline, never dB HL. null until then (setting it without a baseline stops the test from starting)."
   },
 
   "tone": {
@@ -65,6 +65,8 @@
     "heard_needed": {"value": 2, "source": "PLACEHOLDER: threshold = lowest level heard on this many ascending presentations. TODO(source) with step_down_db."},
     "min_db": {"value": -90, "source": "Design choice: floor of the search (player volume ~0.00003). A threshold at the floor is reported as 'at floor', not as a value."},
     "max_db": {"value": 0, "source": "Design choice: player volume 1.0, the loudest the app can play at the fixed media volume."},
+    "outlier_db_above_group": {"value": 15, "source": "PLACEHOLDER (owner request 2026-10-19): a run-1 threshold more than this above the median of the OTHER volunteers at that frequency counts as clearly higher. Three 5 dB steps: beyond the usual 5-10 dB test-retest spread of threshold measurement, TODO(source)."},
+    "outlier_min_points": {"value": 2, "source": "PLACEHOLDER: a volunteer with at least this many clearly-higher thresholds (of 8 ear x frequency points) is excluded from the baseline, so one stray answer doesn't exclude anyone."},
     "max_presentations": {"value": 25, "source": "PLACEHOLDER: per ear and frequency; then the search stops without a threshold."}
   },
 

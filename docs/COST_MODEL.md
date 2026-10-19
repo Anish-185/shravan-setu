@@ -37,7 +37,7 @@ student time.
 |---|---|---|
 | **A. School phone** | Phone + earphones (Rs 10,400 per kit) | **Recommended.** One calibrated phone+earphone pair gives consistent test levels; child data stays on a school device |
 | **B. Teacher's own phone** | Earphones only (Rs 400) | Cheapest, but not recommended until per-model calibration exists (roadmap). Each phone model needs its own calibration, test levels vary across models until then, and child data sits on a personal phone |
-| **C. One kit per class teacher, own phones** | Earphones per class teacher | Cheaper than A, dearer than B (one kit per class instead of one per 250 students). The same calibration and privacy issues as B, multiplied by the number of phone models, and less convenient to manage |
+| **C. One kit per class teacher, own phones** | Earphones per class teacher | Advantage is **speed, not cost**: each class teacher screens their own class at the same time, so the whole school finishes in about the days one class takes (a class of 40 at 1 h a day: about 3 school days vs about 21 for scenario A, CLAIMS COST-06). Costs more than B (one kit per class instead of one per 250 students), less than A. The same calibration and privacy issues as B, multiplied by the number of phone models, and less convenient to manage |
 
 Cost per child per year for schools of 250, 400 and 1,000 students: see the cost table in `eval/results.md`.
 
