@@ -89,3 +89,19 @@ Every entry here must also appear in `docs/REUSE_LOG.md`.
 | Pure-tone WAVs: 1000 Hz and 4000 Hz, left-only and right-only, 10 s (`tone_*Hz_*_um.wav`), copied unmodified | DhwaniSarathi `audiometer/app/assets/puretones/` (original team, see above) | Apache-2.0 | `screener/assets/tones/` |
 | Telugu voice recordings `screener/assets/voice/te/*.mp3` (no third-party audio) | ours: recorded by Anish | Apache-2.0 | `screener/assets/voice/te/` |
 | App scaffold (`create-expo-app` default template, reset to blank) | Expo (650 Industries) | MIT (`screener/LICENSE`) | `screener/` config files, `src/app/_layout.tsx` |
+
+## Design mock-ups (`docs/design/*.png`)
+
+The two mock-up images in `docs/design/` (made for choosing a design direction, `docs/DESIGN.md`) are rendered with
+these free assets. None is bundled in the app yet; when one is, it is also listed in `docs/COST_AND_LICENSES.md`.
+
+| Asset | Author | Licence | Source |
+|---|---|---|---|
+| Anek Telugu (font) | Ek Type | SIL OFL 1.1 | https://github.com/google/fonts/tree/main/ofl/anektelugu |
+| Baloo Tammudu 2 (font) | Ek Type | SIL OFL 1.1 | https://github.com/google/fonts/tree/main/ofl/balootammudu2 |
+| Tiro Telugu (font) | Tiro Typeworks (John Hudson, Fiona Ross, Kaja Słojewska) | SIL OFL 1.1 | https://github.com/google/fonts/tree/main/ofl/tirotelugu |
+| Hind Guntur (font) | Indian Type Foundry | SIL OFL 1.1 | https://github.com/google/fonts/tree/main/ofl/hindguntur |
+| Phosphor Icons 2.1.1 (ear, folder, cloud-arrow-up, gear-six, info, warning, check-circle, arrow-square-out) | Phosphor Icons (Helena Zhang, Tobias Fried) | MIT | https://github.com/phosphor-icons/core |
+| Lucide 1.59.0 (ear, folder, cloud-upload, settings, info) | Lucide contributors | ISC | https://github.com/lucide-icons/lucide |
+
+Balloon, clouds, ripples and the setu line are original artwork drawn for this project.

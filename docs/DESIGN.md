@@ -138,7 +138,8 @@ strings define it today. The Telugu explanation sits under it, from `strings.jso
 
 - New visible strings get `te: "TODO_TE"` and fall back to English visibly, per CLAUDE.md. They're listed for the
   Telugu reviewer.
-  - Examples: "Developer", the five step labels if they don't exist yet, "Well done!".
+  - Examples: "Developer", "Well done!". The five step labels already exist with human Telugu (`consent.h`,
+    `device.h`, `lr.h`, `ambient.h`, `test.h`).
   - The Telugu form of the app name "Shravan Setu" is also a human task.
 - I write no Telugu.
 
@@ -151,6 +152,10 @@ strings define it today. The Telugu explanation sits under it, from `strings.jso
 - All illustration is original SVG drawn for this app: sky, clouds, balloon, ripples, the app icon.
 
 ## 4. Two directions
+
+Mock-ups of both, rendered from HTML with the real fonts, icons and the app's own English and Telugu strings (not
+screenshots of the running app): `docs/design/direction-a-open-sky.png`, `docs/design/direction-b-setu-line.png`, also
+shown in the README.
 
 ### Direction A: "Open Sky" (recommended)
 

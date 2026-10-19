@@ -1,4 +1,30 @@
-﻿# Dhwani Sarathi
+# Shravan Setu
+
+School hearing **screening and referral** for the Seva First Innovation Challenge 2026. Screening only, never a
+diagnosis. This repo is a fork of DhwaniSarathi (SIH 2023, Apache-2.0); the original team's README follows below,
+unchanged. Credits: `ATTRIBUTION.md`.
+
+## Design directions (proposal, not chosen yet)
+
+Mock-ups for the visual polish pass, rendered from HTML with the real fonts and icons. **These are not screenshots of
+the running app.** All English and Telugu text comes from the app's `screener/src/i18n/strings.json`. Full brief,
+palettes, contrast checks and the recommendation: [`docs/DESIGN.md`](docs/DESIGN.md).
+
+**A. Open Sky (recommended):** calm, pale sky for teachers; the full sky and a big balloon in child mode; sound as soft
+ripples. Anek Telugu + Baloo Tammudu 2, Phosphor icons.
+
+![Direction A: Open Sky mock-ups](docs/design/direction-a-open-sky.png)
+
+**B. Setu Line:** editorial and warm; one line, a sound wave rising into a bridge, runs through the screens. Tiro
+Telugu + Hind Guntur, Lucide icons.
+
+![Direction B: Setu Line mock-ups](docs/design/direction-b-setu-line.png)
+
+---
+
+*Original README (DhwaniSarathi team):*
+
+# Dhwani Sarathi
 
 ### SiH 1403 : App-Based Audiometer
 ### Problem Statement:
