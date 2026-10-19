@@ -4,21 +4,21 @@ School hearing **screening and referral** for the Seva First Innovation Challeng
 diagnosis. This repo is a fork of DhwaniSarathi (SIH 2023, Apache-2.0); the original team's README follows below,
 unchanged. Credits: `ATTRIBUTION.md`.
 
-## Design directions (proposal, not chosen yet)
+## Design: Direction B "Setu Line" (chosen, v2)
 
-Mock-ups for the visual polish pass, rendered from HTML with the real fonts and icons. **These are not screenshots of
-the running app.** All English and Telugu text comes from the app's `screener/src/i18n/strings.json`. Full brief,
-palettes, contrast checks and the recommendation: [`docs/DESIGN.md`](docs/DESIGN.md).
+Mock-ups for the visual polish pass, rendered from HTML with the real fonts, icons and illustrations. **These are not
+screenshots of the running app.** All English and Telugu text comes from the app's `screener/src/i18n/strings.json`.
+Full brief, contrast checks and the icon inspection: [`docs/DESIGN.md`](docs/DESIGN.md).
 
-**A. Open Sky (recommended):** calm, pale sky for teachers; the full sky and a big balloon in child mode; sound as soft
-ripples. Anek Telugu + Baloo Tammudu 2, Phosphor icons.
+Night indigo and marigold, Tiro Telugu for titles and quotes, Hind Guntur for the interface, Baloo Tammudu 2 in child
+mode. The setu line (a sound wave rising into a bridge), a muggu-inspired dot lattice, arch windows with hand-drawn
+Open Peeps on teacher screens, and a Sankranti sky with kites for the child.
 
-![Direction A: Open Sky mock-ups](docs/design/direction-a-open-sky.png)
+![Direction B v2, teacher screens](docs/design/direction-b-v2-teacher.png)
 
-**B. Setu Line:** editorial and warm; one line, a sound wave rising into a bridge, runs through the screens. Tiro
-Telugu + Hind Guntur, Lucide icons.
+![Direction B v2, test, child mode, sync, settings, app icon and icons](docs/design/direction-b-v2-child.png)
 
-![Direction B: Setu Line mock-ups](docs/design/direction-b-setu-line.png)
+The two first-round directions (A "Open Sky" and B v1) are kept in `docs/design/` for the record.
 
 ---
 

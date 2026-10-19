@@ -1,4 +1,4 @@
-# Design brief: Shravan Setu visual polish (Step 1, awaiting owner's pick)
+# Design brief: Shravan Setu visual polish
 
 Scope is visual and interaction design only. No changes to test logic, rules, config, data, sync or timing. The
 starting point is tagged `pre-polish` (commit `bbb435314c7e7fb871481791a5513eb6afeed37a`, pushed). Every polish
@@ -6,6 +6,98 @@ commit uses the `style:` prefix, so the whole pass can be rolled back with one `
 tag.
 
 This is a screening and referral tool, never a diagnosis. Nothing in this pass changes that wording or hides it.
+
+## 0. Decision (2026-10-19): Direction B "Setu Line", refined as B v2
+
+The owner picked Direction B and asked for more personality, more design elements and pictures, a polished and
+reliable feel, and a closer look at the icons. B v2 below is the direction to build. Sections 1 to 5 are kept as the
+record of how we got here.
+
+Mock-ups (rendered from HTML with the real fonts, icons and illustrations, and the app's own English and Telugu
+strings; not screenshots of the running app):
+
+- `docs/design/direction-b-v2-teacher.png`: Home (English and Telugu), consent step, REFER and PASS results, cases.
+- `docs/design/direction-b-v2-child.png`: test intro, child mode, celebration, sync, settings, app icon, icon set.
+
+### What B v2 adds
+
+| Element | What it is | Where |
+|---|---|---|
+| **Setu line** (kept) | One hand-drawn-feeling line: a sound wave rising into a bridge arch | Home band, result divider, child-mode bridge, app icon |
+| **Muggu lattice** (new) | A dot grid with a looping line passing between the dots, after the muggulu drawn outside Telugu homes. Original artwork, generated as an SVG pattern | Home band (marigold, 13%), primary card (white, 8%), sync arch, app icon dots |
+| **Bridge-arch stepper** (new) | The five test steps sit as posts on an arch. Done = indigo with a tick, current = marigold with a halo, next = white. The current step's own heading sits under it in Tiro | Every test-flow step |
+| **Arch windows** (new) | A rounded-top frame (the setu arch) holding a hand-drawn figure | Home band, test intro, sync, empty states |
+| **Hand-drawn people** (new) | Open Peeps (CC0) figures recoloured to Night ink on warm paper: an adult with a shirt (Home), an adult pointing (test intro), a wheelchair user (sync), a sitting adult (empty states). Adults only; no children are drawn | Teacher screens only, never in child mode or on results |
+| **Quote style** (new) | What the teacher says aloud is set in Tiro Telugu italic with a marigold rule | Test intro, voice-line cards |
+| **Icon tiles** (new) | 42 dp rounded tiles with a soft tint behind each list icon (indigo, marigold or grey tint) | Home rows, settings sections |
+| **Status chips** (new) | Tint + icon + word for each case status (Referred: send, Camp scheduled: tent, Missed camp: calendar-x, Treated: heart-pulse, …) | Cases list, case detail |
+| **Sankranti sky** (new) | Child mode: lavender-to-dawn sky, two paper kites with bow tails, three birds, layered hills, a marigold sun and the setu bridge on the horizon | Child mode, celebration |
+| **Tap echo** (new) | A white ring with 24 muggu dots around the balloon; on tap it pulses outward once (400 ms) | Child mode |
+| **Celebration** (new) | The balloon drifts up, marigold petals fall, a ring of muggu dots draws around "Well done!" in Baloo. Silent, about 1.5 s | After the last tone, before the result |
+| **App icon** (new) | Night square, the marigold setu line with a white "sound" dot at the top of the arch, two rows of muggu dots below | Launcher, splash |
+
+### Icon inspection (Lucide chosen)
+
+I rendered every concept the app needs (24 of them) in Lucide, Phosphor Light and Tabler at 24 dp, 20 dp and white on
+indigo, and compared them:
+
+- **Lucide** (ISC, 1.59.0): the clearest at 20 dp, consistent stroke and corner style, and it covers every concept:
+  ear, folder-heart, cloud-upload, tent, hospital, signature, headphones, mic, languages, flask, sliders. **Chosen.**
+- **Phosphor Light**: too thin at 20 dp for a budget screen; Regular is fine but its filled-outline style doesn't
+  match the drawn line.
+- **Tabler**: good, and it even has a balloon, but its retest arrow reads as a "G" and the camp tent is unclear.
+- Rules:
+  - one set only; stroke 1.75 at 22 to 24 dp, 2.0 at 20 dp or below, never below 16 dp
+  - round caps and joins
+  - an icon always sits next to a text label, except the voice button, which has an accessibility label
+- Outcome icons: PASS circle-check, RETEST rotate-ccw, REFER **send** (paper plane: "sent onward for care"), clearer
+  than the arrow-out-of-box in v1.
+- The balloon is drawn as artwork, not taken from an icon set, so it isn't needed as an icon.
+- A bug the inspection caught in my own mock-up code: stripping `width`/`height` from every SVG element (not just the
+  root `<svg>`) erased Lucide's `<rect>` shapes, which turned the mic into a "U". The real app will import icon paths
+  untouched.
+
+### Contrast of the new pairs (WCAG, all AA or better)
+
+| Pair | Ratio |
+|---|---|
+| Indigo on the Referred chip tint (#3B35B8 on #EEEDF8) | 7.6 |
+| Treated chip (#2E6B47 on #E5F1EA) | 5.5 |
+| Band subtitle (#CFCBF7 on Night) | 10.3 |
+| Marigold language pill on Night | 7.7 |
+| Night icon on the marigold tile | 7.7 |
+| Dusk on white | 6.6 |
+| Route tag (#5B5A7A on #F1F0F7) | 5.8 |
+| Night on Lavender / Dawn sky | 11.3 / 12.7 |
+
+### Rules that keep it reliable
+
+- **The celebration is identical for every outcome.** The child never learns PASS or REFER from the animation; the
+  result is for the teacher, after the celebration.
+- **No people in child mode or on result screens.** Figures warm up teacher screens; they never sit next to an
+  outcome.
+- **Telugu everywhere is checked.** Telugu lines use a 1.7 line height. No text box has a fixed height. Long labels
+  wrap; the Telugu "Screen a child" card wraps to two lines in the mock-up without clipping.
+- **Performance.** The figures are 32–80 KB SVGs with long paths. They're static, so if react-native-svg is slow to draw
+  them on the Redmi, they'll be pre-rendered to PNG at @2x/@3x (still under budget). Patterns and kites are drawn
+  once, not animated. Only the balloon, its ring and the celebration move, on the UI thread.
+- **Banners unchanged in strength.** "Screening only, not a diagnosis" stays at the top of every screen that has it
+  today, including child mode (on a white 85% strip so it reads over the sky). UNCALIBRATED stays directly under the
+  ears card on the result.
+- New strings get `TODO_TE`: "Developer", "Well done!".
+
+### Asset budget (B v2)
+
+| Asset | Size |
+|---|---|
+| Hind Guntur Regular, Medium, SemiBold, Bold (static) | ~1.3 MB (four files of ~320 KB) |
+| Tiro Telugu Regular + Italic | ~0.5 MB (measured on install) |
+| Baloo Tammudu 2 SemiBold (instanced from the variable font) | ~0.4 MB |
+| Open Peeps, 4 figures, SVG (optimised) | ~0.2 MB |
+| Lucide icon paths, muggu, kites, balloon, setu line | < 40 KB (in code) |
+
+Total about 2.4 MB, under the 3 MB aim. I'll measure the real files and trim weights (for example, drop Hind Bold) if
+it goes over.
 
 ## 1. Research
 
@@ -148,7 +240,7 @@ strings define it today. The Telugu explanation sits under it, from `strings.jso
 - **Lottie:** `lottie-react-native` 7.3.8 is in Expo Go, but every animation here is simple enough for Reanimated.
   Most free Lottie files carry the "Lottie Simple License" rather than an allowlisted licence. Skipped.
 - **unDraw:** its own custom licence, not on our allowlist, and its style is widely recognisable.
-- **Open Peeps** (CC0): fine to use, but we don't need people. CLAUDE.md also points away from showing children.
+- **Open Peeps** (CC0): not used in v1. B v2 uses four adult figures on teacher screens (section 0).
 - All illustration is original SVG drawn for this app: sky, clouds, balloon, ripples, the app icon.
 
 ## 4. Two directions
@@ -391,9 +483,10 @@ makes a network call.
 Gradients use react-native-svg, so `expo-linear-gradient` isn't needed. The fontTools library is used once on the
 laptop to make the static font files and isn't shipped.
 
-## 6. Step 2 plan (after your pick)
+## 6. Step 2 plan (B v2)
 
-1. Design tokens and components in `screener/src/ui.tsx`, with fonts loaded under the splash screen.
+1. Design tokens and components in `screener/src/ui.tsx` (colours, type, spacing, radii, buttons, cards, chips,
+   icon tiles, banners, stepper, arch window, muggu, setu line), with fonts loaded under the splash screen.
 2. Home, with Audio spike and Calibration moved to Settings → Developer.
 3. Test flow: step indicator, transitions, progress bar.
 4. Child mode: balloon, float, tap echo, silent celebration.

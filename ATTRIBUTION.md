@@ -105,3 +105,13 @@ these free assets. None is bundled in the app yet; when one is, it is also liste
 | Lucide 1.59.0 (ear, folder, cloud-upload, settings, info) | Lucide contributors | ISC | https://github.com/lucide-icons/lucide |
 
 Balloon, clouds, ripples and the setu line are original artwork drawn for this project.
+
+Added for the Direction B v2 mock-ups (`docs/design/direction-b-v2-*.png`):
+
+| Asset | Author | Licence | Source |
+|---|---|---|---|
+| Open Peeps figures: peep-13, peep-standing-16, peep-sitting-14, peep-sitting-1 (recoloured) | Pablo Stanley | CC0 1.0 | https://www.openpeeps.com/ |
+| Tiro Telugu Italic (font) | Tiro Typeworks | SIL OFL 1.1 | https://github.com/google/fonts/tree/main/ofl/tirotelugu |
+| Lucide 1.59.0, more icons (folder-heart, tent, send, hospital, signature, headphones, mic, languages, flask-conical, sliders-horizontal, share-2, volume-2, heart-pulse, calendar-x, refresh-cw, server, chevron-right, play, check, user-round, circle-check, triangle-alert) | Lucide contributors | ISC | https://github.com/lucide-icons/lucide |
+
+The muggu lattice, kites, birds, hills, balloon, setu line and app icon are original artwork drawn for this project.
