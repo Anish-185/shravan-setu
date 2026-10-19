@@ -1,0 +1,3 @@
+# Laptop-only evaluation dependencies (scripts/eval_nhanes.py reads SAS XPT files). Never part of the app or the
+# server runtime. Install: uv pip install -p server/.venv/bin/python -r requirements-eval.txt
+pandas==3.0.6

@@ -1,5 +1,5 @@
 {
-  "config_version": "0.1.0",
+  "config_version": "0.2.0",
   "_about": "Single source of truth for screening and triage rules. Every value has a source. PLACEHOLDER = no evidence yet; tune from team tests (Phase 6) and record the evidence here. Levels are in dB re: team baseline, never dB HL.",
 
   "ears": {
@@ -8,11 +8,11 @@
   },
   "frequencies_hz": {
     "value": [1000, 2000, 4000],
-    "source": "TODO(source): school pure-tone screening convention of 1, 2 and 4 kHz (cite a published school screening guideline). 500 Hz is controlled separately by policy_500hz."
+    "source": "American Academy of Audiology (2011), Childhood Hearing Screening Guidelines, Summary of recommendations, pure tone screening, item 3: pure tone sweep at 1000, 2000 and 4000 Hz (at 20 dB HL). 500 Hz is controlled separately by policy_500hz."
   },
   "screening_level_db_re_team_baseline": {
     "value": null,
-    "source": "TODO(source): set after biological calibration on [PHONE_MODEL] + [EARPHONE_MODEL] (docs/TEAM_TEST_PROTOCOL.md, Phase 6). The usual school screening convention is 20-25 dB HL at 1, 2 and 4 kHz; citation TODO. We cannot claim dB HL without instrument calibration."
+    "source": "TODO(source): set after biological calibration on [PHONE_MODEL] + [EARPHONE_MODEL] (docs/TEAM_TEST_PROTOCOL.md, Phase 6). The school screening level is 20 dB HL at 1, 2 and 4 kHz (American Academy of Audiology (2011), Childhood Hearing Screening Guidelines, Summary of recommendations, pure tone screening, item 3; scripts/eval_nhanes.py assumes it). We cannot claim dB HL without instrument calibration."
   },
 
   "tone": {
@@ -69,7 +69,7 @@
   },
 
   "rescreen": {
-    "enabled": {"value": true, "source": "Design choice: two-stage screening. Rescreen immediately, before any REFER."},
+    "enabled": {"value": true, "source": "Design choice: two-stage screening, matching American Academy of Audiology (2011), Childhood Hearing Screening Guidelines, Summary of recommendations, pure tone screening, item 7: rescreen immediately. Rescreen before any REFER."},
     "failed_points_only": {"value": true, "source": "Design choice: only the ear/frequency points that were not heard."},
     "max_rounds": {"value": 1, "source": "Design choice: at most one rescreen round in the same session."},
     "catch_trials": {"value": 1, "source": "PLACEHOLDER: silent trials inserted into the rescreen round, so it can't be passed by tapping in rhythm."}

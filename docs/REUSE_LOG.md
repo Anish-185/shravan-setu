@@ -225,3 +225,26 @@ Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state mach
 - Recordings (Anish, 18-10-2026) arrived as MP3. Decision: play the MP3 directly (Metro bundles `.mp3` by default and
   `expo-audio` plays it on Android, Expo Go included) rather than convert to `.m4a`: no re-encode, no new tool step.
   Placeholders and `scripts/make_voice_placeholders.py` deleted.
+
+## Phase 6
+
+### SAS XPT reader + NHANES audiometry evaluation (`scripts/eval_nhanes.py`)
+
+- Queries (2026-10-19): GitHub `nhanes audiometry`, `nhanes hearing`, `nhanes xpt python`, `nhanes download`,
+  `xport reader`, `sas xpt`, `nhanes python package`, `audiogram hearing loss grade`, `school hearing screening
+  simulation`, `pure tone audiometry sensitivity specificity`; PyPI `xport`, `pyreadstat`, `nhanes`, `pandas`.
+
+| Candidate | Licence | Last activity | Size | Verdict |
+|---|---|---|---|---|
+| pandas 3.0.6 (`read_sas(format="xport")`) | BSD-3-Clause | release 2026-09-17 | ~110 MB with numpy | **Use**, laptop-only (`requirements-eval.txt`), owner-approved 2026-10-19 (over the 5 MB rule). Correct XPT reader; not in the app or server runtime |
+| pyreadstat 1.3.6 | Apache-2.0 | 2026-08-12 | C extension + numpy + narwhals | Works, but a second big stack for one file format |
+| xport 3.6.1 | MIT | 2022-02-16 | small, but pins `pandas<1.4` | Reject: incompatible with current pandas / Python 3.12 |
+| nhanes 0.5.1 (PyPI) | MIT | 2020-07-16 | — | Reject: unmaintained, downloads whole datasets; we need 8 files |
+| thepyottlab/NHANES-Hearing-and-Biological-Age-Analysis | MIT | pushed 2026-10-16 | 82 MB repo | Different question (ageing); adults. Nothing to reuse beyond variable names, which come from the CDC docs anyway |
+| mrwyattii/NHANES-Downloader | no clear licence (NOASSERTION) | 2017-10-20 | 20 KB | Reject: licence |
+| lanzhi4/nhanes-hearing-phenotypes | no clear licence (NOASSERTION) | 2026-09-24 | 12 MB | Reject: licence |
+
+- No open-source code was found that applies a school screening protocol to NHANES youth audiograms.
+- Decision: (c) build `scripts/eval_nhanes.py` (~250 lines, stdlib + pandas for reading XPT). It reuses OUR rule
+  engine (`server/referrals/rules`) so the evaluation runs the same code as the server. Download with pinned SHA-256.
+- matplotlib skipped as planned (large); results are Markdown tables.
