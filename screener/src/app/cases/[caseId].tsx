@@ -2,7 +2,7 @@
 // table). Screening follow-up, not a diagnosis.
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { events, moveCase, remindersFor, type CaseRec, type Facility } from '@/cases';
 import { cfg } from '@/config';
@@ -12,7 +12,8 @@ import { useLang, useT } from '@/i18n';
 import { exportSession } from '@/result';
 import { LOST, nextStatuses, TREATMENTS } from '@/rules';
 import { TriageForm } from '@/triage';
-import { Banner, Btn, Chips, H, P, s } from '@/ui';
+import { Icon } from '@/icons';
+import { Banner, Btn, C, Card, Chips, H, P, s, StatusPill } from '@/ui';
 
 export default function CaseDetail() {
   const t = useT();
@@ -45,9 +46,16 @@ export default function CaseDetail() {
     <ScrollView contentContainerStyle={s.screen}>
       <Banner />
       <H>{name}</H>
-      <P>{t('case.status', { status: t(`status.${c.status}` as never) })}</P>
+      <View accessible accessibilityLabel={t('case.status', { status: t(`status.${c.status}` as never) })}>
+        <StatusPill status={c.status} text={t(`status.${c.status}` as never)} />
+      </View>
       {c.triage_route
-        ? <P>{t('case.route', { route: c.triage_route, facility: facility?.name ?? t('triage.noFacility') })}</P>
+        ? (
+          <Card style={st.route}>
+            <Icon name="hospital" size={22} color={C.dusk} />
+            <Text style={[s.p, { flex: 1 }]}>{t('case.route', { route: c.triage_route, facility: facility?.name ?? t('triage.noFacility') })}</Text>
+          </Card>
+        )
         : <>
           <P>{t('case.noTriage')}</P>
           <TriageForm caseId={caseId} onSaved={() => refresh((n) => n + 1)} />
@@ -55,12 +63,15 @@ export default function CaseDetail() {
 
       <H>{t('case.history')}</H>
       {events(db, caseId).map((e, i) => (
-        <P key={i}>{t('case.event', {
-          at: localTime(e.at), from: t(`status.${e.from_status}` as never), to: t(`status.${e.to_status}` as never),
-        })}{e.treatment ? ` (${t(`treatment.${e.treatment}` as never)})` : ''}{e.reason ? ` (${e.reason})` : ''}</P>
+        <View key={i} style={st.event}>
+          <View style={st.dot} />
+          <Text style={[s.p, { flex: 1 }]}>{t('case.event', {
+            at: localTime(e.at), from: t(`status.${e.from_status}` as never), to: t(`status.${e.to_status}` as never),
+          })}{e.treatment ? ` (${t(`treatment.${e.treatment}` as never)})` : ''}{e.reason ? ` (${e.reason})` : ''}</Text>
+        </View>
       ))}
 
-      {next.length === 0 ? <P>{t('case.final')}</P> : <P>{t('case.move')}</P>}
+      {next.length === 0 ? <Text style={s.muted}>{t('case.final')}</Text> : <Text style={s.muted}>{t('case.move')}</Text>}
       {next.includes('treated') && (
         <Chips options={TREATMENTS} value={treatment} onChange={setTreatment} label={(o) => t(`treatment.${o}`)} />
       )}
@@ -74,11 +85,11 @@ export default function CaseDetail() {
       </View>
       {!!msg && <Text style={s.warn}>{msg}</Text>}
 
-      {hasLog && <Btn kind="plain" title={t('result.export')} onPress={() => exportSession(session!)} />}
+      {hasLog && <Btn kind="plain" icon="share-2" title={t('result.export')} onPress={() => exportSession(session!)} />}
 
       {remindersFor(db, caseId).length > 0 && <H>{t('case.reminders')}</H>}
       {remindersFor(db, caseId).map((r, i) => (
-        <P key={i}>{t('case.wouldSend', { text: lang === 'te' ? r.text_te : r.text_en })}</P>
+        <Card key={i}><Text style={s.muted}>{t('case.wouldSend', { text: lang === 'te' ? r.text_te : r.text_en })}</Text></Card>
       ))}
     </ScrollView>
   );
@@ -89,3 +100,10 @@ function localTime(iso: string) {
   const d = new Date(iso);
   return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 16).replace('T', ' ');
 }
+
+const st = StyleSheet.create({
+  route: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
+  event: { flexDirection: 'row', gap: 12, alignItems: 'flex-start', borderLeftWidth: 2, borderLeftColor: C.lilac, marginLeft: 5,
+    paddingLeft: 14, paddingBottom: 8 },
+  dot: { position: 'absolute', left: -7, top: 9, width: 12, height: 12, borderRadius: 6, backgroundColor: C.indigo },
+});

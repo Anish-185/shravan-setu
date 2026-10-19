@@ -1,13 +1,15 @@
 // Teacher taps Sync when online. Safe to retry; each queued record shows its own status.
 import * as SecureStore from 'expo-secure-store';
 import { useState } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+
+import { Arch, Muggu } from '@/art';
 
 import { db } from '@/db';
 import { kvGet, outbox } from '@/db/store';
 import { syncNow } from '@/db/sync';
 import { useT } from '@/i18n';
-import { Btn, P, s } from '@/ui';
+import { Btn, C, Card, F, s } from '@/ui';
 
 export default function Sync() {
   const t = useT();
@@ -35,19 +37,34 @@ export default function Sync() {
 
   const pending = rows.filter((r) => r.status !== 'synced').length;
   return (
-    <View style={[s.screen, { flex: 1 }]}>
-      <P>{t('sync.pending', { n: pending })}</P>
-      <Btn title={t(busy ? 'sync.busy' : 'sync.now')} onPress={run} disabled={busy} />
-      {!!msg && <P>{msg}</P>}
-      <FlatList
-        data={rows}
-        keyExtractor={(r) => String(r.seq)}
-        renderItem={({ item }) => (
-          <Text style={item.status === 'error' ? s.warn : item.status === 'synced' ? s.ok : undefined}>
-            {item.type} {item.id.slice(0, 8)}: {item.status}{item.error ? ` (${item.error})` : ''}
-          </Text>
-        )}
-      />
-    </View>
+    <FlatList
+      contentContainerStyle={s.screen}
+      data={rows}
+      keyExtractor={(r) => String(r.seq)}
+      ListHeaderComponent={(
+        <View style={{ gap: 14 }}>
+          <View style={{ alignItems: 'center', paddingTop: 6 }}>
+            <Arch width={190} height={220} bg={C.lavender} source={require('../../assets/images/peeps/sync.png')}
+              imgWidth={153} imgHeight={200} offset={-4}>
+              <Muggu color={C.indigo} opacity={0.12} size={20} dot={1.8} />
+            </Arch>
+          </View>
+          <Text style={st.count}>{pending}</Text>
+          <Text style={[s.muted, { textAlign: 'center' }]}>{t('sync.pending', { n: pending })}</Text>
+          <Btn icon="refresh-cw" title={t(busy ? 'sync.busy' : 'sync.now')} onPress={run} disabled={busy} />
+          {!!msg && <Card><Text style={s.p}>{msg}</Text></Card>}
+        </View>
+      )}
+      renderItem={({ item }) => (
+        <Text style={[st.item, item.status === 'error' ? s.warn : item.status === 'synced' ? s.ok : s.muted]}>
+          {item.type} {item.id.slice(0, 8)}: {item.status}{item.error ? ` (${item.error})` : ''}
+        </Text>
+      )}
+    />
   );
 }
+
+const st = StyleSheet.create({
+  count: { color: C.night, fontFamily: F.title, fontSize: 54, lineHeight: 70, textAlign: 'center', marginBottom: -12 },
+  item: { fontSize: 14, lineHeight: 24 },
+});

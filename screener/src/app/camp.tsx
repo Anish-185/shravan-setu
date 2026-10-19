@@ -13,7 +13,7 @@ import { db } from '@/db';
 import { get, kvGet, list } from '@/db/store';
 import { useT } from '@/i18n';
 import { shareText } from '@/share';
-import { Banner, Btn, Chips, H, P, s } from '@/ui';
+import { Banner, Btn, Card, Chips, H, P, s } from '@/ui';
 
 const inAWeek = () => new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
 
@@ -58,20 +58,20 @@ export default function Camp() {
     <ScrollView contentContainerStyle={s.screen}>
       <Banner />
       <H>{t('camp.h')}</H>
-      <P>{t('camp.cases', { n: rows.length, names: rows.map((r) => r.name).join(', ') })}</P>
+      <Card><P>{t('camp.cases', { n: rows.length, names: rows.map((r) => r.name).join(', ') })}</P></Card>
       {!camp ? (
         <>
           <TextInput style={s.input} value={date} onChangeText={setDate} placeholder={t('camp.date')} />
-          <P>{t('camp.facility')}</P>
+          <Text style={s.muted}>{t('camp.facility')}</Text>
           <Chips options={facilities.map((f) => f.id)} value={facility} onChange={setFacility}
             label={(fid) => facilities.find((f) => f.id === fid)?.name ?? fid} />
-          <Btn title={t('camp.create')} onPress={create} disabled={!rows.length} />
+          <Btn icon="tent" title={t('camp.create')} onPress={create} disabled={!rows.length} />
         </>
       ) : (
         <>
           <P>{camp.camp_date}{camp.facility ? ` · ${get<Facility>(db, 'facility', camp.facility)?.name ?? ''}` : ''}</P>
-          <Btn kind="plain" title={t('camp.shareCsv')} onPress={() => shareText(`camp-request-${id}.csv`, casesCsv(db, rows))} />
-          <Btn kind="plain" title={t('camp.pdf')} onPress={pdf} />
+          <Btn kind="plain" icon="share-2" title={t('camp.shareCsv')} onPress={() => shareText(`camp-request-${id}.csv`, casesCsv(db, rows))} />
+          <Btn kind="plain" icon="file-down" title={t('camp.pdf')} onPress={pdf} />
           <Btn title={t('result.done')} onPress={() => router.back()} />
         </>
       )}
