@@ -1,0 +1,2 @@
+volunteer,visit,session,date,room,media_volume_steps,minutes,outcome,reliability_score,catch_taps,late_start_replays,export_file,notes
+V1,1,calibration_run1,2026-10-__,quiet,,,,,,,calibration-V1-run1-....json,EXAMPLE ROW: delete
