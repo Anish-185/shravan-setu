@@ -248,3 +248,11 @@ Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state mach
 - Decision: (c) build `scripts/eval_nhanes.py` (~250 lines, stdlib + pandas for reading XPT). It reuses OUR rule
   engine (`server/referrals/rules`) so the evaluation runs the same code as the server. Download with pinned SHA-256.
 - matplotlib skipped as planned (large); results are Markdown tables.
+
+### District funnel simulator (`scripts/simulate_district.py`)
+
+- Queries (2026-10-19): GitHub `screening referral funnel simulation`, `screening program monte carlo follow-up`,
+  `loss to follow-up simulation referral`: no results.
+- Decision: (c) build, ~180 lines of stdlib (`random.binomialvariate`, `statistics.quantiles`). A funnel of binomial
+  stages is well under the size where a simulation library (SimPy, Mesa) earns its place. Inputs in
+  `config/district_model.json`, each with a source.

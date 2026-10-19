@@ -1,0 +1,33 @@
+{
+  "_about": "Inputs for scripts/simulate_district.py. Every output of that script is SIMULATED. Brief figures keep TODO(source) until the owner supplies the papers; their study settings may differ from ours. Screening, not diagnosis.",
+
+  "children": {"value": 10000, "source": "Design choice: a round district-sized cohort for illustration."},
+  "screening_coverage": {"value": 1.0, "source": "ASSUMPTION: every enrolled child with consent is screened. Real coverage (absence, consent) TODO(source) from a pilot."},
+  "prevalence": {"value": 0.1414, "source": "Challenge brief: 14.14% of school children. TODO(source): the study, its definition of hearing loss and its setting."},
+  "screen_sensitivity": {"value": 1.0, "source": "ASSUMPTION: ideal screen, so the funnel isolates follow-up. Swept 0.7-1.0. Rule-logic estimates on US data: scripts/eval_nhanes.py (not field accuracy)."},
+  "screen_specificity": {"value": 1.0, "source": "ASSUMPTION: ideal screen (no false referrals). Swept 0.85-1.0. See scripts/eval_nhanes.py for rule-logic estimates on US data."},
+  "follow_up": {
+    "value": {
+      "sms_only": 0.394,
+      "school_camp": 0.885
+    },
+    "source": "Challenge brief: 39.4% of referred children followed up with SMS reminders only; 88.5% when ear camps were held at school. TODO(source) for both: study, setting, what 'followed up' means. Our app implements the camp model (camp request, missed-camp reminder, case tracking); we have no data showing it reaches 88.5%."
+  },
+  "models": {
+    "value": {
+      "sms_only": "Referral + SMS reminders only",
+      "school_camp": "Referral + ear camp at school (what this app organises)"
+    },
+    "source": "Design choice: the two follow-up models in the brief."
+  },
+  "monte_carlo": {
+    "value": {
+      "runs": 1000,
+      "prevalence_range": [0.10, 0.18],
+      "follow_up_spread": 0.10,
+      "sensitivity_range": [0.80, 1.0],
+      "specificity_range": [0.90, 1.0]
+    },
+    "source": "ASSUMPTION: illustrative uncertainty ranges, not from data. Each run draws prevalence, sensitivity and specificity uniformly from these ranges and each follow-up rate uniformly within +/- follow_up_spread (clipped to 0-1), then binomial counts."
+  }
+}
