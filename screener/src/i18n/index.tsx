@@ -1,6 +1,6 @@
-// Language choice (English / Telugu), kept on the phone and switchable from every screen's header.
+// Language choice (English / Telugu), kept on the phone and switchable from every screen's header (LangToggle in
+// ui.tsx).
 import { createContext, useContext, useState, type ReactNode } from 'react';
-import { Pressable, Text } from 'react-native';
 
 import { db } from '@/db';
 import { kvGet, kvSet } from '@/db/store';
@@ -30,15 +30,4 @@ export function useT() {
     x: (text: T, vars?: Record<string, string | number>) => pick(text, lang, vars),
     reason: (text: string) => reasonText(lang, text),
   });
-}
-
-/** Header button: switches English <-> Telugu. */
-export function LangToggle() {
-  const { lang, setLang } = useLang();
-  const t = useT();
-  return (
-    <Pressable accessibilityRole="button" onPress={() => setLang(lang === 'en' ? 'te' : 'en')} style={{ padding: 8 }}>
-      <Text style={{ color: '#0a58ca', fontWeight: '600' }}>{t(lang === 'en' ? 'lang.switchToTe' : 'lang.switchToEn')}</Text>
-    </Pressable>
-  );
 }

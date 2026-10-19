@@ -256,3 +256,28 @@ Searches (2026-10-17): GitHub `gh search repos` for `"django fsm"`, `"state mach
 - Decision: (c) build, ~180 lines of stdlib (`random.binomialvariate`, `statistics.quantiles`). A funnel of binomial
   stages is well under the size where a simulation library (SimPy, Mesa) earns its place. Inputs in
   `config/district_model.json`, each with a source.
+
+## Design pass: Direction B v2 (2026-10-19)
+
+Candidates and the icon inspection are in `docs/DESIGN.md` (section 0 and "Not used, and why").
+
+### Drawing icons and artwork
+
+- Candidates: `react-native-svg` 15.15.4 (MIT, in Expo Go, no network), `lucide-react-native` (ISC, needs
+  react-native-svg anyway and ships every icon), an icon font (blurry at small sizes, no stroke control).
+- Decision: (a) depend on `react-native-svg`; (b) copy the 33 Lucide shapes we use into `screener/src/icons.tsx`
+  untouched, with the licence in `screener/licenses/`. The muggu lattice, setu line, stepper arch, sky, kites,
+  balloon and app icon are original artwork drawn in code.
+
+### Fonts
+
+- Hind Guntur, Tiro Telugu and Baloo Tammudu 2 from google/fonts (OFL 1.1), loaded with the already-installed
+  `expo-font`. This replaces the Phase 5 plan to rely on Android's system Telugu font: the design needs one family
+  that is equally good in Telugu and English. Baloo's variable font is instanced to one static weight with fontTools
+  (laptop only), because variable axes are unreliable in React Native on Android.
+
+### Animation
+
+- Child-mode float, tap echo and the celebration use `react-native-reanimated` (already installed with the Expo
+  template), which runs them on the UI thread. Lottie skipped (licences of free files, see `docs/DESIGN.md`).
+

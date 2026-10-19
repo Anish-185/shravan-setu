@@ -89,6 +89,10 @@ Every entry here must also appear in `docs/REUSE_LOG.md`.
 | Pure-tone WAVs: 1000 Hz and 4000 Hz, left-only and right-only, 10 s (`tone_*Hz_*_um.wav`), copied unmodified | DhwaniSarathi `audiometer/app/assets/puretones/` (original team, see above) | Apache-2.0 | `screener/assets/tones/` |
 | Telugu voice recordings `screener/assets/voice/te/*.mp3` (no third-party audio) | ours: recorded by Anish | Apache-2.0 | `screener/assets/voice/te/` |
 | App scaffold (`create-expo-app` default template, reset to blank) | Expo (650 Industries) | MIT (`screener/LICENSE`) | `screener/` config files, `src/app/_layout.tsx` |
+| Hind Guntur Regular, Medium, SemiBold (fonts, unmodified) | Indian Type Foundry | SIL OFL 1.1 (`screener/licenses/OFL-hindguntur.txt`) | `screener/assets/fonts/` |
+| Tiro Telugu Regular and Italic (fonts, unmodified) | Tiro Typeworks | SIL OFL 1.1 (`screener/licenses/OFL-tirotelugu.txt`) | `screener/assets/fonts/` |
+| Baloo Tammudu 2 SemiBold (instanced at weight 600 from the variable font with fontTools; no Reserved Font Name) | Ek Type | SIL OFL 1.1 (`screener/licenses/OFL-balootammudu2.txt`) | `screener/assets/fonts/` |
+| Lucide 1.59.0 icon shapes, copied untouched from `lucide-static` (33 icons, listed in the file) | Lucide contributors (a few derive from Feather, Cole Bemis) | ISC + MIT (`screener/licenses/lucide-LICENSE.txt`) | `screener/src/icons.tsx` |
 
 ## Design mock-ups (`docs/design/*.png`)
 
