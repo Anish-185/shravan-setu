@@ -93,6 +93,7 @@ Every entry here must also appear in `docs/REUSE_LOG.md`.
 | Tiro Telugu Regular and Italic (fonts, unmodified) | Tiro Typeworks | SIL OFL 1.1 (`screener/licenses/OFL-tirotelugu.txt`) | `screener/assets/fonts/` |
 | Baloo Tammudu 2 SemiBold (instanced at weight 600 from the variable font with fontTools; no Reserved Font Name) | Ek Type | SIL OFL 1.1 (`screener/licenses/OFL-balootammudu2.txt`) | `screener/assets/fonts/` |
 | Lucide 1.59.0 icon shapes, copied untouched from `lucide-static` (33 icons, listed in the file) | Lucide contributors (a few derive from Feather, Cole Bemis) | ISC + MIT (`screener/licenses/lucide-LICENSE.txt`) | `screener/src/icons.tsx` |
+| Open Peeps figures (peep-13, peep-standing-16, peep-sitting-14, peep-sitting-1), recoloured to Night ink and rendered to small PNGs | Pablo Stanley | CC0 1.0 | `screener/assets/images/peeps/` |
 
 ## Design mock-ups (`docs/design/*.png`)
 

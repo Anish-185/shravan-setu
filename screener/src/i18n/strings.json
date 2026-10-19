@@ -2,7 +2,7 @@
  "banner": {
   "en": "Screening only, not a diagnosis",
   "te": "ఇది స్క్రీనింగ్ మాత్రమే, వ్యాధి నిర్ధారణ కాదు",
-  "where": "Yellow banner on every screen that shows a result"
+  "where": "Banner at the top of every screen that shows a result"
  },
  "lang.switchToTe": {
   "en": "Telugu",
@@ -253,6 +253,11 @@
   "en": "Device settings saved.",
   "te": "పరికర సెట్టింగ్స్ సేవ్ అయ్యాయి.",
   "where": "Settings, after saving"
+ },
+ "settings.devH": {
+  "en": "Developer",
+  "te": "డెవలపర్",
+  "where": "Settings: heading of the section with the audio spike and calibration screens (team only)"
  },
  "screen.notFound": {
   "en": "Child not found.",
