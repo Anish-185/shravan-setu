@@ -64,6 +64,11 @@
   "te": "ఆడియో స్పైక్ (డెవలపర్)",
   "where": "Screen title in the header"
  },
+ "title.calibrate": {
+  "en": "Calibration (team only)",
+  "te": "TODO_TE",
+  "where": "Screen title in the header (team-only tool, adults)"
+ },
  "title.cases": {
   "en": "Referral cases",
   "te": "రిఫరల్ కేసులు",
@@ -108,6 +113,11 @@
   "en": "Audio spike (developer)",
   "te": "ఆడియో స్పైక్ (డెవలపర్)",
   "where": "Home screen link (developer tool)"
+ },
+ "home.calibrate": {
+  "en": "Calibration (team only)",
+  "te": "TODO_TE",
+  "where": "Home screen link (team-only tool)"
  },
  "children.pickSchool": {
   "en": "Pick your school in Settings first.",

@@ -55,6 +55,19 @@
     "min_valid_samples_per_tone": {"value": 5, "source": "PLACEHOLDER: fewer valid samples than this during a tone means noise is unknown, so the tone is replayed."}
   },
 
+  "calibration": {
+    "baseline_dbfs": {"value": {"500": null, "1000": null, "2000": null, "4000": null}, "source": "Team baseline per frequency: median threshold of normal-hearing adult volunteers (both ears pooled), in dB re the tone file's full scale at player volume 1.0, at the fixed media volume below, on the standard device. Filled from scripts/calibrate.py after the team calibration (docs/TEAM_TEST_PROTOCOL.md). null = not calibrated: the app plays tone.uncalibrated_player_volume and marks sessions UNCALIBRATED. It is a team baseline, not an ISO audiometric zero, so levels are dB re: team baseline, never dB HL."},
+    "device": {"value": "Redmi 2201117TI + Samsung wired earphones (inline mic)", "source": "Owner: standard device for Phase 6 (CLAUDE.md calibration context). Baseline values apply to this pair only."},
+    "media_volume_steps": {"value": null, "source": "TODO: the fixed media-volume setting used during calibration (recorded on the calibration screen); every later session must use the same setting."},
+    "start_db": {"value": -40, "source": "PLACEHOLDER: first presentation level of the threshold search, dB re full scale (player volume 0.01; the spike's comfortable worn level was 0.10 = -20 dB, docs/SPIKE.md)."},
+    "step_down_db": {"value": 10, "source": "PLACEHOLDER: 'down 10, up 5' bracketing, the usual manual pure-tone threshold method. TODO(source): cite a threshold-audiometry guideline."},
+    "step_up_db": {"value": 5, "source": "PLACEHOLDER: see step_down_db."},
+    "heard_needed": {"value": 2, "source": "PLACEHOLDER: threshold = lowest level heard on this many ascending presentations. TODO(source) with step_down_db."},
+    "min_db": {"value": -90, "source": "Design choice: floor of the search (player volume ~0.00003). A threshold at the floor is reported as 'at floor', not as a value."},
+    "max_db": {"value": 0, "source": "Design choice: player volume 1.0, the loudest the app can play at the fixed media volume."},
+    "max_presentations": {"value": 25, "source": "PLACEHOLDER: per ear and frequency; then the search stops without a threshold."}
+  },
+
   "voice": {
     "player_volume": {"value": 0.5, "source": "PLACEHOLDER: Telugu voice instructions through the earphones at the fixed media volume. Set by ear with real recordings (comfortable, not loud). Not a test level."}
   },

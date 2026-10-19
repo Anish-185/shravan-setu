@@ -9,7 +9,7 @@ import { File } from 'expo-file-system';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { createMic } from '@/audio/mic';
-import { playFromStart, rewind, warmUp } from '@/audio/tones';
+import { playback, playFromStart, rewind, warmUp } from '@/audio/tones';
 import type { Port } from '@/engine/engine';
 import { v, type Config, type Ear } from '@/rules';
 
@@ -25,14 +25,6 @@ const TONES: Record<string, number> = {
   'right-4000': require('@/assets/tones/generated/tone_4000Hz_right.wav'),
   silence: require('@/assets/tones/generated/silence.wav'), // catch trials: same path and start delay, no sound
 };
-
-/** Player volume. Calibrated levels come in Phase 6; until then every session is marked uncalibrated. */
-export function playback(cfg: Config) {
-  if (v(cfg, 'screening_level_db_re_team_baseline') !== null) {
-    throw new Error('Calibrated playback is not implemented yet (Phase 6).');
-  }
-  return { volume: v(cfg, 'tone', 'uncalibrated_player_volume') as number, calibrated: false };
-}
 
 // Not useAudioRecorder: that hook releases the recorder in its own cleanup, before ours can stop it (ERR-021).
 // Options flattened for Android exactly as useAudioRecorder does (expo-audio build/utils/options.js).
@@ -123,7 +115,7 @@ export function useScreeningAudio(cfg: Config) {
     if (!disposed.current) Object.values(players).forEach(rewind); // players are gone after unmount
   };
 
-  const { volume, calibrated } = playback(cfg);
+  const { volumeFor, calibrated } = useMemo(() => playback(cfg), [cfg]);
 
   const port: Port = {
     now: () => Date.now(),
@@ -133,11 +125,11 @@ export function useScreeningAudio(cfg: Config) {
     play(ear: Ear, freq: number) {
       stopAll();
       // expo-audio's documented volume API is assignment on the native player object (see ERR-004).
-      playFromStart(players[`${ear}-${freq}`], volume);
+      playFromStart(players[`${ear}-${freq}`], volumeFor(freq));
     },
     playSilence() {
       stopAll();
-      playFromStart(players.silence, volume);
+      playFromStart(players.silence, volumeFor(1000)); // silent clip: any volume, same path
     },
     stop: stopAll,
   };
@@ -149,6 +141,11 @@ export function useScreeningAudio(cfg: Config) {
     error,
     calibrated,
     deviceChanges: () => [...changes.current],
+    /** Calibration tool only: one tone at an explicit player volume. */
+    playAt(ear: Ear, freq: number, volume: number) {
+      stopAll();
+      playFromStart(players[`${ear}-${freq}`], volume);
+    },
     /** Silent warm-up of every player before the test (ERR-026); call once the audio mode is set (mic started). */
     warmUp: () => warmUp(
       Object.values(players),

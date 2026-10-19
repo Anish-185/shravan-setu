@@ -15,6 +15,7 @@ export default function Home() {
       <Link href="/sync" style={styles.link}>{t('home.sync')}</Link>
       <Link href="/settings" style={styles.link}>{t('home.settings')}</Link>
       <Link href="/spike" style={styles.dev}>{t('home.spike')}</Link>
+      <Link href="/calibrate" style={styles.dev}>{t('home.calibrate')}</Link>
     </ScrollView>
   );
 }

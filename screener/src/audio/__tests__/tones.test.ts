@@ -1,5 +1,15 @@
 // Tone player handling (ERR-026): warm-up, rewind after stop, and play without a seek.
-import { playFromStart, rewind, warmUp, type TonePlayer } from '../tones';
+import * as fs from 'fs';
+import * as path from 'path';
+
+import { playback, playFromStart, rewind, warmUp, type TonePlayer } from '../tones';
+
+const cfg = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../../../config/screening.json'), 'utf8'));
+const withCal = (level: number | null, base: Record<string, number | null>) => ({
+  ...cfg,
+  screening_level_db_re_team_baseline: { value: level, source: 'test' },
+  calibration: { ...cfg.calibration, baseline_dbfs: { value: base, source: 'test' } },
+});
 
 function fakePlayer() {
   const calls: string[] = [];
@@ -54,4 +64,22 @@ test('warm-up does not hang when a player never reports playing', async () => {
   timers.forEach((fn) => fn()); // the timeout fires
   await warm;
   expect(p.calls).toEqual(['play@0']);
+});
+
+test('uncalibrated: placeholder volume for every frequency', () => {
+  const p = playback(cfg);
+  expect(p.calibrated).toBe(false);
+  expect(p.volumeFor(4000)).toBe(cfg.tone.uncalibrated_player_volume.value);
+});
+
+test('calibrated: volume = baseline + screening level, per frequency', () => {
+  const p = playback(withCal(20, { 500: -60, 1000: -70, 2000: -72, 4000: -66 }));
+  expect(p.calibrated).toBe(true);
+  expect(p.volumeFor(1000)).toBeCloseTo(10 ** (-50 / 20));
+  expect(p.volumeFor(4000)).toBeCloseTo(10 ** (-46 / 20));
+});
+
+test('calibrated but a baseline is missing or too loud: fails before any test starts', () => {
+  expect(() => playback(withCal(20, { 500: -60, 1000: null, 2000: -72, 4000: -66 }))).toThrow(/1000 Hz/);
+  expect(() => playback(withCal(20, { 500: -10, 1000: -70, 2000: -72, 4000: -66 }))).toThrow(/above full scale/);
 });

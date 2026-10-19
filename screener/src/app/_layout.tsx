@@ -17,6 +17,7 @@ function Screens() {
       <Stack.Screen name="sync" options={{ title: t("title.sync") }} />
       <Stack.Screen name="settings" options={{ title: t("title.settings") }} />
       <Stack.Screen name="spike" options={{ title: t("title.spike") }} />
+      <Stack.Screen name="calibrate" options={{ title: t("title.calibrate") }} />
     </Stack>
   );
 }
