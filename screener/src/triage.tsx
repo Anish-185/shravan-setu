@@ -8,7 +8,7 @@ import { cfg } from '@/config';
 import { db } from '@/db';
 import { useT } from '@/i18n';
 import { v } from '@/rules';
-import { Btn, H, P, s } from '@/ui';
+import { Btn, C, Card, H, P, Pill, s, Warn } from '@/ui';
 
 type Q = { id: string; en: string; te: string };
 
@@ -20,34 +20,34 @@ export function TriageForm({ caseId, onSaved }: { caseId: string; onSaved?: () =
   const complete = questions.every((q) => q.id in answers);
 
   return (
-    <View style={s.screen}>
+    <View style={{ gap: 14 }}>
       <H>{t('triage.h')}</H>
-      <Text style={s.warn}>{t('triage.label')}</Text>
-      <P>{t('triage.p')}</P>
+      <Warn>{t('triage.label')}</Warn>
+      <Text style={s.muted}>{t('triage.p')}</Text>
       {questions.map((q) => (
-        <View key={q.id} style={{ gap: 6 }}>
+        <Card key={q.id}>
           <P>{t.x(q)}</P>
           <View style={{ flexDirection: 'row', gap: 12 }}>
             {[true, false].map((yes) => (
               <Pressable key={String(yes)} accessibilityRole="button" accessibilityState={{ selected: answers[q.id] === yes }}
                 onPress={() => setAnswers({ ...answers, [q.id]: yes })}
-                style={[s.btn, { flex: 1, paddingVertical: 18 }, answers[q.id] !== yes && s.btnPlain]}>
+                style={[s.btn, { flex: 1 }, answers[q.id] !== yes && s.btnPlain]}>
                 <Text style={[s.btnText, answers[q.id] !== yes && s.btnPlainText]}>{t(yes ? 'common.yes' : 'common.no')}</Text>
               </Pressable>
             ))}
           </View>
-        </View>
+        </Card>
       ))}
       <Btn title={t('triage.save')} disabled={!complete} onPress={() => {
         setSaved(saveTriage(db, cfg, caseId, answers));
         onSaved?.();
       }} />
       {saved && (
-        <>
-          <Text style={s.ok}>{t('triage.saved')}</Text>
+        <Card>
+          <Pill icon="circle-check" text={t('triage.saved')} tint={C.okTint} color={C.okText} />
           <P>{t(saved.route === 'PHC' ? 'triage.routePHC' : 'triage.routeDEIC', { facility: saved.facility?.name ?? t('triage.noFacility') })}</P>
-          <P>{t.reason(saved.reason)}</P>
-        </>
+          <Text style={s.muted}>{t.reason(saved.reason)}</Text>
+        </Card>
       )}
     </View>
   );
