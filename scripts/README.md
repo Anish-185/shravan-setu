@@ -16,3 +16,4 @@
 
 Every quotable number comes from one of these scripts and is recorded in `docs/CLAIMS.md`; `python -m eval.report`
 regenerates them all into `eval/results.md`.
+| `check_contrast.py` | WCAG AA contrast of every text/background pair in the app, colours read from `screener/src/ui.tsx`; run by pytest |

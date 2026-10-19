@@ -204,7 +204,7 @@ Why teal and not green for PASS:
 - Teal raises that to 61, and to 77 for deutan viewers.
 - RETEST is told apart from REFER mainly by lightness (pale amber with dark text against deep vermillion with white
   text) and by its icon.
-- These are design checks, not claims. Step 2 adds `scripts/check_contrast.py`, which checks every token pair for
+- These are design checks, not claims. `scripts/check_contrast.py` checks every token pair the app uses for
   AA, so the figures can be reproduced.
 
 The outcome word stays in English capitals in both languages ("PASS / RETEST / REFER") because that is how the
