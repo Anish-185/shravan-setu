@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="332" viewBox="0 0 640 332" font-family="sans-serif" font-size="12">
+<rect width="640" height="332" fill="#ffffff"/>
+<text x="10" y="22" font-size="15" font-weight="bold">SIMULATED district funnel (10,000 children)</text>
+<text x="10" y="40" fill="#555">Brief figures, TODO(source). Not measured. Bar widths are linear.</text>
+<text x="10" y="82">Screened</text>
+<rect x="150" y="60" width="400.0" height="16" fill="#9a9a9a"/>
+<text x="556.0" y="72">10,000</text>
+<rect x="150" y="78" width="400.0" height="16" fill="#2a6fdb"/>
+<text x="556.0" y="90">10,000</text>
+<text x="10" y="140">With hearing loss</text>
+<rect x="150" y="118" width="56.6" height="16" fill="#9a9a9a"/>
+<text x="212.6" y="130">1,414</text>
+<rect x="150" y="136" width="56.6" height="16" fill="#2a6fdb"/>
+<text x="212.6" y="148">1,414</text>
+<text x="10" y="198">Referred</text>
+<rect x="150" y="176" width="56.6" height="16" fill="#9a9a9a"/>
+<text x="212.6" y="188">1,414</text>
+<rect x="150" y="194" width="56.6" height="16" fill="#2a6fdb"/>
+<text x="212.6" y="206">1,414</text>
+<text x="10" y="256">Reached care</text>
+<rect x="150" y="234" width="22.3" height="16" fill="#9a9a9a"/>
+<text x="178.3" y="246">557</text>
+<rect x="150" y="252" width="50.1" height="16" fill="#2a6fdb"/>
+<text x="206.1" y="264">1,251</text>
+<rect x="10" y="310" width="12" height="12" fill="#9a9a9a"/>
+<text x="26" y="320">Referral + SMS reminders only</text>
+<rect x="310" y="310" width="12" height="12" fill="#2a6fdb"/>
+<text x="326" y="320">Referral + ear camp at school (what this app organises)</text>
+</svg>

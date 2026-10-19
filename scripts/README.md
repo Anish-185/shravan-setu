@@ -7,5 +7,12 @@
 | `analyze_spike.py` | Phase 1 spike analysis (`docs/SPIKE.md` §5, CLAIMS SPK-01..05): `python scripts/analyze_spike.py data/raw/spike/*.json` |
 | `make_tones.py` | Generates click-free per-ear tone WAVs from `config/screening.json` into `screener/assets/tones/generated/` |
 
-Planned (Phase 6): `simulate_district.py`, `download_nhanes.py`, `eval_nhanes.py`, `cost_model.py`. Every quotable
-number comes from one of these scripts and is recorded in `docs/CLAIMS.md`.
+| `analyze_phase4.py` | Device-trial session summaries (play latency, taps from play() and from playback start, late-start replays): `python scripts/analyze_phase4.py data/raw/phase5/*.json` |
+| `telugu_strings.py` | Writes `docs/TELUGU_STRINGS.md` and `docs/VOICE_SCRIPT.md`; `--check` is run by pytest |
+| `simulate_district.py` | SIMULATED district funnel, sweeps, Monte Carlo, SVG chart (inputs `config/district_model.json`) |
+| `eval_nhanes.py` | NHANES youth rule-logic evaluation: `--download` (8 CDC files, pinned SHA-256), then run. Needs `requirements-eval.txt` (pandas, laptop only) |
+| `cost_model.py` | PROPOSED deployment cost model (inputs `config/cost_model.json`) |
+| `calibrate.py` | Team baseline and test-retest from calibration exports: `python scripts/calibrate.py data/raw/calibration/*.json` |
+
+Every quotable number comes from one of these scripts and is recorded in `docs/CLAIMS.md`; `python -m eval.report`
+regenerates them all into `eval/results.md`.
