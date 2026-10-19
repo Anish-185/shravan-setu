@@ -26,6 +26,19 @@ Removed from the original pins: `pytz` and `typing_extensions` (no longer requir
 
 Runtime: Python 3.12 + SQLite on a laptop. No cloud hosting, no database service.
 
+### Evaluation only (`requirements-eval.txt`, laptop, never the app or server runtime)
+
+| Package | Version | Licence | Cost | Network calls |
+|---|---|---|---|---|
+| pandas | 3.0.6 | BSD-3-Clause | 0 | None (reads local XPT files) |
+| numpy (pandas dependency) | 2.5.4 | BSD-3-Clause (bundled libraries: BSD/MIT-style) | 0 | None |
+| python-dateutil (pandas dependency) | 2.9.0.post0 | Apache-2.0 OR BSD-3-Clause | 0 | None |
+| six (dateutil dependency) | 1.17.0 | MIT | 0 | None |
+| `scripts/eval_nhanes.py --download` | ours | Apache-2.0 | 0 | **Only when run with `--download`**: 8 public files from `wwwn.cdc.gov` (NHANES), checked against pinned SHA-256. No account or key |
+
+~110 MB installed (over the 5 MB rule; owner-approved 2026-10-19 because it never ships). `scripts/simulate_district.py`
+and `scripts/cost_model.py` use the standard library only.
+
 ## Mobile app (`screener/`)
 
 Expo SDK 57 (downgraded from 58 for Play Store Expo Go, ERR-014). Licences read from each package's installed `package.json`. Runs in the free Expo Go app;
@@ -76,14 +89,14 @@ third-party Hugging Face Space (network). All three are banned by our zero-cost 
 
 ## Real deployment costs (not hidden)
 
-These are not software costs but they are real. Values are TODO(source) until we have local prices; the
-cost model (Phase 6) takes them as inputs.
+These are not software costs but they are real. Proposed plan for a future pilot (not tested in any school); full
+model and scenarios: `docs/COST_MODEL.md`, numbers from `scripts/cost_model.py` (inputs in `config/cost_model.json`).
 
 | Item | Cost | Notes |
 |---|---|---|
-| Android phone (`[PHONE_MODEL]`) | TODO(source) | One per screening team; amortised over its lifespan |
-| Wired earphones (`[EARPHONE_MODEL]`) | TODO(source) | Replacement rate TODO |
-| Teacher / screener time | TODO(source) | Minutes per child × local wage |
+| Budget Android phone | Rs 10,000, assumed lifespan 3 years | Team estimate, online retail price, Oct 2026. Scenario A (recommended) buys one per ~250 students |
+| Wired earphones with inline mic | Rs 400, assumed lifespan 1 year | Team estimate, online retail price, Oct 2026. Replacements must be the same model |
+| Teacher / screener time | ~5 min per child (planning input) | Reported in minutes; rupee value TODO(source), optional (screening may be part of existing school-health duties) |
 | Laptop for the backend | TODO(source) | Often already available at the school or block office |
 | SMS / IVR reminders | TODO(source) | Future cost only; stubbed (logged, not sent) in this version |
 | Telugu text and voice recordings | TODO(source) | [TELUGU_SPEAKER]'s time: 160+ UI texts, 5 triage questions, 1 reminder, 5 voice lines (`docs/TELUGU_STRINGS.md`, `docs/VOICE_SCRIPT.md`); one-off |

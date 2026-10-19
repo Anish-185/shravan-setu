@@ -1,0 +1,46 @@
+{
+  "_about": "Inputs for scripts/cost_model.py. A PROPOSED plan for a future school pilot (via SFIC field-testing support); nothing here was tested in a school. Software is Rs 0 in every scenario; deployment costs are listed separately so none are hidden.",
+
+  "software_cost_inr": {"value": 0, "source": "docs/COST_AND_LICENSES.md: every dependency is free/open source, no paid service, API key or hosting (backend runs on a school laptop)."},
+  "phone_price_inr": {"value": 10000, "source": "Team estimate, online retail price, Oct 2026: budget Android phone."},
+  "phone_life_years": {"value": 3, "source": "Team estimate, Oct 2026: assumed lifespan."},
+  "earphone_price_inr": {"value": 400, "source": "Team estimate, online retail price, Oct 2026: wired earphones with inline mic."},
+  "earphone_life_years": {"value": 1, "source": "Team estimate, Oct 2026: assumed lifespan."},
+
+  "minutes_per_child": {"value": 5, "source": "Planning input: test ~2-2.5 min from our device trials (session durations in scripts/analyze_phase4.py; CLAIMS P4/P5 rows) plus setup, a team estimate. Re-measure in team tests (docs/TEAM_TEST_PROTOCOL.md)."},
+  "screening_hours_per_phone_per_day": {"value": 1, "source": "Planning input, team proposal: one hour of screening per phone per school day."},
+  "students_per_phone": {
+    "value": {"recommended": 250, "acceptable": 400},
+    "source": "Planning guideline, team proposal: limits how long a screening round runs per phone (about 1 month at 250), not student time; each student misses about 5 minutes once a year."
+  },
+  "school_sizes": {"value": [250, 400, 1000], "source": "Design choice: example school sizes for the cost-per-child table."},
+  "students_per_class": {"value": 40, "source": "TODO(source): typical class size, used only to count class teachers in scenario C. Planning placeholder."},
+
+  "teacher_cost_inr_per_hour": {"value": null, "source": "TODO(source): optional. Screening may be part of existing school-health duties, so teacher time is reported in minutes; a rupee value is added only when sourced."},
+  "future_sms_cost_inr_per_message": {"value": null, "source": "TODO(source): reminders are stubbed today (logged, never sent). Real SMS is a later-round roadmap item and a future cost, shown separately."},
+  "future_sms_messages_per_referral": {"value": 2, "source": "PLACEHOLDER: e.g. a camp reminder and a missed-camp reminder per referred child."},
+
+  "scenarios": {
+    "value": {
+      "A_school_phone": {
+        "label": "A. School phone + earphones (recommended)",
+        "buys_phone": true,
+        "kits": "per_phone_guideline",
+        "notes": "The school buys a phone + earphones (Rs 10,400 per kit). One calibrated phone+earphone pair gives consistent test levels; child data stays on a school device. Buy every phone of the same model with the same earphone model."
+      },
+      "B_teacher_phone": {
+        "label": "B. Teacher's own phone, school buys earphones",
+        "buys_phone": false,
+        "kits": "per_phone_guideline",
+        "notes": "Cheapest. Not recommended until per-model calibration exists (roadmap): each phone model needs its own calibration, test levels vary across models until then, and child data sits on a personal phone."
+      },
+      "C_kit_per_class_teacher": {
+        "label": "C. One earphone kit per class teacher, on their own phones",
+        "buys_phone": false,
+        "kits": "per_class",
+        "notes": "Cheaper than A (no phones bought), dearer than B (one kit per class instead of one per 250 students); each class teacher screens only their own class. The same calibration and privacy issues as B, multiplied by the number of phone models, and less convenient to manage."
+      }
+    },
+    "source": "Team proposal, Oct 2026."
+  }
+}
