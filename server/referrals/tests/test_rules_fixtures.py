@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from referrals import rules
+from referrals.rules import audit
 
 ROOT = Path(__file__).resolve().parents[3]
 FIX = ROOT / "shared" / "fixtures"
@@ -36,6 +37,8 @@ def call(fn, inp, cfg):
         return rules.next_statuses(inp["from_status"])
     if fn == "check_transition":
         return rules.check_transition(inp["from_status"], inp["to_status"], inp["treatment"], inp["reason"])
+    if fn == "verify_audit_chain":
+        return audit.verify_chain(inp["entries"])
     if fn == "triage_route":
         return rules.triage_route(inp["answers"], cfg)
     raise AssertionError(fn)

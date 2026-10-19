@@ -52,6 +52,9 @@ The original Django backend lives in `server/apigateway/`; our changes to `serve
 Filled in per phase.
 
 - (Phase 0) No features yet: cleanup, attribution, architecture.
+- (Phase 7) Tamper-evident audit log on the phone and the server: hash-chained entries for consent, results,
+  referrals, status changes and camp requests; `manage.py verify_audit_log` and a Verify button in Settings. Shared
+  test vectors for both languages. SHA-256 from Python's hashlib and @noble/hashes (MIT, dependency).
 - (Phase 5) Closing the loop on the phone, all offline: ear-health triage checklist after a REFER (shared triage rule,
   "nearest" PHC/DEIC = same mandal from the local facility list, "Triage, not diagnosis"); referral case list filtered
   by status, case detail with full history and buttons only for legal moves (the case state machine now lives in both

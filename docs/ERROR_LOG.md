@@ -507,3 +507,15 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
   to false.
 - Verification: CLAIMS CAL-02 shows the clustering (`python -m eval.report --check`); after the fix, the re-run's 1-4 kHz thresholds should spread across people and sit above the confirmed floor.
 - Lesson: when a threshold search lands on the same level for everyone, check the playback floor before trusting it; give every search a known audible floor well below the expected threshold.
+
+### ERR-045: a docs edit script missed its target, and the commit went out without the change
+- Phase / date: Provisional calibration / 2026-10-20
+- Symptom: `AssertionError` from the inline Python edit of `eval/report.py`; the next commands in the same shell call
+  still ran, so `eval/results.md` was regenerated and pushed (4cf6a38) without the PROVISIONAL label definition.
+- Where: one-off shell command (heredoc edit, then `eval.report`, commit, push on separate lines)
+- Root cause: the search string spanned two source lines, and the heredoc's failure didn't stop the rest because the
+  steps were separate lines, not joined with `&&`.
+- Fix: corrected the edit and pushed a follow-up commit (16169f8, "define the PROVISIONAL label in results.md").
+- Status: FIXED
+- Verification: `eval/results.md` line 5 defines **PROVISIONAL**; `python -m eval.report --check` passes.
+- Lesson: chain an edit and its commit/push with `&&` (or `set -e`), so a failed edit stops the push.

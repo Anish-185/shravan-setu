@@ -249,6 +249,31 @@
   "te": "పరికర సెట్టింగ్స్ సేవ్ అయ్యాయి.",
   "where": "Settings, after saving"
  },
+ "settings.auditH": {
+  "en": "Audit log",
+  "te": "TODO_TE",
+  "where": "Settings: heading of the audit-log section"
+ },
+ "settings.auditP": {
+  "en": "Consent, results, referrals and status changes are chained together, so a later change to any of them shows up here.",
+  "te": "TODO_TE",
+  "where": "Settings: what the audit log is"
+ },
+ "settings.auditVerify": {
+  "en": "Verify audit log",
+  "te": "TODO_TE",
+  "where": "Settings: button that checks the audit log"
+ },
+ "settings.auditOk": {
+  "en": "Audit log OK: {n} entries. Last code {head}.",
+  "te": "TODO_TE",
+  "where": "Settings: result when the check passes ({head} = first 12 characters of the last hash, write it down to compare later)"
+ },
+ "settings.auditBroken": {
+  "en": "Audit log check failed at entry {at}. Tell the team lead.",
+  "te": "TODO_TE",
+  "where": "Settings: result when an entry was changed, removed or reordered"
+ },
  "settings.devH": {
   "en": "Developer",
   "te": "డెవలపర్",

@@ -2,6 +2,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { verifyChain } from '../audit';
 import * as rules from '../index';
 
 const ROOT = path.resolve(__dirname, '../../../..');
@@ -26,6 +27,7 @@ function call(fn: string, input: any, cfg: rules.Config): unknown {
     case 'reliability_score': return rules.reliabilityScore(input.trials, cfg);
     case 'apply_500hz_policy': return rules.apply500HzPolicy(input.ambient_db_re_baseline, cfg);
     case 'triage_route': return rules.triageRoute(input.answers, cfg);
+    case 'verify_audit_chain': return verifyChain(input.entries);
     case 'next_statuses': return rules.nextStatuses(input.from_status);
     case 'check_transition': return rules.checkTransition(input.from_status, input.to_status, input.treatment, input.reason);
     case 'noise_verdict': return rules.noiseVerdict(input.samples, input.mic_start_ms, input.device_changes_ms, cfg);

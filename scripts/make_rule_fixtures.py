@@ -5,6 +5,7 @@ never computed by the rule engine, so the fixtures are an independent check, not
 
     python scripts/make_rule_fixtures.py
 """
+import hashlib
 import json
 import shutil
 from pathlib import Path
@@ -333,12 +334,67 @@ CHECK = [
 ]
 
 
+# Audit chain (verify_audit_chain): chains are built here with hashlib directly, not with either engine.
+GENESIS = "0" * 64
+
+
+def chain(*items):
+    out, prev = [], GENESIS
+    for seq, (at, kind, rid, data) in enumerate(items, 1):
+        body = json.dumps([seq, at, kind, rid, data, prev], ensure_ascii=False, separators=(",", ":"))
+        h = hashlib.sha256(body.encode("utf-8")).hexdigest()
+        out.append({"seq": seq, "at": at, "kind": kind, "record_id": rid, "data": data, "prev": prev, "hash": h})
+        prev = h
+    return out
+
+
+GOOD = chain(
+    ("2026-10-20T09:00:00.000Z", "consent", "c-1", '{"child":"k-1","given_by":"parent","method":"written"}'),
+    ("2026-10-20T09:05:00.000Z", "screening_result", "r-1",
+     '{"outcome":"REFER","reliability_score":0.75,"reasons":["left ear 4000 Hz: not heard"]}'),
+    ("2026-10-20T09:05:00.000Z", "case_event", "e-1", '{"note":"తల్లిదండ్రులకు చెప్పాం\\nline 2","to_status":"referred"}'),
+)
+
+
+def edit(entries, i, **fields):
+    out = [dict(e) for e in entries]
+    out[i].update(fields)
+    return out
+
+
+def rehash(e):
+    body = json.dumps([e["seq"], e["at"], e["kind"], e["record_id"], e["data"], e["prev"]], ensure_ascii=False,
+                      separators=(",", ":"))
+    return {**e, "hash": hashlib.sha256(body.encode("utf-8")).hexdigest()}
+
+
+def broken(at, why, n=3):
+    return {"ok": False, "entries": n, "head": None, "broken_at": at, "why": why}
+
+
+AUDIT = [{"name": n, "input": {"entries": e}, "expected": x} for n, e, x in (
+    ("empty log", [], {"ok": True, "entries": 0, "head": None, "broken_at": None, "why": None}),
+    ("intact chain (Telugu, escaped newline, float in data)", GOOD,
+     {"ok": True, "entries": 3, "head": GOOD[2]["hash"], "broken_at": None, "why": None}),
+    ("data edited", edit(GOOD, 1, data=GOOD[1]["data"].replace("REFER", "PASS")), broken(2, "hash")),
+    ("time edited", edit(GOOD, 1, at="2026-10-21T09:05:00.000Z"), broken(2, "hash")),
+    ("kind edited", edit(GOOD, 0, kind="case"), broken(1, "hash")),
+    ("edited and rehashed: the next link breaks", [GOOD[0], rehash({**GOOD[1], "data": "{}"}), GOOD[2]],
+     broken(3, "prev")),
+    ("middle entry deleted", [GOOD[0], GOOD[2]], broken(2, "seq", 2)),
+    ("entries swapped", [GOOD[0], GOOD[2], GOOD[1]], broken(2, "seq")),
+    ("swapped and renumbered", [GOOD[0], {**GOOD[2], "seq": 2}, {**GOOD[1], "seq": 3}], broken(2, "prev")),
+    ("first entry does not start from genesis", edit(GOOD, 0, prev="f" * 64), broken(1, "prev")),
+)]
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / "config" / "screening.json", OUT / "fixture_config.json")
     for fn, cases in (("decide_outcome", DECIDE), ("rescreen_plan", RESCREEN), ("apply_500hz_policy", POLICY),
                       ("triage_route", TRIAGE), ("reliability_score", RELIABILITY), ("noise_verdict", NOISE),
-                      ("ambient_level", AMBIENT), ("next_statuses", NEXT), ("check_transition", CHECK)):
+                      ("ambient_level", AMBIENT), ("next_statuses", NEXT), ("check_transition", CHECK),
+                      ("verify_audit_chain", AUDIT)):
         path = OUT / f"{fn}.json"
         path.write_text(json.dumps({"function": fn, "cases": cases}, indent=1) + "\n")
         print(f"{path.relative_to(ROOT)}: {len(cases)} cases")

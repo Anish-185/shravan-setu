@@ -177,3 +177,27 @@ class ReminderLog(Base):
     text_en = models.TextField()
     text_te = models.TextField()
     status = models.CharField(max_length=30, default="would_send_stubbed")
+
+
+class AuditEntry(models.Model):
+    """Hash-chained, append-only audit log (referrals.rules.audit). Written by referrals.audit_log on every save of
+    a consent, result, case, case event or camp request; checked by `manage.py verify_audit_log`."""
+
+    seq = models.PositiveIntegerField(primary_key=True)
+    at = models.CharField(max_length=40, help_text="Server time, ISO text exactly as hashed.")
+    kind = models.CharField(max_length=30)
+    record_id = models.CharField(max_length=64)
+    data = models.TextField(help_text="The record's fields as JSON text, exactly as hashed.")
+    prev = models.CharField(max_length=64)
+    hash = models.CharField(max_length=64)
+
+    class Meta:
+        ordering = ["seq"]
+
+    def save(self, *args, **kwargs):
+        if not self._state.adding:
+            raise ValueError("AuditEntry is append-only")
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        raise ValueError("AuditEntry is append-only")

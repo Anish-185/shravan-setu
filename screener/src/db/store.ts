@@ -1,3 +1,5 @@
+import { nextEntry, verifyChain, type AuditEntry } from '@/rules/audit';
+
 // Local-first storage: every write lands in SQLite first, and synced types also go into an outbox (sync.ts).
 // One generic `records` table: `data` holds exactly the backend serializer fields for that type, so the outbox
 // payload is the stored row. Client-generated UUIDv4 ids make every push idempotent.
@@ -14,6 +16,8 @@ export const SYNCED_TYPES = [
 ] as const;
 // Local only: session_log (full engine log), facility (pulled at login), reminder (stub log; the server logs its own).
 export type RecordType = (typeof SYNCED_TYPES)[number] | 'session_log' | 'facility' | 'reminder';
+// Every write of these also appends to the hash-chained audit log (consent, results, referrals, status changes).
+const AUDITED: readonly string[] = ['consent', 'screening_result', 'case', 'case_event', 'camp_request'];
 
 export function migrate(db: Db) {
   db.run(`CREATE TABLE IF NOT EXISTS records (
@@ -22,6 +26,9 @@ export function migrate(db: Db) {
     seq INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, id TEXT NOT NULL, data TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'pending', error TEXT, created_at TEXT NOT NULL, synced_at TEXT)`);
   db.run('CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL)');
+  db.run(`CREATE TABLE IF NOT EXISTS audit (
+    seq INTEGER PRIMARY KEY, at TEXT NOT NULL, kind TEXT NOT NULL, record_id TEXT NOT NULL, data TEXT NOT NULL,
+    prev TEXT NOT NULL, hash TEXT NOT NULL)`);
 }
 
 const nowIso = () => new Date().toISOString();
@@ -38,8 +45,19 @@ export function put(db: Db, type: RecordType, id: string, data: object) {
     if ((SYNCED_TYPES as readonly string[]).includes(type)) {
       db.run('INSERT INTO outbox (type, id, data, created_at) VALUES (?, ?, ?, ?)', type, id, json, nowIso());
     }
+    if (AUDITED.includes(type)) {
+      const last = db.all<AuditEntry>('SELECT seq, hash FROM audit ORDER BY seq DESC LIMIT 1')[0] ?? null;
+      const e = nextEntry(last, nowIso(), type, id, json);
+      db.run('INSERT INTO audit (seq, at, kind, record_id, data, prev, hash) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        e.seq, e.at, e.kind, e.record_id, e.data, e.prev, e.hash);
+    }
   });
 }
+
+export const auditLog = (db: Db) =>
+  db.all<AuditEntry>('SELECT seq, at, kind, record_id, data, prev, hash FROM audit ORDER BY seq');
+
+export const verifyAuditLog = (db: Db) => verifyChain(auditLog(db));
 
 /** Overwrite local data without queueing (used for server pulls). */
 export function putLocal(db: Db, type: RecordType, id: string, data: object) {

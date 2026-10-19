@@ -281,3 +281,28 @@ Candidates and the icon inspection are in `docs/DESIGN.md` (section 0 and "Not u
 - Child-mode float, tap echo and the celebration use `react-native-reanimated` (already installed with the Expo
   template), which runs them on the UI thread. Lottie skipped (licences of free files, see `docs/DESIGN.md`).
 
+
+## Phase 7: quick wins (2026-10-20)
+
+### 1. Tamper-evident audit log
+
+- Queries (`gh search repos`): "hash chain audit log django", "tamper evident audit log sqlite", "hash-chained
+  append-only log javascript", "django tamper evident log" (no results); "audit log hash chain", "tamper-evident log",
+  "hash chain log verify", "merkle audit log python". PyPI: django-auditlog, django-simple-history, immudb-py. npm
+  search: "hash chain audit log", "tamper evident log".
+- Candidates:
+  - django-auditlog 3.4.1 (MIT): change history per model, **no hash chain**, so it doesn't make the log
+    tamper-evident; we would still write the chain.
+  - django-simple-history 3.13.0: same (history tables, no chain).
+  - BBVA/qed (Apache-2.0, updated 2026-09-22): a separate Go server for verifiable logs. Far too heavy for a laptop
+    SQLite demo, and nothing for the phone.
+  - immudb-py 1.5.0 (Apache-2.0): client for the immudb database server; needs that server running.
+  - fatihsoysalcom/secure-audit-logs-hash-chain-python (MIT, 0 stars, 2026-08-30), Achalnawal2745/tamper-evident-logs
+    (no licence), ARS4EVER/tamper_evident_log_system (no licence), danielspencer/secure_log_lib (ISC, last commit
+    2020): unmaintained, unlicensed or toy projects.
+  - npm: @tmx-group/audit-verifier, @cendor/acttrace, decern: unrelated or tied to their own services.
+- Decision: (c) build. The chain is about 30 lines per language (`server/referrals/rules/audit.py`,
+  `screener/src/rules/audit.ts`), checked by the shared fixture `verify_audit_chain.json`. SHA-256: Python `hashlib`
+  (stdlib); on the phone (a) depend on **@noble/hashes 2.4.0** (MIT, audited, no dependencies, no install scripts,
+  no network). Needed because `put()` writes inside a synchronous SQLite transaction and `expo-crypto` only offers an
+  async digest; copying a hand-written SHA-256 would be unaudited crypto. Only `sha2.js` and `utils.js` are bundled.

@@ -1,0 +1,378 @@
+{
+ "function": "verify_audit_chain",
+ "cases": [
+  {
+   "name": "empty log",
+   "input": {
+    "entries": []
+   },
+   "expected": {
+    "ok": true,
+    "entries": 0,
+    "head": null,
+    "broken_at": null,
+    "why": null
+   }
+  },
+  {
+   "name": "intact chain (Telugu, escaped newline, float in data)",
+   "input": {
+    "entries": [
+     {
+      "seq": 1,
+      "at": "2026-10-20T09:00:00.000Z",
+      "kind": "consent",
+      "record_id": "c-1",
+      "data": "{\"child\":\"k-1\",\"given_by\":\"parent\",\"method\":\"written\"}",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea"
+     },
+     {
+      "seq": 2,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "screening_result",
+      "record_id": "r-1",
+      "data": "{\"outcome\":\"REFER\",\"reliability_score\":0.75,\"reasons\":[\"left ear 4000 Hz: not heard\"]}",
+      "prev": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea",
+      "hash": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59"
+     },
+     {
+      "seq": 3,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "case_event",
+      "record_id": "e-1",
+      "data": "{\"note\":\"\u0c24\u0c32\u0c4d\u0c32\u0c3f\u0c26\u0c02\u0c21\u0c4d\u0c30\u0c41\u0c32\u0c15\u0c41 \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c3e\u0c02\\nline 2\",\"to_status\":\"referred\"}",
+      "prev": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59",
+      "hash": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949"
+     }
+    ]
+   },
+   "expected": {
+    "ok": true,
+    "entries": 3,
+    "head": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949",
+    "broken_at": null,
+    "why": null
+   }
+  },
+  {
+   "name": "data edited",
+   "input": {
+    "entries": [
+     {
+      "seq": 1,
+      "at": "2026-10-20T09:00:00.000Z",
+      "kind": "consent",
+      "record_id": "c-1",
+      "data": "{\"child\":\"k-1\",\"given_by\":\"parent\",\"method\":\"written\"}",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea"
+     },
+     {
+      "seq": 2,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "screening_result",
+      "record_id": "r-1",
+      "data": "{\"outcome\":\"PASS\",\"reliability_score\":0.75,\"reasons\":[\"left ear 4000 Hz: not heard\"]}",
+      "prev": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea",
+      "hash": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59"
+     },
+     {
+      "seq": 3,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "case_event",
+      "record_id": "e-1",
+      "data": "{\"note\":\"\u0c24\u0c32\u0c4d\u0c32\u0c3f\u0c26\u0c02\u0c21\u0c4d\u0c30\u0c41\u0c32\u0c15\u0c41 \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c3e\u0c02\\nline 2\",\"to_status\":\"referred\"}",
+      "prev": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59",
+      "hash": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949"
+     }
+    ]
+   },
+   "expected": {
+    "ok": false,
+    "entries": 3,
+    "head": null,
+    "broken_at": 2,
+    "why": "hash"
+   }
+  },
+  {
+   "name": "time edited",
+   "input": {
+    "entries": [
+     {
+      "seq": 1,
+      "at": "2026-10-20T09:00:00.000Z",
+      "kind": "consent",
+      "record_id": "c-1",
+      "data": "{\"child\":\"k-1\",\"given_by\":\"parent\",\"method\":\"written\"}",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea"
+     },
+     {
+      "seq": 2,
+      "at": "2026-10-21T09:05:00.000Z",
+      "kind": "screening_result",
+      "record_id": "r-1",
+      "data": "{\"outcome\":\"REFER\",\"reliability_score\":0.75,\"reasons\":[\"left ear 4000 Hz: not heard\"]}",
+      "prev": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea",
+      "hash": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59"
+     },
+     {
+      "seq": 3,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "case_event",
+      "record_id": "e-1",
+      "data": "{\"note\":\"\u0c24\u0c32\u0c4d\u0c32\u0c3f\u0c26\u0c02\u0c21\u0c4d\u0c30\u0c41\u0c32\u0c15\u0c41 \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c3e\u0c02\\nline 2\",\"to_status\":\"referred\"}",
+      "prev": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59",
+      "hash": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949"
+     }
+    ]
+   },
+   "expected": {
+    "ok": false,
+    "entries": 3,
+    "head": null,
+    "broken_at": 2,
+    "why": "hash"
+   }
+  },
+  {
+   "name": "kind edited",
+   "input": {
+    "entries": [
+     {
+      "seq": 1,
+      "at": "2026-10-20T09:00:00.000Z",
+      "kind": "case",
+      "record_id": "c-1",
+      "data": "{\"child\":\"k-1\",\"given_by\":\"parent\",\"method\":\"written\"}",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea"
+     },
+     {
+      "seq": 2,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "screening_result",
+      "record_id": "r-1",
+      "data": "{\"outcome\":\"REFER\",\"reliability_score\":0.75,\"reasons\":[\"left ear 4000 Hz: not heard\"]}",
+      "prev": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea",
+      "hash": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59"
+     },
+     {
+      "seq": 3,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "case_event",
+      "record_id": "e-1",
+      "data": "{\"note\":\"\u0c24\u0c32\u0c4d\u0c32\u0c3f\u0c26\u0c02\u0c21\u0c4d\u0c30\u0c41\u0c32\u0c15\u0c41 \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c3e\u0c02\\nline 2\",\"to_status\":\"referred\"}",
+      "prev": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59",
+      "hash": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949"
+     }
+    ]
+   },
+   "expected": {
+    "ok": false,
+    "entries": 3,
+    "head": null,
+    "broken_at": 1,
+    "why": "hash"
+   }
+  },
+  {
+   "name": "edited and rehashed: the next link breaks",
+   "input": {
+    "entries": [
+     {
+      "seq": 1,
+      "at": "2026-10-20T09:00:00.000Z",
+      "kind": "consent",
+      "record_id": "c-1",
+      "data": "{\"child\":\"k-1\",\"given_by\":\"parent\",\"method\":\"written\"}",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea"
+     },
+     {
+      "seq": 2,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "screening_result",
+      "record_id": "r-1",
+      "data": "{}",
+      "prev": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea",
+      "hash": "60a917e0fa1abd503be33de8225cc88b14504a36be44ecbf643b8caac8fce934"
+     },
+     {
+      "seq": 3,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "case_event",
+      "record_id": "e-1",
+      "data": "{\"note\":\"\u0c24\u0c32\u0c4d\u0c32\u0c3f\u0c26\u0c02\u0c21\u0c4d\u0c30\u0c41\u0c32\u0c15\u0c41 \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c3e\u0c02\\nline 2\",\"to_status\":\"referred\"}",
+      "prev": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59",
+      "hash": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949"
+     }
+    ]
+   },
+   "expected": {
+    "ok": false,
+    "entries": 3,
+    "head": null,
+    "broken_at": 3,
+    "why": "prev"
+   }
+  },
+  {
+   "name": "middle entry deleted",
+   "input": {
+    "entries": [
+     {
+      "seq": 1,
+      "at": "2026-10-20T09:00:00.000Z",
+      "kind": "consent",
+      "record_id": "c-1",
+      "data": "{\"child\":\"k-1\",\"given_by\":\"parent\",\"method\":\"written\"}",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea"
+     },
+     {
+      "seq": 3,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "case_event",
+      "record_id": "e-1",
+      "data": "{\"note\":\"\u0c24\u0c32\u0c4d\u0c32\u0c3f\u0c26\u0c02\u0c21\u0c4d\u0c30\u0c41\u0c32\u0c15\u0c41 \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c3e\u0c02\\nline 2\",\"to_status\":\"referred\"}",
+      "prev": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59",
+      "hash": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949"
+     }
+    ]
+   },
+   "expected": {
+    "ok": false,
+    "entries": 2,
+    "head": null,
+    "broken_at": 2,
+    "why": "seq"
+   }
+  },
+  {
+   "name": "entries swapped",
+   "input": {
+    "entries": [
+     {
+      "seq": 1,
+      "at": "2026-10-20T09:00:00.000Z",
+      "kind": "consent",
+      "record_id": "c-1",
+      "data": "{\"child\":\"k-1\",\"given_by\":\"parent\",\"method\":\"written\"}",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea"
+     },
+     {
+      "seq": 3,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "case_event",
+      "record_id": "e-1",
+      "data": "{\"note\":\"\u0c24\u0c32\u0c4d\u0c32\u0c3f\u0c26\u0c02\u0c21\u0c4d\u0c30\u0c41\u0c32\u0c15\u0c41 \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c3e\u0c02\\nline 2\",\"to_status\":\"referred\"}",
+      "prev": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59",
+      "hash": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949"
+     },
+     {
+      "seq": 2,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "screening_result",
+      "record_id": "r-1",
+      "data": "{\"outcome\":\"REFER\",\"reliability_score\":0.75,\"reasons\":[\"left ear 4000 Hz: not heard\"]}",
+      "prev": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea",
+      "hash": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59"
+     }
+    ]
+   },
+   "expected": {
+    "ok": false,
+    "entries": 3,
+    "head": null,
+    "broken_at": 2,
+    "why": "seq"
+   }
+  },
+  {
+   "name": "swapped and renumbered",
+   "input": {
+    "entries": [
+     {
+      "seq": 1,
+      "at": "2026-10-20T09:00:00.000Z",
+      "kind": "consent",
+      "record_id": "c-1",
+      "data": "{\"child\":\"k-1\",\"given_by\":\"parent\",\"method\":\"written\"}",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea"
+     },
+     {
+      "seq": 2,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "case_event",
+      "record_id": "e-1",
+      "data": "{\"note\":\"\u0c24\u0c32\u0c4d\u0c32\u0c3f\u0c26\u0c02\u0c21\u0c4d\u0c30\u0c41\u0c32\u0c15\u0c41 \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c3e\u0c02\\nline 2\",\"to_status\":\"referred\"}",
+      "prev": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59",
+      "hash": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949"
+     },
+     {
+      "seq": 3,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "screening_result",
+      "record_id": "r-1",
+      "data": "{\"outcome\":\"REFER\",\"reliability_score\":0.75,\"reasons\":[\"left ear 4000 Hz: not heard\"]}",
+      "prev": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea",
+      "hash": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59"
+     }
+    ]
+   },
+   "expected": {
+    "ok": false,
+    "entries": 3,
+    "head": null,
+    "broken_at": 2,
+    "why": "prev"
+   }
+  },
+  {
+   "name": "first entry does not start from genesis",
+   "input": {
+    "entries": [
+     {
+      "seq": 1,
+      "at": "2026-10-20T09:00:00.000Z",
+      "kind": "consent",
+      "record_id": "c-1",
+      "data": "{\"child\":\"k-1\",\"given_by\":\"parent\",\"method\":\"written\"}",
+      "prev": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "hash": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea"
+     },
+     {
+      "seq": 2,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "screening_result",
+      "record_id": "r-1",
+      "data": "{\"outcome\":\"REFER\",\"reliability_score\":0.75,\"reasons\":[\"left ear 4000 Hz: not heard\"]}",
+      "prev": "29fbfe5df986e71c915e70511cfcdb59e6e73493723705ed7ab594347ddfdcea",
+      "hash": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59"
+     },
+     {
+      "seq": 3,
+      "at": "2026-10-20T09:05:00.000Z",
+      "kind": "case_event",
+      "record_id": "e-1",
+      "data": "{\"note\":\"\u0c24\u0c32\u0c4d\u0c32\u0c3f\u0c26\u0c02\u0c21\u0c4d\u0c30\u0c41\u0c32\u0c15\u0c41 \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c3e\u0c02\\nline 2\",\"to_status\":\"referred\"}",
+      "prev": "134c1eab0ad63da740625f69206b91cdd674e40f28bb7070a58747744b915b59",
+      "hash": "23aa31e7c86d50d76ddf73ac3b678bb3f48566fb3d6545d0b4905c3d442fd949"
+     }
+    ]
+   },
+   "expected": {
+    "ok": false,
+    "entries": 3,
+    "head": null,
+    "broken_at": 1,
+    "why": "prev"
+   }
+  }
+ ]
+}

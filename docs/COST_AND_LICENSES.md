@@ -65,6 +65,7 @@ no Expo account needed for local development.
 | eslint, eslint-config-expo (dev) | 9.39.5 / 57.0.2 | MIT | 0 | None |
 | jest, jest-expo, @types/jest, @types/node (dev) | 29.7.0 / 57.0.6 / 29.5.14 / 26.6.5 | MIT | 0 | None |
 | react-native-svg (design pass, `docs/DESIGN.md`) | 15.15.4 | MIT | 0 | None (draws icons and artwork on the phone) |
+| @noble/hashes (Phase 7 audit log) | 2.4.0 | MIT | 0 | None (synchronous SHA-256 on the phone; no dependencies, no install scripts) |
 | Fonts: Hind Guntur (3 weights), Tiro Telugu (+ Italic), Baloo Tammudu 2 SemiBold, bundled in `assets/fonts/` (2.6 MB) | — | SIL OFL 1.1 | 0 | None (loaded from the app bundle) |
 | Lucide icon shapes in `src/icons.tsx` | 1.59.0 | ISC (+ MIT for Feather-derived icons) | 0 | None |
 

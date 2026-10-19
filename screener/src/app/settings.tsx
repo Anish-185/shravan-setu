@@ -1,12 +1,12 @@
 // One-time phone setup: backend URL, teacher login (token kept in expo-secure-store), school, standard device.
-// Developer screens (audio spike, calibration) sit at the bottom.
+// Audit-log verify button. Developer screens (audio spike, calibration) sit at the bottom.
 import * as SecureStore from 'expo-secure-store';
 import { router, type Href } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { db } from '@/db';
-import { kvGet, kvSet } from '@/db/store';
+import { kvGet, kvSet, verifyAuditLog } from '@/db/store';
 import { saveFacilities } from '@/cases';
 import { useT, type Key } from '@/i18n';
 import { Icon, type IconName } from '@/icons';
@@ -24,6 +24,7 @@ export default function Settings() {
   const [earphone, setEarphone] = useState(() => kvGet(db, 'earphone_model') ?? '');
   const [volume, setVolume] = useState(() => kvGet(db, 'volume_setting') ?? '');
   const [msg, setMsg] = useState('');
+  const [audit, setAudit] = useState('');
 
   const base = url.replace(/\/+$/, '');
 
@@ -67,6 +68,12 @@ export default function Settings() {
     setMsg(t('settings.deviceSaved'));
   }
 
+  function checkAudit() {
+    const v = verifyAuditLog(db);
+    setAudit(v.ok ? t('settings.auditOk', { n: v.entries, head: (v.head ?? '-').slice(0, 12) })
+      : t('settings.auditBroken', { at: v.broken_at ?? '-' }));
+  }
+
   return (
     <ScrollView contentContainerStyle={s.screen}>
       <Section icon="server" tint={C.indigoTint} title={t('settings.backendH')}>
@@ -87,6 +94,12 @@ export default function Settings() {
         <Btn title={t('settings.saveDevice')} onPress={saveDevice} disabled={!earphone.trim() || !volume.trim()} />
       </Section>
       {!!msg && <Text style={s.p}>{msg}</Text>}
+
+      <Section icon="circle-check" tint={C.indigoTint} title={t('settings.auditH')}>
+        <Text style={s.muted}>{t('settings.auditP')}</Text>
+        <Btn kind="plain" title={t('settings.auditVerify')} onPress={checkAudit} />
+        {!!audit && <P>{audit}</P>}
+      </Section>
 
       <Section icon="flask-conical" tint={C.greyTint} title={t('settings.devH')}>
         <DevLink icon="volume-2" label="home.spike" href="/spike" />
