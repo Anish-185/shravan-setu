@@ -3,23 +3,27 @@
 import Constants from 'expo-constants';
 import * as Crypto from 'expo-crypto';
 import * as Device from 'expo-device';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
-import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { useScreeningAudio } from '@/audio/useScreeningAudio';
 import { isPlaceholder, useVoice } from '@/audio/voice';
+import { Arch, Stepper } from '@/art';
+import { Celebration, ChildMode } from '@/child';
 import { cfg, CONFIG_VERSION } from '@/config';
 import { db } from '@/db';
 import { get, kvGet, put } from '@/db/store';
 import { createEngine, type Engine, type Snapshot } from '@/engine/engine';
-import { useT } from '@/i18n';
+import { useT, type Key } from '@/i18n';
+import { Icon } from '@/icons';
 import { ambientLevel, apply500HzPolicy, v, type Ear, type Sample } from '@/rules';
 import { ResultStep } from '@/result';
 import { saveSession } from '@/session';
-import { Banner, Btn, Check, Chips, H, P, s, VoiceBtn } from '@/ui';
+import { Banner, Btn, C, Card, Check, Chips, F, H, P, Pill, s, VoiceBtn } from '@/ui';
 
 type Step = 'consent' | 'device' | 'lr' | 'ambient' | 'test' | 'result';
+const STEPS: Key[] = ['consent.h', 'device.h', 'lr.h', 'ambient.h', 'test.h']; // the bridge-arch stepper's posts
 type Audio = ReturnType<typeof useScreeningAudio>;
 type Voice = ReturnType<typeof useVoice>;
 const GIVEN_BY = ['parent', 'guardian'] as const;
@@ -40,6 +44,8 @@ export default function Screen() {
   const [startedAt, setStartedAt] = useState('');
   const engine = useRef<Engine | null>(null);
   const saved = useRef<{ sessionId: string; caseId: string | null } | null>(null);
+  const [celebrated, setCelebrated] = useState(false);
+  const endCelebration = useCallback(() => setCelebrated(true), []);
 
   // Leaving mid-session stops the engine's timers. useScreeningAudio itself stops the mic, deletes the recording
   // and releases the recorder on unmount, in that order (ERR-021).
@@ -47,10 +53,27 @@ export default function Screen() {
 
   if (!child) return <P>{t('screen.notFound')}</P>;
 
+  // Child mode and the celebration fill the screen (no header); the result is mounted, and saved, under the
+  // celebration as before, so leaving early never loses a session.
+  const childMode = step === 'test' && !!snap && snap.phase !== 'paused';
+  const celebrating = step === 'result' && !celebrated;
+  const stepNo = ['consent', 'device', 'lr', 'ambient', 'test'].indexOf(step) + 1;
+
   return (
+    <View style={{ flex: 1 }}>
+      <Stack.Screen options={{ headerShown: !childMode && !celebrating }} />
+      {childMode ? (
+        <ChildMode snap={snap} error={audio.error ?? ''} onTap={() => engine.current?.onTap(Date.now())} />
+      ) : (
     <ScrollView contentContainerStyle={s.screen}>
       <Banner />
-      <H>{child.display_name}</H>
+      {step === 'result' ? <H>{child.display_name}</H> : (
+        <View style={st.who}>
+          <Icon name="user-round" size={20} color={C.dusk} />
+          <Text style={st.whoText}>{child.display_name}</Text>
+        </View>
+      )}
+      {stepNo > 0 && <Stepper current={stepNo} label={t(STEPS[stepNo - 1])} />}
       {!!audio.error && <Text style={s.warn}>{audio.error}</Text>}
       {step === 'consent' && (
         <ConsentStep childId={childId} onDone={(id) => { setConsentId(id); setStep('device'); }} />
@@ -84,7 +107,6 @@ export default function Screen() {
             audio.setListeners({ onSample: e.onSample, onEarphones: e.onEarphones, onPlaybackStart: e.onPlaybackStart });
             e.start();
           }}
-          onTap={() => engine.current?.onTap(Date.now())}
           onResume={() => engine.current?.resume()}
         />
       )}
@@ -107,6 +129,9 @@ export default function Screen() {
         />
       )}
     </ScrollView>
+      )}
+      {celebrating && <Celebration onEnd={endCelebration} />}
+    </View>
   );
 }
 
@@ -115,12 +140,15 @@ function ConsentStep({ childId, onDone }: { childId: string; onDone: (consentId:
   const [by, setBy] = useState<(typeof GIVEN_BY)[number] | null>(null);
   const [method, setMethod] = useState<(typeof METHODS)[number] | null>(null);
   return (
-    <View style={s.screen}>
+    <View style={st.step}>
       <H>{t('consent.h')}</H>
-      <P>{t('consent.p')}</P>
-      <Chips options={GIVEN_BY} value={by} onChange={setBy} label={(o) => t(`consent.by.${o}`)} />
-      <Chips options={METHODS} value={method} onChange={setMethod} label={(o) => t(`consent.method.${o}`)} />
-      <Btn title={t('consent.continue')} disabled={!by || !method} onPress={() => {
+      <Text style={s.muted}>{t('consent.p')}</Text>
+      <Card>
+        <Chips options={GIVEN_BY} value={by} onChange={setBy} label={(o) => t(`consent.by.${o}`)} />
+        <View style={st.rule} />
+        <Chips options={METHODS} value={method} onChange={setMethod} label={(o) => t(`consent.method.${o}`)} />
+      </Card>
+      <Btn icon="signature" title={t('consent.continue')} disabled={!by || !method} onPress={() => {
         const id = Crypto.randomUUID();
         put(db, 'consent', id, { child: childId, given_by: by, method, given_at: new Date().toISOString() });
         onDone(id);
@@ -144,14 +172,16 @@ function DeviceStep({ audio, onMic, onDone }: { audio: Audio; onMic: (t: number)
   }, []);
 
   return (
-    <View style={s.screen}>
+    <View style={st.step}>
       <H>{t('device.h')}</H>
-      <P>{t('device.phone', { model: Device.modelName ?? '?' })}</P>
-      <P>{t('device.earphones', { model: earphone || t('device.notSetSettings') })}</P>
-      <P>{t('device.volume', { setting: volume || t('device.notSetSettings') })}</P>
-      <Text style={audio.earphones ? s.ok : s.warn}>
-        {audio.micOn ? t(audio.earphones ? 'device.detected' : 'device.notDetected') : t('device.micStarting')}
-      </Text>
+      <Card>
+        <P>{t('device.phone', { model: Device.modelName ?? '?' })}</P>
+        <P>{t('device.earphones', { model: earphone || t('device.notSetSettings') })}</P>
+        <P>{t('device.volume', { setting: volume || t('device.notSetSettings') })}</P>
+      </Card>
+      {audio.micOn && audio.earphones
+        ? <Pill icon="headphones" text={t('device.detected')} tint={C.okTint} color={C.okText} />
+        : <Text style={s.warn}>{audio.micOn ? t('device.notDetected') : t('device.micStarting')}</Text>}
       <Check label={t('device.volumeOk', { setting: volume || '?' })} value={volumeOk} onChange={setVolumeOk} />
       <Check label={t('device.btOff')} value={btOff} onChange={setBtOff} />
       <Btn title={t('common.continue')} onPress={onDone}
@@ -190,11 +220,11 @@ function LrStep({ audio, voice, onDone }: { audio: Audio; voice: Voice; onDone: 
   }
 
   return (
-    <View style={s.screen}>
+    <View style={st.step}>
       <H>{t('lr.h')}</H>
-      <P>{t('lr.p')}</P>
+      <Text style={s.muted}>{t('lr.p')}</Text>
       <VoiceBtn onPress={() => voice.play(['lr'])} placeholder={isPlaceholder(['lr'])} />
-      <Btn title={t('lr.play')} onPress={play} />
+      <Btn icon="play" title={t('lr.play')} onPress={play} />
       <View style={{ flexDirection: 'row', gap: 12 }}>
         <View style={{ flex: 1 }}><Btn title={t('lr.left')} disabled={!side} onPress={() => answer('left')} /></View>
         <View style={{ flex: 1 }}><Btn title={t('lr.right')} disabled={!side} onPress={() => answer('right')} /></View>
@@ -229,15 +259,17 @@ function AmbientStep({ audio, voice, micStart, onDone }: {
 
   const noisy = result?.db != null && result.db > v(cfg, 'noise', 'gate_db_above_baseline');
   return (
-    <View style={s.screen}>
+    <View style={st.step}>
       <H>{t('ambient.h')}</H>
-      <P>{t('ambient.p')}</P>
+      <Text style={s.muted}>{t('ambient.p')}</Text>
       <VoiceBtn onPress={() => voice.play(['quiet'])} placeholder={isPlaceholder(['quiet'])} />
       <Btn title={t(measuring ? 'ambient.measuring' : 'ambient.measure')} onPress={measure} disabled={measuring} />
       {result && (
         <>
-          <P>{result.db === null ? t('ambient.couldNot') : t('ambient.value', { value: result.db.toFixed(1) })}</P>
-          <P>{t.reason(result.reason)}</P>
+          <Card>
+            <P>{result.db === null ? t('ambient.couldNot') : t('ambient.value', { value: result.db.toFixed(1) })}</P>
+            <Text style={s.muted}>{t.reason(result.reason)}</Text>
+          </Card>
           {noisy && <Text style={s.warn}>{t('ambient.noisy')}</Text>}
           <Btn title={t('ambient.continue')} onPress={() => onDone(result)} />
         </>
@@ -246,58 +278,49 @@ function AmbientStep({ audio, voice, micStart, onDone }: {
   );
 }
 
-// Child mode: one huge balloon, almost no text. The teacher plays the voice instructions first.
-function TestStep({ snap, voice, onStart, onTap, onResume }: {
-  snap: Snapshot | null; voice: Voice; onStart: () => void; onTap: () => void; onResume: () => void;
+// Step 5, before the test: the teacher reads the instruction aloud (quote style), then hands over the phone. The
+// running test is child mode (src/child.tsx), drawn by the screen above; a pause comes back here for the teacher.
+function TestStep({ snap, voice, onStart, onResume }: {
+  snap: Snapshot | null; voice: Voice; onStart: () => void; onResume: () => void;
 }) {
   const t = useT();
   if (!snap) {
+    const parts = t('test.teacher').split(/[“”]/); // [before, the words to say, after]
     return (
-      <View style={s.screen}>
+      <View style={st.step}>
         <H>{t('test.h')}</H>
-        <P>{t('test.teacher')}</P>
+        {parts.length === 3 ? (
+          <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 6 }}>
+            <View style={{ flex: 1 }}>
+              <Text style={s.muted}>{parts[0].trim()}</Text>
+              <Text style={st.quote}>“{parts[1]}”</Text>
+              <Text style={s.muted}>{parts[2].trim()}</Text>
+            </View>
+            <Arch width={96} height={178} bg={C.dawn} source={require('../../../assets/images/peeps/test-intro.png')}
+              imgWidth={109} imgHeight={230} offset={-60} />
+          </View>
+        ) : <P>{t('test.teacher')}</P>}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <View style={{ flex: 1 }}><Btn kind="plain" title={t('test.playVoice')} onPress={() => voice.play(['intro', 'tap'])} /></View>
           <VoiceBtn onPress={() => voice.play(['intro', 'tap'])} placeholder={isPlaceholder(['intro', 'tap'])} />
         </View>
-        <Btn title={t('test.start')} onPress={onStart} />
-      </View>
-    );
-  }
-  if (snap.phase === 'paused') {
-    return (
-      <View style={s.screen}>
-        <Text style={s.warn}>{t(snap.earphones ? 'test.pausedChanged' : 'test.disconnected')}</Text>
-        <Btn title={t('test.resume')} onPress={onResume} disabled={!snap.earphones} />
+        <Btn icon="play" title={t('test.start')} onPress={onStart} />
       </View>
     );
   }
   return (
-    <View style={[s.screen, { alignItems: 'center' }]}>
-      <Balloon onTap={onTap} label={t('test.balloon')} />
-      <Text style={{ color: '#888' }}>{t('test.progress', { done: snap.done, total: snap.total })}</Text>
+    <View style={st.step}>
+      <Text style={s.warn}>{t(snap.earphones ? 'test.pausedChanged' : 'test.disconnected')}</Text>
+      <Btn title={t('test.resume')} onPress={onResume} disabled={!snap.earphones} />
     </View>
   );
 }
 
-function Balloon({ onTap, label }: { onTap: () => void; label: string }) {
-  const [scale] = useState(() => new Animated.Value(1));
-  return (
-    <Pressable accessibilityRole="button" accessibilityLabel={label} onPressIn={() => {
-      onTap(); // tap time first; the bounce is only feedback
-      scale.setValue(0.85);
-      Animated.spring(scale, { toValue: 1, friction: 3, useNativeDriver: true }).start();
-    }}>
-      <Animated.View style={[st.balloon, { transform: [{ scale }] }]} />
-      <View style={st.knot} />
-      <View style={st.string} />
-    </Pressable>
-  );
-}
-
 const st = StyleSheet.create({
-  balloon: { width: 280, height: 330, borderRadius: 150, backgroundColor: '#e63946' },
-  knot: { alignSelf: 'center', width: 0, height: 0, borderLeftWidth: 12, borderRightWidth: 12, borderBottomWidth: 18,
-    borderLeftColor: 'transparent', borderRightColor: 'transparent', borderBottomColor: '#c1121f', marginTop: -6 },
-  string: { alignSelf: 'center', width: 2, height: 60, backgroundColor: '#555' },
+  step: { gap: 14 },
+  who: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  whoText: { color: C.dusk, fontFamily: F.uiBold, fontSize: 16, lineHeight: 27 },
+  rule: { height: 1, backgroundColor: C.lilac },
+  quote: { color: C.night, fontFamily: F.quote, fontSize: 20, lineHeight: 34, borderLeftWidth: 4, borderLeftColor: C.marigold,
+    paddingLeft: 14, paddingVertical: 4, marginVertical: 10 },
 });

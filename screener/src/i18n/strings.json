@@ -489,6 +489,11 @@
   "te": "నాకు బీప్ వినిపించింది",
   "where": "Child mode balloon (read by screen readers)"
  },
+ "test.wellDone": {
+  "en": "Well done!",
+  "te": "చాలా బాగా చేశావు!",
+  "where": "Child mode: the silent celebration after the last tone (same for every outcome). Same wording as voice line done"
+ },
  "result.h": {
   "en": "Result: {outcome}",
   "te": "ఫలితం: {outcome}",

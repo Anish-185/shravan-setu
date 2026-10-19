@@ -202,6 +202,7 @@ Drafted by Claude (Anthropic) from `docs/TELUGU_STRINGS.md` at commit 4d6326c. A
 | 185 | `reason.triage.default` | No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis. | Triage result after saving the checklist (route to DEIC). English must match config/screening.json triage.default_reason | ప్రశ్నల్లో చికిత్స చేయగల కారణం ఏదీ కనిపించలేదు: తదుపరి వినికిడి పరీక్ష కోసం DEIC కి. ప్రాథమిక పరిశీలన మాత్రమే, వ్యాధి నిర్ధారణ కాదు. | Added 18-10-2026 (ERR-030). Written by Anish, native Telugu speaker. |
 | 186 | `reminders.missed_camp.date` |  on {date} | Fills {date} in the reminder (#167) when a camp date is known ({date} = 24 Oct 2026 in English, 24-10-2026 in Telugu) | {date} న | Added 18-10-2026 (ERR-029); the form suggested in #167. Approved by Anish, native Telugu speaker, 18-10-2026. |
 | 187 | `settings.devH` | Developer | Settings: heading of the section with the audio spike and calibration screens (team only) | డెవలపర్ | Added 19-10-2026 (design pass). Written by Anish, native Telugu speaker. |
+| 188 | `test.wellDone` | Well done! | Child mode: the silent celebration after the last tone (same for every outcome) | చాలా బాగా చేశావు! | Added 19-10-2026 (design pass). Same wording as the approved voice line `voice.done` (#160). Approved by Anish, native Telugu speaker. |
 
 ## Voice lines to record (same text as #156–#160)
 
