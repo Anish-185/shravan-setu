@@ -66,3 +66,11 @@ def test_no_files():
     r = c.analyse([])
     assert r["baseline"] == {f: None for f in c.FREQS} and r["retest"] is None
     assert "none" in c.markdown(r)
+
+
+def test_no_spread_between_people_is_flagged_as_a_possible_playback_floor():
+    spread = c.analyse([export("V1", 1, BASE), export("V2", 1, {k: x - 10 for k, x in BASE.items()}),
+                        export("V3", 1, {k: x + 10 for k, x in BASE.items()})])
+    assert spread["flat"] == [] and "WARNING" not in c.markdown(spread)
+    same = c.analyse([export(v, 1, {**BASE, 500: BASE[500] + d}) for v, d in (("V1", 0), ("V2", -10), ("V3", 10))])
+    assert same["flat"] == [1000, 2000, 4000] and "no spread at 1000 Hz, 2000 Hz, 4000 Hz" in c.markdown(same)

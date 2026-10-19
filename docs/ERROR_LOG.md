@@ -193,6 +193,7 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: OPEN (blocked upstream). Uuid fixed; the rest has no safe fix today. Rechecked 2026-10-19 (Phase 6): `npm audit` still 57 (8 moderate, 49 high), no safe fix; unchanged.
 - Recheck (warning restyle, 2026-10-19 evening): `npm audit` → 57 (8 moderate, 49 high). No change.
 - Recheck (Phase 6 Step 0, 2026-10-19): `npm audit` → 57 (8 moderate, 49 high), same 5 advisories; braces 3.0.3, node-forge 1.4.0, sprintf-js 1.1.3 are still the latest releases; decode-uri-component still needs expo-router 58. No change.
+- Recheck (Phase 7 Step 0, 2026-10-20): `npm audit` → 57 (8 moderate, 49 high); braces 3.0.3, node-forge 1.4.0, sprintf-js 1.1.3 still the latest releases; decode-uri-component 0.5.0 still ESM-only. No change.
 - Verification: `npm install` → `57 vulnerabilities`, no install-scripts warning; `npm ls uuid` → xcode uses uuid@11.1.1; `npx tsc --noEmit` exit 0; `npx expo lint` exit 0; `npx jest` 46 passed; `npx expo-doctor` 21/21; `npx expo export --platform android` exit 0.
 - Next step: at each Step 0, run `npm audit` and recheck braces/node-forge/sprintf-js for patched releases (add an override if one is semver-compatible). Move to expo-router 58 when the Play Store Expo Go supports SDK 58, which clears decode-uri-component.
 - Lesson: read `npm audit` by root advisory and by whether the package ships in the bundle; never take `audit fix --force` in an Expo project.
@@ -488,3 +489,13 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: server pytest 213 passed, parity PARITY OK.
 - Lesson: in parallel shell calls, start every command with an absolute `cd` and use subshells for side trips.
+
+### ERR-044: calibration thresholds at 1-4 kHz all land on -60 dB re full scale (probable playback floor)
+- Phase / date: Phase 6 calibration analysis / 2026-10-20
+- Symptom: `scripts/calibrate.py` on V1-V7 run 1: baseline 1000/2000/4000 Hz = -60.0 each; 40 of 42 ear-frequency thresholds are exactly -60 (2 are -55). Across all 1-4 kHz presentations: heard at -60 in 150 of 173, at -65 in 7 of 128, at -70 in 3 of 107, at -75/-80 in 0 of 13. The within-run 1 kHz repeat agrees to 0.4 dB. 500 Hz behaves like a real threshold: median -35, range -55 to -20.
+- Where: `data/raw/calibration/*.json`, `scripts/calibrate.py`, playback via `volumeAt()` (`screener/src/engine/calibration.ts`) and expo-audio `player.volume`
+- Root cause (probable, not yet proven): the phone plays nothing audible below player volume ~0.001 (-60 dB) at media volume 6 steps, so the search stops at the playback floor instead of the listener's threshold. Seven people at three frequencies with almost no spread, and a drop from 87% heard to 5% in one 5 dB step, look like a device limit rather than hearing; real thresholds vary by person and by frequency, and the earphone's output varies by frequency. The tone files are fine (16-bit, -1.0 dBFS peak, one channel silent). Where exactly the floor comes from (Android mixer volume resolution, expo-audio, or the earphone) is not known.
+- Fix (proposed, not done): do not set `calibration.baseline_dbfs` from this run. Either (a) move the attenuation into the tone files (for example tones at -30 dBFS, so the player volume stays well above 0.001 at threshold) or raise the media volume, then re-run calibration run 1; or (b) keep -60 only as an upper bound and say the screening level is "at least" 20 dB re team baseline. Before either: a 2-minute phone check to confirm the floor (raise the media volume a few steps, play 1 kHz at -55, -60, -65, -70: if -60 is clearly loud and -65 is silent, it's the floor).
+- Status: NEEDS-HUMAN (owner decision on (a) or (b), plus the phone check)
+- Verification: CLAIMS CAL-02 shows the clustering (`python -m eval.report --check`); after the fix, the re-run's 1-4 kHz thresholds should spread across people and sit above the confirmed floor.
+- Lesson: when a threshold search lands on the same level for everyone, check the playback floor before trusting it; give every search a known audible floor well below the expected threshold.

@@ -35,7 +35,7 @@ def compute():
     p5 = sorted(PHASE5.glob("session-*.json"))
     cal = sorted((ROOT / "data" / "raw" / "calibration").glob("*.json"))
     return {"sim": sim, "cost": cost, "nhanes": nh, "phase5": p5, "calibration": cal,
-            "claims": claim_rows(sim, cost, nh), "device_checks": device_checks(p5, PHASE6_CHILD)}
+            "claims": claim_rows(sim, cost, nh), "device_checks": device_checks(p5, PHASE6_CHILD, cal)}
 
 
 def row(cid, claim, value, condition, script, kind):
@@ -113,7 +113,7 @@ def claim_rows(sim, cost, nh):
     return rows
 
 
-def device_checks(p5_files, p6_child):
+def device_checks(p5_files, p6_child, cal_files=()):
     """Hand-written device-trial rows rechecked against their raw files when present: {claim id: expected text}."""
     fmt = lambda t: f"min {t[0]} ms, median {t[1]} ms, max {t[2]} ms"  # noqa: E731
     out = {}
@@ -122,6 +122,16 @@ def device_checks(p5_files, p6_child):
             s = analyze_phase4.summary(json.loads(f.read_text()))
             out |= {f"{prefix}-01": fmt(s["latency_ms"]), f"{prefix}-02": fmt(s["tap_from_start_ms"]),
                     f"{prefix}-03": s["over_limit"].replace("/", " of ")}
+    if cal_files:
+        data = [json.loads(p.read_text()) for p in cal_files]
+        c = calibrate.analyse(data)
+        firsts = [(f, x) for d in data for (_, f), x in calibrate.thresholds(d)[0].items() if x is not None]
+        lo = [x for f, x in firsts if f == 500]
+        hi = [x for f, x in firsts if f != 500]
+        out |= {"CAL-01": f"median {c['baseline'][500]} ({c['n'][500]} ears, range {min(lo)} to {max(lo)})",
+                "CAL-02": " / ".join(str(c["baseline"][f]) for f in (1000, 2000, 4000))
+                          + f"; {hi.count(-60)} of {len(hi)} ear-frequency thresholds exactly -60",
+                "CAL-03": f"{len(c['excluded'])} of {len(c['volunteers'])} excluded"}
     return out
 
 

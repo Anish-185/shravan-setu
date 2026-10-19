@@ -22,6 +22,7 @@ CAL = json.loads((ROOT / "config" / "screening.json").read_text())["calibration"
 FREQS = (500, 1000, 2000, 4000)
 OUTLIER_DB = CAL["outlier_db_above_group"]["value"]
 OUTLIER_POINTS = CAL["outlier_min_points"]["value"]
+STEP_UP = CAL["step_up_db"]["value"]
 
 
 def thresholds(d):
@@ -67,16 +68,18 @@ def analyse(files):
         if len(high) >= OUTLIER_POINTS:
             excluded[who] = high
     kept = [w for w in run1 if w not in excluded]
-    baseline, n = {}, {}
+    baseline, n, flat = {}, {}, []
     for f in FREQS:
         xs = values(f, kept)
         baseline[f] = statistics.median(xs) if xs else None
         n[f] = len(xs)
+        if len(kept) >= 3 and xs and max(xs) - min(xs) <= STEP_UP:  # no spread between people: suspect the device
+            flat.append(f)
     diffs = [r2[k] - r1[k] for vol in runs.values() if 1 in vol and 2 in vol
              for r1, r2 in [(vol[1], vol[2])] for k in r1 if r1[k] is not None and r2.get(k) is not None]
     return {"volunteers": sorted(runs), "baseline": baseline, "n": n, "retest": stats(diffs),
             "repeat_1000": stats(repeats), "excluded": excluded, "review": review, "skipped": skipped,
-            "can_judge": len(run1) >= 3}
+            "can_judge": len(run1) >= 3, "flat": flat}
 
 
 def stats(diffs):
@@ -106,6 +109,10 @@ def markdown(r):
         lines += ["", "Review (not excluded):", *[f"- {x}" for x in r["review"]]]
     if r["skipped"]:
         lines += ["", "No threshold (not used):", *[f"- {x}" for x in r["skipped"]]]
+    if r["flat"]:
+        lines += ["", f"WARNING: no spread at {', '.join(f'{f} Hz' for f in r['flat'])}: every threshold within {STEP_UP} dB. "
+                  "Real thresholds differ between people, so this is probably the phone's playback floor, not hearing "
+                  "(docs/ERROR_LOG.md ERR-044). Confirm before pasting the baseline."]
     cfg = {str(f): r["baseline"][f] for f in FREQS}
     lines += ["", "Paste into config/screening.json `calibration.baseline_dbfs.value` (and record the source):", "",
               f"    {json.dumps(cfg)}", "",
