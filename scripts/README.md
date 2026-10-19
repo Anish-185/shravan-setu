@@ -13,7 +13,7 @@
 | `eval_nhanes.py` | NHANES youth rule-logic evaluation: `--download` (8 CDC files, pinned SHA-256), then run. Needs `requirements-eval.txt` (pandas, laptop only) |
 | `cost_model.py` | PROPOSED deployment cost model (inputs `config/cost_model.json`) |
 | `calibrate.py` | Team baseline and test-retest from calibration exports: `python scripts/calibrate.py data/raw/calibration/*.json` |
+| `check_contrast.py` | WCAG AA contrast of every text/background pair in the app, colours read from `screener/src/ui.tsx`; run by pytest |
 
 Every quotable number comes from one of these scripts and is recorded in `docs/CLAIMS.md`; `python -m eval.report`
 regenerates them all into `eval/results.md`.
-| `check_contrast.py` | WCAG AA contrast of every text/background pair in the app, colours read from `screener/src/ui.tsx`; run by pytest |

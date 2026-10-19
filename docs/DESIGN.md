@@ -84,7 +84,8 @@ indigo, and compared them:
 - **Banners unchanged in strength.** "Screening only, not a diagnosis" stays at the top of every screen that has it
   today, including child mode (on a white 85% strip so it reads over the sky). UNCALIBRATED stays directly under the
   ears card on the result.
-- New strings get `TODO_TE`: "Developer", "Well done!".
+- New strings "Developer" (డెవలపర్) and "Well done!" (చాలా బాగా చేశావు!, same as voice line `voice.done`): Telugu by
+  Anish, native Telugu speaker (`docs/TELUGU_REVIEW.md` #187, #188).
 
 ### Asset budget (B v2)
 
@@ -98,6 +99,30 @@ indigo, and compared them:
 
 Total about 2.4 MB, under the 3 MB aim. I'll measure the real files and trim weights (for example, drop Hind Bold) if
 it goes over.
+
+### As built (2026-10-19)
+
+Built in eight `style:` commits after `0ec3a3f`, everything in the table above: tokens, fonts and Lucide icons
+(`screener/src/ui.tsx`, `icons.tsx`), muggu, setu line, arch windows and stepper (`art.tsx`), Home and Settings →
+Developer, test steps, child mode and celebration (`child.tsx`), result and triage, cases, children, case, camp and
+sync, app icon and splash, and `scripts/check_contrast.py` (26/26 pairs pass AA).
+
+- **Nothing from the cut list was dropped:** kites, muggu and the step arch are all in.
+- **Left out on purpose** (motion on teacher screens adds risk on the Redmi and isn't needed):
+  - the setu line drawing itself on Home open
+  - the dot gliding along the stepper arch
+  - the progress-bar width animation
+  - haptics (`expo-haptics` not added)
+- **Measured assets:**
+  - fonts 2.64 MB (Hind Guntur Bold dropped)
+  - Open Peeps PNGs 39 KB
+  - icon paths 7 KB
+  - total about 2.69 MB, under the 3 MB aim
+- **Test integrity:**
+  - `src/engine`, `src/audio`, `src/rules`, `config/` and the timing code are unchanged.
+  - The tap is still recorded in `onPressIn` before any feedback.
+  - The result still mounts, and saves, at the moment the last tone finishes; the 1.6 s celebration is an overlay
+    on top of it.
 
 ## 1. Research
 

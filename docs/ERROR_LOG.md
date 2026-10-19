@@ -416,3 +416,63 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Verification: `pgrep -af "port 8099"` empty; `npx tsc --noEmit` and `npx expo lint` exit 0.
 - Lesson: stop a background process by its PID (or let `timeout` end it), never with `pkill -f` from a shell whose own command line contains the pattern.
 
+
+### ERR-037: Telugu "Well done!" spilled out of the celebration's dot ring
+- Phase / date: Design pass (B v2) / 2026-10-19
+- Symptom: in Telugu, చాలా బాగా చేశావు! wrapped to two lines and the second line sat on and below the ring of dots (web preview screenshot).
+- Where: `screener/src/child.tsx`, `Celebration`
+- Root cause: the ring was a fixed 260 x 120 box sized for the one-line English text.
+- Fix: ring 300 x 170 with 35 dp side padding and 36 dp text, so the Telugu wraps inside it; English stays on one line.
+- Status: FIXED
+- Verification: preview screenshots of the celebration in English and Telugu; phone check in the design checklist.
+- Lesson: size any text-bearing artwork for the longer Telugu string first.
+
+### ERR-038: child-mode dot ring clipped at the top; celebration petals came to rest in a row
+- Phase / date: Design pass (B v2) / 2026-10-19
+- Symptom: the top of the white ring and its dots were cut off; after the celebration's fall the 14 petals stayed visible in one line across the screen.
+- Where: `screener/src/child.tsx`
+- Root cause: the ring was centred too close to the top of its SVG box (ring radius larger than the space above the centre); petals ended at a fixed translateY on screen and stayed opaque.
+- Fix: balloon drawing moved down 24 dp inside the same fixed hit area (now 300 x 364), ring centred on the balloon body; petals fall 900 dp and fade out over the last quarter.
+- Status: FIXED
+- Verification: preview screenshots.
+- Lesson: check artwork at its final frame, not just mid-animation.
+
+### ERR-039: overwrote the tracked `screener/metro.config.js` while setting up a desktop preview
+- Phase / date: Design pass (B v2) / 2026-10-19
+- Symptom: `ls metro.config.js` printed the file name (it existed), and the next line of the same command replaced it with a temporary config.
+- Where: a one-off shell command
+- Root cause: I checked for the file and wrote it in one command, without reading the check's output first.
+- Fix: `git checkout metro.config.js` before any commit; no commit ever contained the temporary file.
+- Status: FIXED
+- Verification: `git diff HEAD -- screener/metro.config.js` is empty.
+- Lesson: look at a target before overwriting it, in a separate step.
+
+### ERR-040: `pkill -f` ended its own shell again (ERR-036 recurred)
+- Phase / date: Design pass (B v2) / 2026-10-19
+- Symptom: `Exit code 144`, twice, from commands that stopped the preview server with `pkill -f "expo start --web"` / `pgrep -f "node.*expo start"`.
+- Where: one-off shell commands
+- Root cause: the same as ERR-036; I didn't apply its lesson.
+- Fix: stopped the server by port instead (`fuser -k 8099/tcp`).
+- Status: FIXED
+- Verification: later commands ran to completion.
+- Lesson: as ERR-036. Stop dev servers by port or PID.
+
+### ERR-041: the app's web build can't open expo-sqlite, so screens can't be previewed in a desktop browser
+- Phase / date: Design pass (B v2) / 2026-10-19
+- Symptom: `Worker chunk not found for: .../expo-sqlite/web/worker.ts`, then `Unable to resolve "./wa-sqlite/wa-sqlite.wasm"`, then `SharedArrayBuffer is not defined` and `Sync operation timeout` at `src/db/index.ts:6`; later `AudioModule.AudioRecorder is not a constructor`.
+- Where: `npx expo start --web` (web is not a target platform; the app is Android only)
+- Root cause: expo-sqlite on web needs a wasm asset rule plus cross-origin isolation headers that the Expo dev server doesn't send for the HTML page; expo-audio's recorder doesn't exist on web.
+- Fix: for screenshots only, uncommitted preview stand-ins kept out of git with `.git/info/exclude`: `src/db/index.web.ts` (in-memory store with obviously fake demo records), `src/audio/useScreeningAudio.web.ts` (silent stub) and `src/app/preview.tsx` (child mode, celebration and result states). The phone build is unaffected.
+- Status: WORKAROUND (dev tooling only)
+- Verification: preview screenshots of every screen in English and Telugu; `git status` clean of the stand-ins.
+- Lesson: for visual checks of an Android-only app, stub the native data and audio layers per platform rather than fight the web runtime.
+
+### ERR-042: two compile errors while writing the design pass
+- Phase / date: Design pass (B v2) / 2026-10-19
+- Symptom: `TS2551: Property 'absoluteFillObject' does not exist on type 'typeof StyleSheet'` (`src/child.tsx`); TS2322 on the preview-only `src/db/index.web.ts`.
+- Where: `npx tsc --noEmit`
+- Root cause: React Native 0.86's types no longer export `StyleSheet.absoluteFillObject`; the preview stub was loosely typed.
+- Fix: explicit `position: 'absolute', top/left/right/bottom: 0`; the preview stub (never committed) marked `@ts-nocheck`.
+- Status: FIXED
+- Verification: `npx tsc --noEmit` and `npx expo lint` exit 0 before every commit.
+- Lesson: use `StyleSheet.absoluteFill` (the style object) or explicit insets on RN 0.86.
