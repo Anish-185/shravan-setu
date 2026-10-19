@@ -46,6 +46,8 @@ calibration itself) on a different day or after a 10-minute break.
    `config/screening.json` `calibration.media_volume_steps` (source: this procedure, date).
 3. Delete the V0 export.
 
+Done 2026-10-19 (owner): media volume zero then 6 steps, `calibration.media_volume_steps` = 6; V0 deleted.
+
 ## Step 2: biological calibration (every volunteer, visit 1)
 
 1. Volunteer seated in the quiet room, earphones on properly (left in left), phone face-down so they can't see the
@@ -126,6 +128,8 @@ gating and the 500 Hz policy against the quiet room.
 - Minutes per test (median, range): replaces the "test ~2-2.5 min" part of the cost model's 5 min per child.
 - Random tapper and partial guesser outcomes.
 - Play latency and late-start replays (L1, L2).
+- 500 Hz vs 1-4 kHz thresholds: the V0 dummy run needed a much higher level at 500 Hz (observation only, V0 is
+  not data). Check whether the volunteers' `calibrate.py` table shows the same and report it.
 
 These go into `docs/CLAIMS.md` as "team test, n = ..., adults, one device", never as accuracy in children.
 

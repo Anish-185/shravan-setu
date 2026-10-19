@@ -108,7 +108,9 @@ def markdown(r):
         lines += ["", "No threshold (not used):", *[f"- {x}" for x in r["skipped"]]]
     cfg = {str(f): r["baseline"][f] for f in FREQS}
     lines += ["", "Paste into config/screening.json `calibration.baseline_dbfs.value` (and record the source):", "",
-              f"    {json.dumps(cfg)}"]
+              f"    {json.dumps(cfg)}", "",
+              "Then set `screening_level_db_re_team_baseline.value` to 20 (owner decision 2026-10-19). With both set, the "
+              "app plays calibrated levels and the UNCALIBRATED note disappears."]
     return "\n".join(lines) + "\n"
 
 
