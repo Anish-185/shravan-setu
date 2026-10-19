@@ -274,6 +274,46 @@
   "te": "TODO_TE",
   "where": "Settings: result when an entry was changed, removed or reordered"
  },
+ "title.rooms": {
+  "en": "Find a quiet room",
+  "te": "TODO_TE",
+  "where": "Home row and screen title: the quiet-spot finder"
+ },
+ "rooms.p": {
+  "en": "Earphones plugged in, phone where the child will sit, everyone quiet for a few seconds. Measure each room at the hours you might screen; the quietest room and hour come first. Levels are relative to the reference quiet room, not decibels.",
+  "te": "TODO_TE",
+  "where": "Quiet-spot finder: how to measure"
+ },
+ "rooms.name": {
+  "en": "Room (for example Library)",
+  "te": "TODO_TE",
+  "where": "Quiet-spot finder: room name box"
+ },
+ "rooms.measure": {
+  "en": "Measure this room now",
+  "te": "TODO_TE",
+  "where": "Quiet-spot finder: measure button"
+ },
+ "rooms.best": {
+  "en": "Quietest so far: {room}, {slot}",
+  "te": "TODO_TE",
+  "where": "Quiet-spot finder: recommendation ({slot} = an hour like 10:00–11:00)"
+ },
+ "rooms.row": {
+  "en": "{room}, {slot}: {value} ({n} readings)",
+  "te": "TODO_TE",
+  "where": "Quiet-spot finder: one room and hour ({value} = median room noise, relative)"
+ },
+ "rooms.noisy": {
+  "en": "too noisy for screening",
+  "te": "TODO_TE",
+  "where": "Quiet-spot finder: after a room and hour above the noise gate"
+ },
+ "rooms.none": {
+  "en": "No readings yet.",
+  "te": "TODO_TE",
+  "where": "Quiet-spot finder: empty list"
+ },
  "settings.devH": {
   "en": "Developer",
   "te": "డెవలపర్",

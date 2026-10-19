@@ -14,8 +14,9 @@ export type Db = {
 export const SYNCED_TYPES = [
   'child', 'consent', 'screening_session', 'screening_result', 'case', 'case_event', 'camp_request',
 ] as const;
-// Local only: session_log (full engine log), facility (pulled at login), reminder (stub log; the server logs its own).
-export type RecordType = (typeof SYNCED_TYPES)[number] | 'session_log' | 'facility' | 'reminder';
+// Local only: session_log (full engine log), facility (pulled at login), reminder (stub log; the server logs its own),
+// room_reading (quiet-spot finder).
+export type RecordType = (typeof SYNCED_TYPES)[number] | 'session_log' | 'facility' | 'reminder' | 'room_reading';
 // Every write of these also appends to the hash-chained audit log (consent, results, referrals, status changes).
 const AUDITED: readonly string[] = ['consent', 'screening_result', 'case', 'case_event', 'camp_request'];
 

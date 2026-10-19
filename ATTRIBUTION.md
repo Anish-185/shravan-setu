@@ -55,6 +55,8 @@ Filled in per phase.
 - (Phase 7) Tamper-evident audit log on the phone and the server: hash-chained entries for consent, results,
   referrals, status changes and camp requests; `manage.py verify_audit_log` and a Verify button in Settings. Shared
   test vectors for both languages. SHA-256 from Python's hashlib and @noble/hashes (MIT, dependency).
+- (Phase 7) Quiet-spot finder: room-noise readings per room and hour (same relative measurement as the pre-test
+  step), quietest room and hour first, kept on the phone.
 - (Phase 5) Closing the loop on the phone, all offline: ear-health triage checklist after a REFER (shared triage rule,
   "nearest" PHC/DEIC = same mandal from the local facility list, "Triage, not diagnosis"); referral case list filtered
   by status, case detail with full history and buttons only for legal moves (the case state machine now lives in both

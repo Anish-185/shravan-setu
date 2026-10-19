@@ -13,6 +13,7 @@ referral. No real child data is ever committed to this repository; seed and test
 | Consent record | Recorded before any test | Who gave it as a role ("parent", "guardian") and the method; no names needed |
 | Screening result and session log | PASS / RETEST / REFER with reasons; device, earphone model, volume setting, config version | Mic **metering numbers only**; audio is never kept (the recording file is deleted) |
 | Case, status moves, triage answers | The referral loop: who still needs treatment | Triage is yes/no answers, routed to PHC or DEIC; not a diagnosis |
+| Room-noise readings (quiet-spot finder) | Pick the quietest room and hour for screening | Room name, hour and one relative number; no child data, no audio, stays on the phone |
 | Audit log (phone and server) | Shows if a consent, result, case or status record was changed later | A copy of those records' fields as written, chained by SHA-256. No names: children appear only by record id. Entries are never edited or deleted |
 
 The full session log (trials, metering numbers) stays on the phone; only the result summary syncs to the laptop server.

@@ -306,3 +306,14 @@ Candidates and the icon inspection are in `docs/DESIGN.md` (section 0 and "Not u
   (stdlib); on the phone (a) depend on **@noble/hashes 2.4.0** (MIT, audited, no dependencies, no install scripts,
   no network). Needed because `put()` writes inside a synchronous SQLite transaction and `expo-crypto` only offers an
   async digest; copying a hand-written SHA-256 would be unaudited crypto. Only `sha2.js` and `utils.js` are bundled.
+
+### 3. Quiet-spot finder
+
+- Queries (`gh search repos`): "noise level meter react native expo", "sound level meter expo-audio", "quiet room
+  finder noise", "ambient noise logger android" (no results). npm search "sound level meter react native":
+  react-native-sound-level 1.4.0 (MIT, 2026-07-07), react-native-sound 0.13.0 (MIT), react-native-nitro-sound 0.2.20
+  (MIT), use-sound (web only).
+- Evaluation: the react-native-* packages are native modules that Expo Go cannot load (we ship in Expo Go, ERR-019),
+  and they would add a second metering path next to expo-audio's, which our noise reference was measured with.
+- Decision: (c) build, reusing what we have: the mic meter in `useScreeningAudio`, the shared `ambientLevel()` rule
+  and the `noise.*` config. New code is a ~25-line ranking function (`screener/src/rooms.ts`, jest) and one screen.

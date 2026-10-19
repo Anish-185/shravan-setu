@@ -69,6 +69,9 @@ no Expo account needed for local development.
 | Fonts: Hind Guntur (3 weights), Tiro Telugu (+ Italic), Baloo Tammudu 2 SemiBold, bundled in `assets/fonts/` (2.6 MB) | — | SIL OFL 1.1 | 0 | None (loaded from the app bundle) |
 | Lucide icon shapes in `src/icons.tsx` | 1.59.0 | ISC (+ MIT for Feather-derived icons) | 0 | None |
 
+Phase 7 added one dependency, `@noble/hashes` (MIT, synchronous SHA-256 for the audit log; no network). The
+quiet-spot finder added none. No new network calls.
+
 The design pass (Direction B v2) added one dependency, `react-native-svg` (in Expo Go). fontTools was used once on
 the laptop to make the Baloo SemiBold instance and is not shipped.
 
