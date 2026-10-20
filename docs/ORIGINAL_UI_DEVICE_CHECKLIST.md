@@ -41,5 +41,7 @@ number. Plan and parity table: `docs/INTEGRATION_PLAN.md`.
    legend chip: the list filters; "More details" opens the result; tapping the child opens their tests.
 
 ## G. Telugu
-1. Switch to Telugu and repeat a quick pass of A–F: nothing cut off or overlapping. The 56 new strings show
-   `[TODO_TE]` plus English until the Telugu batch is filled (list in the end-of-phase report).
+1. Switch to Telugu and repeat a quick pass of A–F: nothing cut off or overlapping, and no `[TODO_TE]` marker anywhere
+   (batch 5 filled the last 56 strings, `docs/TELUGU_BATCH_5.md`). English left on purpose: PASS / RETEST / REFER,
+   dB, Hz, WHO, PDF, WhatsApp, PIN, dates.
+2. Home shows "స్వాగతం," with your name on the next line.
