@@ -67,37 +67,38 @@ naming the original file and what we changed (Apache-2.0 section 4(b)).
 | `Screens/Educator/AssignmentList.js` | `src/app/teacher/class.tsx` | Local assignments; progress = children tested ÷ strength; deadline wired; stable cover; Copy ID dropped; class children added |
 | `Screens/Educator/AssignmentAnalytics.js` | `src/app/teacher/assignment/[id].tsx` | Estimated grade or PASS / RETEST / REFER per child; legend with both; no gender |
 | `Screens/Login.js` (teacher branch, first pass) | `src/app/teacher/login.tsx` | Demo login instead of Firebase (unchanged from the first pass) |
-| Paper theme from each screen | `src/original/paper.tsx` | One provider; Paper icons drawn with our Lucide set |
-| EducatorHome header pattern | `src/original/Banner.tsx` | Ours, built from their header for the Children and Cases screens |
+| Paper theme, header banner (`paper.tsx`, `Banner.tsx`) | removed 2026-10-20 (fix-and-finish) | The screens now use our own design system; the original's ideas and logic stay, credited in each file's header |
 
 Moved, not copied: our own consent and device steps went from the screening screen to `src/steps.tsx` unchanged.
 Not copied: `notRequired/*`, `Maps.js`, `ML.js`, `JewelleryDetection.js`, signup/student screens, their tone WAVs
 (we play our own generated tones), `audiogram-bg.png` and `legend.jpeg` (redrawn, see the plan).
 
-#### Images on the original screens (`screener/assets/images/original/`)
+#### Illustrations on the teacher, pre-test, test and results screens (`screener/src/illustrations.tsx`)
 
-**Made by Team JL, 2026-10-20**, with `scripts/make_art.py` (flat SVG drawn in our palette with the setu line from
-`screener/src/art.tsx`, rendered to PNG/JPEG). Licence: Apache-2.0, like the rest of our code (repo `LICENSE`). Glyphs
-drawn with `lu(...)` in that script are Lucide 1.59.0 shapes, copied untouched (ISC,
-`screener/licenses/lucide-LICENSE.txt`). The figures are generic cartoons; no photos, no real people.
+**Drawn by Team JL, 2026-10-20 (fix-and-finish)**, as react-native-svg code in the Direction B v2 style (Night ink at
+icon weight, our palette washes, the setu arch with muggu dots and the setu line from `screener/src/art.tsx`).
+Licence: Apache-2.0, like the rest of our code (repo `LICENSE`). Glyphs drawn through `<Glyph>` are Lucide 1.59.0
+shapes copied untouched from lucide-static (ISC, `screener/licenses/lucide-LICENSE.txt`): house, moon, headphones,
+smartphone, bell-off, message-circle-off, mic, audio-waveform, ear. The head in profile, the earbuds, the equalizer and
+the noise-cancel switch are drawn by us. No photos, no real people, no AI images, nothing from Freepik or unDraw (not
+needed, so its terms were not relied on).
 
-They replace the images the original team shipped, which had no recorded source or licence (three carried a Bing Image
-Creator "AI Generated Image" C2PA tag, two Freepik XMP metadata, two were watermarked stock previews, the rest had no
-provenance at all). Same file names, pixel sizes and subjects, so the screens keep the original layout. The original
-files are still in `audiometer/app/assets/` (unchanged, not used by our app).
+| Drawing | Used on | Subject |
+|---|---|---|
+| `QuietPlace`, `WiredEarphones`, `NotificationsOff`, `EqualizerNeutral`, `NoTalking`, `NoiseCancelOff` | Make sure | Quiet house at night; wired earphones into a phone; bell crossed out; every slider in the middle; speech bubble crossed out; earphones with the switch off |
+| `MicMeter` | Check your surrounding | Microphone with three rings, lit by the room-noise result |
+| `WhichEarArt` | Which ear | Two earbuds marked L and R with a question mark |
+| `TestStart` | Detailed test start | Earphones over a sound wave |
+| `HeadEar` | Detailed test | Head in profile with the tested ear lit (mirrored for the left ear) |
+| `EarBadge` | Results ear cards | Lucide ear in the ear's colour (mirrored for the left ear) |
+| `Cover` | Classroom and assignment cards | Colour from the id, muggu lattice, setu line |
 
-| File | Size | Used on | Subject | Source / licence / author |
-|---|---|---|---|---|
-| `shh.png`, `headphones.png`, `mute.png`, `equalizer.png`, `silence.png`, `noise-pollution.png` | 128 px | Make sure | Finger on lips; wired headphones; bell crossed out; equalizer with every slider in the middle; head talking, crossed out; noise burst behind headphones | Made by Team JL, Apache-2.0 |
-| `microphone.png` | 400 px | Check your surrounding | Microphone with sound bars and arcs | Team JL, Apache-2.0; mic and audio-lines glyphs Lucide (ISC) |
-| `left_ear.png`, `right_ear.png` | 500 px | Detailed test | Head in profile (facing left / mirrored), ear highlighted | Team JL, Apache-2.0; ear glyph Lucide (ISC) |
-| `leftear.png`, `rightear.png` | 320 px | Your Results ear cards | Left ear / mirrored right ear | Lucide ear glyph (ISC), drawn large by Team JL |
-| `questionmark.jpg` | 500 px | Which ear | Two ears either side of a question mark | Team JL, Apache-2.0; ear glyph Lucide (ISC) |
-| `atest_icon.jpg` | 500 px | Detailed test start card | Ear with incoming sound arcs | Team JL, Apache-2.0; ear glyph Lucide (ISC) |
-| `ears.jpg` | 600 px | Children banner | Two ears back to back on a dot grid | Team JL, Apache-2.0; ear glyph Lucide (ISC) |
-| `background.png` | 1200 px | Teacher page, Create Classroom, banners | School doodles round the edges, transparent middle | Team JL layout; glyphs Lucide (ISC) |
-| `profile.png` | 300 px | Teacher avatar | Generic cartoon person | Made by Team JL, Apache-2.0 |
-| `AssignmentImages/0.jpg`, `1.jpg`, `2.jpg`, `4.jpg` | 800 px | Assignment covers | Pattern of school items on night / teal / indigo / marigold | Team JL layout; glyphs Lucide (ISC) |
+People on the bands (login, Home, Children, child's tests, Assignments, Cases) are the Open Peeps figures listed
+below (CC0), already in the app since the design pass.
+
+The earlier images in `screener/assets/images/original/` (the first flat redraws by `scripts/make_art.py`, which
+replaced the original team's pictures of unknown source) were **removed** with that script: they did not fit our line
+style. The original team's files are still in `audiometer/app/assets/` (unchanged, not used by our app).
 
 Not carried over: their `AssignmentImages/3.jpg` and `5.jpg` (watermarked; the screen never used them).
 

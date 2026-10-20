@@ -1,65 +1,45 @@
 # Original UI phone checklist (Redmi 2201117TI, Samsung wired earphones, Expo Go)
 
-After `git pull` and a reload of the app. Use fake children only (Student T1, T2 ...). Report pass / fail and anything
-odd for each number. Plan: `docs/INTEGRATION_PLAN.md`.
+Updated 2026-10-20 for the fix-and-finish pass (login first, five tabs, child's tests, our design). After `git pull`
+and a reload of the app. Use fake children only (Student T1, T2 ...). Report pass / fail and anything odd for each
+number. Plan and parity table: `docs/INTEGRATION_PLAN.md`.
 
-## A. Bottom tabs
-1. Tabs show Home, Children, Cases, Teacher, Settings; each opens its screen and the current tab is highlighted.
-2. Children and Cases show the banner (red strip over the doodle background, picture on the right).
-3. During a screening and a detailed test the tab bar is hidden; it comes back on the result screen.
+## A. Login first
+1. Fresh start of the app opens the **login** (night screen, teacher in the arch). No tab bar yet.
+2. Type a name and a 4-digit PIN → Log in → **Home**: "Welcome," and your name, the school, today's date.
+3. Close Expo Go fully and reopen: you are still logged in (Home, not login).
+4. Settings → Log out → back on the login. A wrong PIN shows "Wrong PIN for this phone."; the right one logs in.
 
-## B. Make sure → Check your surrounding → Which ear (start a screening for Student T1)
-1. After consent: "Make sure.." with six pictures in three rows (quiet place, headphones, notifications off, equalizer
-   neutral, no talking, noise-cancel off). Next.
-2. Check your surrounding: microphone picture, one timed measurement, a coloured bar (red too noisy, amber 500 Hz left
-   out, blue fine). Continue → "Test Confirmation" dialog with our value and reason; Stop and Continue both work.
-3. Which ear: two-ears picture, Play, then Left / Right / None?. A right answer adds to "Correct in a row: n of N"; a
-   wrong one says to switch the earphones and restarts the count; None? shows the no-sound message. Answers do
-   nothing before Play.
+## B. Tabs and Home
+1. Tabs: Home, Children, Assignments, Cases, Settings; each opens, the current one is highlighted with a marigold arch.
+2. Home → New classroom → type "5A", strength 30: the card preview updates while you type; Create → 5A on Home.
+3. **Tap a classroom card: no crash** (the old Teacher-tab crash, ERR-054). The classroom page opens.
 
-## C. The screening test still works as before
-1. Finish the screening: tones, tapping and timing feel the same as before this version.
-2. The result shows PASS / RETEST / REFER with the same reasons as before, and the provisional-calibration line.
-3. A REFER still creates a case (Cases tab), and sync to the laptop still works.
+## C. Classroom, assignments, child's tests
+1. Classroom → Add children to this classroom → tick two children: they appear in the list.
+2. Assignments tab → pick 5A, name "Term 1", tap "2 weeks" → Create: the card shows the deadline and 0 of 30.
+3. Tap a child (Children tab, classroom, analytics, or the name on a case): **Child's tests** opens with Screen again
+   and Detailed test buttons; after a test the new row appears at the top with date, type, assignment and result.
+4. "View result" on a row opens the full result.
 
-## D. Detailed hearing test
-1. On a REFER result: "Detailed hearing test (optional)" opens it. Also from Teacher → a classroom → a child → Detailed
-   hearing test.
-2. Flow: consent → Make sure (progress bar) → device check → Check your surrounding → Which ear → "Pure Tone
-   Audiometry Test" start card → Start Test. The first tone plays on Start.
-3. Each tone: ear label and head picture match the ear being tested; the threshold bar and dB chip go up in 10 dB
-   steps after No; Yes moves on; Replay plays the same tone again.
-4. **Unplug the earphones mid-test:** the tone stops at once, the "Plug in the wired earphones" line shows, and Yes /
-   No / Replay are disabled. Nothing plays through the speaker. Plug back in and tap Replay: the test continues from the same tone.
-5. Say No to every tone at one frequency: the test moves on after the loudest level (30 dB at 500 Hz, 60 dB at 1-4
-   kHz).
+## D. Make sure → Check your surrounding → Which ear (detailed test for Student T1)
+1. Six drawings with labels; Next. The three-step bar on top moves as you go.
+2. Measure room noise: the mic rings light up (teal quiet / amber 500 Hz left out / rust too noisy); Continue shows
+   the confirmation card with the reason.
+3. Which ear: Play, then Left / Right; the dots fill; a wrong answer resets them.
 
-## E. Your Results
-1. The ear cards show the average in dB and **"Estimated: <grade>"**; the line "Estimated from a phone test with
-   provisional calibration." shows.
-2. The categories table has the header "Range (WHO, dB HL)" and the WHO source line under it.
-3. Both audiograms draw: the line/scatter one (both ears, legend) and the coloured-band one. A frequency never heard
-   shows as **▼**, with the ▼ note under the chart, and the average shows "≥".
-4. Share icon → menu with Export to PDF, Share on WhatsApp, Share with doctor, Cancel. Each opens the Android share
-   sheet with a PDF; open the PDF: numbers, table, WHO source and "Screening and referral tool, not a diagnosis."
+## E. Detailed test
+1. Start Test plays the first tone in the earphones. The head shows the ear under test (left ear: head faces left).
+2. Hz and dB chips change; Replay plays again; Yes / No move on. Pull the earphones out: Yes, No, Replay grey out;
+   plug back in, tap Replay.
 
-## F. Teacher view
-1. Teacher tab → demo login → Teacher Profile Page: avatar, your name, the school from Settings.
-2. Create Classroom: name 5A, strength 30 → "Classroom created successfully"; it appears in the list and in search.
-3. Open 5A → "Add children to this classroom": add two children; Remove takes one out again. Adding a child with
-   class 5A on the Children screen also puts them in 5A.
-4. Create New Assignment: name + deadline (empty = 7 days; a bad date shows the format message). The card shows a
-   cover, the deadline, class strength and progress n/30; screening a child of 5A raises n by one.
-5. Open the assignment → Assignments Analytics: the pie chart shows the categories with percentages and a legend with
-   counts; tapping a slice or a legend colour filters the child cards; tapping again clears the filter.
-6. More details on a child card opens the detailed results (or the screening result if there is no detailed test).
+## F. Your Results and analytics (the charts must draw on the phone)
+1. Results: grade card, left / right ear cards, the left-vs-right bars, the audiogram (✕ left, ○ right, ▽ not heard),
+   the band audiogram, the category table. Tap a frequency column: its values show under the chart.
+2. Share icon → bottom sheet → Export to PDF / WhatsApp / doctor each open the share menu with a PDF.
+3. Assignments → Term 1 → analytics: the donut draws (outer ring outcomes, inner ring grades); tap a slice and a
+   legend chip: the list filters; "More details" opens the result; tapping the child opens their tests.
 
 ## G. Telugu
-1. Switch to Telugu and repeat a quick pass of A, B, D, E and F: every new screen, button, dialog, tab name and
-   banner is in Telugu, with no `[TODO_TE]` marker and no English left except PASS / RETEST / REFER, dB, Hz, WHO, PDF,
-   WhatsApp and dates.
-2. Placeholders are filled (counts, dates, grades), not shown as `{n}`.
-3. Long lines (legend note, WHO source, the ▼ note) wrap without being cut off.
-
-## H. Pictures (redrawn by Team JL)
-1. Every picture in A–F shows (no blank boxes) and looks sharp, not stretched.
+1. Switch to Telugu and repeat a quick pass of A–F: nothing cut off or overlapping. The 56 new strings show
+   `[TODO_TE]` plus English until the Telugu batch is filled (list in the end-of-phase report).

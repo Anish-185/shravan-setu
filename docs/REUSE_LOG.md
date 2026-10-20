@@ -419,3 +419,40 @@ recorded source) with a free image with a clear licence, or with our own SVG art
   (ISC, copied untouched) for the ear, microphone and school items; rendered with rsvg-convert + ImageMagick on the dev
   laptop. 20 files, 504 KB in total (the originals were 1.9 MB). No new app dependency. Check:
   `scripts/test_make_art.py` (every file present at its original size and format).
+
+## Original UI fix-and-finish (2026-10-20, after the Redmi test)
+
+### 1. Rendering every route in jest
+- Need: open every expo-router screen in a test with sample data and fail on any console error (the Teacher-tab
+  crash, ERR-054, was only visible on the phone).
+- Searched: Expo docs "Testing configuration for Expo Router" (expo-router/testing-library, `renderRouter`); npm
+  `@testing-library/react-native`, `expo-router` (bundled helper).
+- Candidates: `expo-router/testing-library` (already installed with expo-router 57, MIT) needs the peer
+  `@testing-library/react-native` >= 13.2: 14.1.0 (MIT, 2026-10-08, needs the new `test-renderer` package) or
+  13.3.3 (MIT, 2025-08-26, uses `react-test-renderer`, already present via jest-expo).
+- Decision: (a) dependency, `@testing-library/react-native` 13.3.3, dev only, with `react-test-renderer` pinned to
+  19.2.3 (ERR-055). The route list is read from `src/app`, so new screens are covered without editing the test.
+
+### 2. Charts on the phone (replacing victory-native)
+- Need: donut with tappable slices, audiogram (lines, markers, grade bands), left/right bars, rendering on the Redmi.
+- Candidates: keep victory-native 37.3.6 (checked only in jest, 35 MB); react-native-gifted-charts (MIT, needs
+  react-native-linear-gradient, a native module not in Expo Go); victory-native 42 (Skia, needs
+  @shopify/react-native-skia, large); draw with react-native-svg (already a dependency and already proven on the
+  phone by the muggu, setu and child-mode art).
+- Decision: (c) build ourselves, `screener/src/charts.tsx` (~170 lines): three charts, no new dependency, victory-native
+  removed. Dataviz checks: outcome palette CVD separation passes; RETEST yellow < 3:1 so every slice also has a
+  labelled legend chip with its count; ear pair (indigo / coral) passes all checks; grades on one warm ramp.
+
+### 3. UI kit (removing react-native-paper)
+- Decision: removed. The original screens are rebuilt with our own components (`src/ui.tsx`: `PostRow`, `SectionH`,
+  `LinkBtn`, `Bar`; `src/art.tsx`: `Band`) so they match the rest of the app.
+
+### 4. Illustrations (replacing the make_art.py images)
+- Need: pictures for Make sure (6), surroundings, which ear, test start, the ear under test, ear cards, covers, in the
+  same line style as our Lucide icons and Open Peeps figures.
+- Candidates: Lucide (ISC, already used): icons only, no scenes; Open Peeps (CC0, already used for people); unDraw
+  (own licence, flat filled style that clashes with our line style, not needed); the make_art.py images (flat, filled,
+  the owner found them off-theme).
+- Decision: (c) build ourselves in react-native-svg (`src/illustrations.tsx`): Lucide glyphs inside our arch scene,
+  plus our own head, earbud, equalizer and switch drawings. No image files, scales on any screen. `scripts/make_art.py`
+  and its test removed.

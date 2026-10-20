@@ -621,3 +621,69 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: `git diff --numstat` = `89 89 strings.json`, and every changed line is a `"te"` line.
 - Lesson: after a scripted JSON rewrite, check the diff size matches the number of values changed before going on.
+
+### ERR-054: opening the Teacher tab crashed (array style through `<Link asChild>`)
+- Phase / date: Original UI, fix-and-finish / 2026-10-20
+- Symptom: `[expo-router]: You are passing an array of styles to a child of <Slot>` at `src/teacher/ClassroomList.tsx:24`, from EducatorHome (`src/app/teacher/index.tsx:57`), on the Redmi.
+- Where: Teacher tab; the same pattern in 7 places (children, cases, class, assignment analytics, ClassroomList).
+- Root cause: `<Link asChild>` renders through expo-router's `Slot`, which merges props into the child and throws on an array `style`.
+- Fix: every `Link asChild` replaced by a `Pressable` with `router.push`; lint rule `no-restricted-syntax` on `asChild` in `screener/eslint.config.js`.
+- Status: FIXED
+- Verification: `src/__tests__/routes.smoke.test.tsx` reproduced it (`/teacher` failed on console.error) and now passes every route; eslint finds no `asChild`.
+- Lesson: render every route in jest with a console-error gate.
+
+### ERR-055: `npm i -D @testing-library/react-native` failed with ERESOLVE
+- Phase / date: Original UI, fix-and-finish / 2026-10-20
+- Symptom: `Could not resolve dependency: peer react@"^19.3.1" from react-test-renderer@19.3.1`.
+- Where: `screener/`
+- Root cause: react-test-renderer was only transitive (19.2.3 via jest-expo), so npm picked 19.3.1, whose peer is React 19.3.
+- Fix: installed `@testing-library/react-native@13.3.3` with `react-test-renderer@19.2.3` (= our React), exact, dev only. No `--force`.
+- Status: FIXED
+- Verification: `npm ls react-test-renderer` shows one deduped 19.2.3; jest 189 pass.
+- Lesson: pin the renderer to the React version when adding a test library.
+
+### ERR-056: route smoke test could not load screens (asset alias, expo-audio, Reanimated mock)
+- Phase / date: Original UI, fix-and-finish / 2026-10-20
+- Symptom: `Could not locate module @/assets/images/... mapped as src/$1`; expo-audio `reading 'prototype'`; `useReducedMotion is not a function`.
+- Where: `npx jest src/__tests__/routes.smoke.test.tsx`
+- Root cause: jest mapped only `@/* -> src/*` (tsconfig also maps `@/assets/*`); expo-audio extends a native class with no jest build; expo-router/testing-library installs its own Reanimated mock when it loads (lazily), replacing ours.
+- Fix: `moduleNameMapper` with `^@/assets/(.*)$` first (`screener/package.json`); expo-audio and worklets mocked in the test; `useReducedMotion` added to the loaded Reanimated mock.
+- Status: FIXED
+- Verification: smoke test 23/23 pass.
+- Lesson: when a test helper installs its own mocks, patch the loaded mock.
+
+### ERR-057: `pkill -f "expo start --web ..."` killed its own shell (exit 144)
+- Phase / date: Original UI, fix-and-finish / 2026-10-20
+- Symptom: `Exit code 144`, rest of the command did not run.
+- Root cause: same as ERR-043: the pattern matches the shell running pkill.
+- Where: one-off shell command stopping the web preview.
+- Fix: reran the rest separately; stopped the server by port with `fuser -k 8098/tcp` (no pattern to match itself).
+- Status: FIXED
+- Verification: `ps aux | grep -c "[e]xpo start --web"` = 0 after `fuser -k`.
+- Lesson: stop dev servers by port (`fuser -k <port>/tcp`) or `timeout`, never `pkill -f` with the pattern on the same line.
+
+### ERR-058: web preview screenshots kept showing old code
+- Phase / date: Original UI, fix-and-finish / 2026-10-20
+- Symptom: after edits, headless Chromium screenshots of `localhost:8098` still showed the previous screens.
+- Where: `CI=1 npx expo start --web` (dev tooling, ERR-041 preview)
+- Root cause: with `CI=1` Metro runs without file watching, so it never rebuilt the bundle.
+- Fix: run the web preview without `CI=1` (`BROWSER=none npx expo start --web --non-interactive`); fresh browser profile.
+- Status: FIXED
+- Verification: the screenshots showed the new greeting and the classroom header fix.
+- Lesson: `CI=1` is for one-shot commands (export, typed routes), not for a server you edit against.
+
+### ERR-059: "More details" was a button inside a button (analytics child rows)
+- Phase / date: Original UI, fix-and-finish / 2026-10-20
+- Symptom: web console `<button> cannot contain a nested <button>` on the analytics screen.
+- Where: `screener/src/ui.tsx` `PostRow` with a `LinkBtn` child, `src/app/teacher/assignment/[id].tsx`
+- Root cause: `PostRow` wrapped all its children in its own `Pressable`; on Android nested pressables work but steal
+  each other's taps and confuse TalkBack.
+- Fix: `PostRow` takes a `footer` drawn outside its tap area; "More details" moved there.
+- Status: FIXED
+- Verification: analytics renders with no nested-button warning; smoke test passes.
+- Lesson: one tap target per area; extra buttons go beside or under it, never inside.
+
+### Step 0 recheck (fix-and-finish, 2026-10-20)
+- ERR-015 (npm audit, OPEN, upstream): rechecked after this phase's installs and removals: still 57 (8 moderate,
+  49 high); no safe fix. ERR-041 (web build without expo-sqlite, WORKAROUND, dev tooling) and ERR-044
+  (provisional 1-4 kHz calibration, WORKAROUND, needs the quieter tone set and a phone session) unchanged.

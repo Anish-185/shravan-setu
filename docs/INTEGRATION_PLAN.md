@@ -11,6 +11,57 @@ Screening and referral tool, never a diagnosis. Our screening test (fixed level,
 default and is unchanged. The original threshold test comes in as an optional second mode, the **detailed hearing
 test**, offered after a REFER and from the teacher view. Its grades are labelled estimates.
 
+## Fix and finish (2026-10-20, after the Redmi test): our design, the original's features
+
+The owner tested the copied screens on the Redmi: the Teacher tab crashed (ERR-054) and the copied look (their red,
+navy, Paper buttons and pictures) did not fit our app. Decision: keep every original **feature and screen idea**, build
+it in **our** Direction B v2 design (Setu palette, Tiro / Hind / Baloo, cards, chips, muggu, setu line, arch), with our
+own drawings. The copied code below stays the source of the logic; the look is ours. Paper and victory-native are
+removed; charts are drawn with react-native-svg (`src/charts.tsx`), illustrations in `src/illustrations.tsx`.
+
+App structure, like the original (login first, then the teacher's page):
+
+- **Login first** (`src/app/login.tsx`, `src/auth.tsx`): demo teacher name + PIN on the phone, no accounts, no
+  Firebase; remembered until **Log out** in Settings. Until then only the login route exists (`Stack.Protected`).
+- **Tabs**: Home (the teacher's page, where login lands: welcome, school, date, "Screen a child", classrooms),
+  Children, **Assignments**, Cases, Settings.
+- **Child's tests** (`src/app/child/[childId].tsx`): every screening and detailed test of a child over time, from
+  Children, a classroom, analytics or a case; "Screen again" and "Detailed test". Like the original `/results/<UID>/`
+  list, which merged `UserOnlyResults` (self tests) and `UserAssignmentResults` (classroom tests) into result cards
+  with "View Results" (`HomeNew.js`, `UDCard.js`).
+
+### Parity table
+
+| Original feature (file) | Ours (file) | Status |
+|---|---|---|
+| Login, then the teacher's profile page (`Login.js` → `EducatorHome.js`) | Demo login first, lands on Home = teacher's page (`login.tsx`, `index.tsx`) | Done, Firebase replaced by name + PIN on the phone |
+| Sign out (`Signout.js`) | Log out in Settings (`settings.tsx`) | Done |
+| Teacher profile: avatar, "Welcome", name, institute, date (`EducatorHome.js`) | Home band: teacher figure in the arch, "Welcome, name", school, date chip | Done |
+| Create Classroom: name + strength (`EducatorCreate.js`) | `teacher/create.tsx`, with a live preview of the classroom card | Done |
+| Classroom list with search and strength (`ClassroomList.js`) | Classroom tickets on Home with strength, children on the phone, latest assignment progress; search from 4 classrooms (`teacher/ClassroomList.tsx`) | Done |
+| Add children to a classroom (their children joined by room code) | Classroom page: add children from this phone (`teacher/class.tsx`) | Done (no child app; the teacher adds them) |
+| Assignments with cover, deadline, strength, progress bar (`AssignmentList.js`) | Assignment tickets (`teacher/Assignments.tsx`) on the **Assignments tab** (`assignments.tsx`) and on each classroom; past-deadline mark; Open / Past / All filter | Done |
+| Create assignment: name + deadline, 7-day default (`AssignmentList.js`, `apigateway`) | Same, plus classroom chips and 1 / 2 / 4-week quick deadlines | Done |
+| Copy Assignment ID (`AssignmentList.js`) | Not used: children have no app of their own to type it into | Left out (reason) |
+| Assignment analytics: donut, colour-coded child cards, tap a slice to filter, More Details (`AssignmentAnalytics.js`) | Two-ring donut (outer: PASS / RETEST / REFER, inner: estimated grade), legend chips with counts that filter too, children as colour posts, tap a child for their tests, "More details" for the result, children not yet tested listed (`teacher/assignment/[id].tsx`, `charts.tsx`) | Done |
+| Result cards per child over time (`HomeNew.js` + `UDCard.js`, `UserOnlyResults`, `UserAssignmentResults`) | Child's tests: date, type, assignment or "Individual test", outcome or estimated grade, link to the result (`child/[childId].tsx`, `childHistory()` in `teacher/data.ts`) | Done |
+| Pre-test "Make sure.." with 6 pictures (`BeforeTest1.js`) | `original/MakeSure.tsx`, our six drawings | Done |
+| Check your surrounding: mic picture, coloured reading, Test Confirmation (`QuietPlaceDetection.js`) | `original/Surrounding.tsx`: mic drawing whose rings follow our noise gate, inline confirmation with our 500 Hz rule | Done |
+| Which ear: picture, Play, Left / Right / None (`EarTest.js`) | `original/WhichEar.tsx`: L/R earbud drawing, our left/right check | Done |
+| Pre-test progress bar | Three-step bar: Make sure → Check your surrounding → Which ear (`detailed/[childId].tsx`) | Done |
+| Detailed test: ear and head picture, progress, threshold bar with help, Hz / Replay / dB chips, Yes / No (`AudiometryTest.js`) | `original/AudiometryTest.tsx`: head in profile with the ear lit (left ear mirrored), both-ear progress, threshold bar in the ear's colour, help inline | Done |
+| Masked phase (`AudiometryTest.js`) | Not used: no calibrated masking noise (config `detailed_test.masking`) | Left out (reason) |
+| Your Results: category + description (`Results.js`) | Grade hero in the grade's colour + description, provisional-calibration note (`results/[testId].tsx`) | Done |
+| Per-ear dB and grade cards with ear pictures | Left / right ear cards (badge, average dB, grade pill) | Done |
+| Left vs right comparison (implicit in their two cards) | Plus mirrored bars per frequency (`EarBars`) | Done (ours, added) |
+| Audiogram line chart, both ears (`Results.js`, Victory) | `Audiogram` in react-native-svg: ✕ left / ○ right, ▽ not heard, tap a frequency to read it | Done |
+| Coloured-band audiogram (`audiogram-bg.png` + legend) | `Audiogram` with WHO grade bands drawn behind | Done |
+| Category table (`Results.js`) | Categories with colour swatches, the child's grade highlighted, WHO citation | Done |
+| Share menu: PDF / WhatsApp / doctor (`Results.js`, view-shot) | Bottom sheet; all three make one PDF (expo-print) and open the share sheet; the PDF says screening only | Done |
+| Home bottom buttons: Start Test, Noise Data, Instructions, Legal Rules, Doctors Nearby (`HomeNew.js`) | Tab bar; "Find a quiet room" (room readings); doctors via the referral route (local facility CSV, no maps) | Partly: Legal Rules / Instructions / Maps left out (maps need a paid key) |
+| Student self-test login and room code (`HomeNew.js`) | Not used: teachers test the children; no child accounts | Left out (reason) |
+| Our own: screening test, referral cases, camp requests, sync, audit log | Unchanged | Kept |
+
 ## Calibration decision (owner, 2026-10-20)
 
 The original maps volume to dB with `MAX_DB = 75` for every frequency (`utils/CONFIG.js`, `dB2Vol`). That is an
@@ -25,16 +76,17 @@ may read too low; the results screen says so when it happens.
 
 | Original library | Decision |
 |---|---|
-| react-native-paper 5.11 (all their screens) | **Used**, 5.15.3 (MIT, 3.8 MB). One app-wide `PaperProvider` with their theme (`src/original/paper.tsx`). Paper's icons are drawn with our Lucide set, so no icon font (@expo/vector-icons) is added |
-| victory-native 36 (pie, audiogram) | **Used**, 37.3.6 (MIT), the last release of the same SVG line (v42 is a different Skia library). Renders under our React 19 / RN 0.86 in jest (`src/__tests__/victory.smoke.test.tsx`); phone check in the checklist. 35 MB in node_modules (over the ~5 MB guideline; allowed by the owner for a chart library) |
+| react-native-paper 5.11 (all their screens) | Used at first; **removed** in the fix-and-finish pass (2026-10-20): the screens are now built with our own components (`src/ui.tsx`) |
+| victory-native 36 (pie, audiogram) | Used at first (37.3.6); **removed** in the fix-and-finish pass: only ever checked in jest, 30 victory/d3 packages, 35 MB. Charts are drawn with react-native-svg (`src/charts.tsx`), which already renders on the phone |
 | expo-av (tones, recording) | Not used: our expo-audio player and mic (`useScreeningAudio`) |
 | react-native-view-shot + expo-media-library (share as image) | Not used: share is a PDF from **expo-print** (MIT, in Expo Go) through **expo-sharing** |
 | firebase, AsyncStorage, react-i18next, react-native-virtualized-view, react-native-floating-action, expo-clipboard | Not used: demo login (no Firebase), SQLite `kv`, our `useT()`, `ScrollView`; their unused help FAB and "Copy Assignment ID" dropped |
 
 ## Navigation
 
-The original `_layout.js` is a `Slot` under an empty `Header`: there is **no bottom tab bar** in the original. We add a
-simple one (`src/TabBar.tsx`): Home, Children, Cases, Teacher, Settings; hidden while a screening or detailed test runs.
+The original `_layout.js` is a `Slot` under an empty `Header`, with a row of buttons at the bottom of the home screen.
+Ours (`src/TabBar.tsx`): Home, Children, Assignments, Cases, Settings; hidden at login and while a screening or detailed
+test runs. Login comes first (see the fix-and-finish section).
 
 ## Screens
 
@@ -101,7 +153,7 @@ simple one (`src/TabBar.tsx`): Home, Children, Cases, Teacher, Settings; hidden 
   screening-only statement) and open the phone's share sheet; no accounts, no paid API. Category descriptions are the
   original's text with typos fixed.
 
-### 6. Teacher view: `Screens/Educator/EducatorHome.js`, `EducatorCreate.js`, `Components/ClassroomList.js` → `src/app/teacher/index.tsx`, `src/app/teacher/create.tsx`, `src/teacher/ClassroomList.tsx`
+### 6. Teacher view: `Screens/Educator/EducatorHome.js`, `EducatorCreate.js`, `Components/ClassroomList.js` → `src/app/index.tsx` (Home), `src/app/teacher/create.tsx`, `src/teacher/ClassroomList.tsx`
 
 - Original: red "Teacher Profile Page" strip, header over `background.png` with `profile.png` avatar, "Welcome",
   name, institute, date box, Create Classroom → form (name + strength) → POST; navy "Classrooms" pill; search; cards
@@ -134,12 +186,11 @@ simple one (`src/TabBar.tsx`): Home, Children, Cases, Teacher, Settings; hidden 
 
 ### 9. Navigation and visuals
 
-- Bottom tab bar (ours, see Navigation). Original header-banner pattern (red strip over `background.png`, picture on
-  the right) as `src/original/Banner.tsx` on Children (with `images/ears.jpeg`) and Cases. Not changed: Home's own
-  band, the screening child mode.
-- Images (2026-10-20): every original image named in this plan is **redrawn by Team JL** (`scripts/make_art.py`,
-  same file name, pixel size and subject), because none of the originals had a recorded source or licence. Details
-  and licences: `ATTRIBUTION.md`.
+- Bottom tab bar (ours, see Navigation). Each tab opens with our Night band (`Band` in `src/art.tsx`: muggu, title,
+  an Open Peeps figure in the arch, the setu line); the original's red banner (`Banner.tsx`) is removed.
+- Images (fix-and-finish, 2026-10-20): the original pictures and our first flat redraws (`scripts/make_art.py`) are
+  **removed**. Replaced by line drawings in `src/illustrations.tsx` (Team JL, Lucide glyphs, our palette) and the
+  Open Peeps figures already in the app. Details and licences: `ATTRIBUTION.md`.
 
 ## Data flow summary
 
