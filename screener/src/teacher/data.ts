@@ -6,7 +6,7 @@ import * as Crypto from 'expo-crypto';
 
 import { cfg } from '@/config';
 import { db } from '@/db';
-import { kvGet, list, put } from '@/db/store';
+import { get, kvGet, list, put } from '@/db/store';
 import { worseEarGrade, type Point } from '@/original/hearing';
 
 export type Child = { display_name: string; age_band: string; school: string; class_label?: string };
@@ -66,16 +66,46 @@ export function addAssignment(label: string, name: string, deadline = defaultDea
 export const assignments = (label: string) =>
   list<Assignment>(db, 'assignment').filter((a) => a.school === school() && a.class_label === label);
 
+/** Every assignment of the selected school, soonest deadline first (the Assignments tab). */
+export const allAssignments = () => list<Assignment>(db, 'assignment').filter((a) => a.school === school())
+  .sort((a, b) => a.deadline.localeCompare(b.deadline) || a.name.localeCompare(b.name));
+
+/** A test belongs to a round from the round's creation to the end of its deadline day (local time). */
+const inWindow = (a: Assignment, startedAt: string) => {
+  const at = new Date(startedAt);
+  return at >= new Date(a.created_at) && at <= new Date(`${a.deadline}T23:59:59.999`);
+};
+
+export type HistoryItem = {
+  kind: 'screening' | 'detailed'; id: string; at: string; outcome: string | null; grade: string | null; round: string | null;
+};
+
+/** One child's tests over time, newest first: every screening with a result and every detailed test, each with the
+ *  round (assignment) of the child's class it fell in, if any. Like the original /results/<UID>/ list, which merged
+ *  UserOnlyResults (self tests) and UserAssignmentResults (classroom tests) into one row of cards. */
+export function childHistory(childId: string): HistoryItem[] {
+  const child = get<Child>(db, 'child', childId);
+  if (!child) return [];
+  const rounds = list<Assignment>(db, 'assignment')
+    .filter((a) => a.school === child.school && a.class_label === (child.class_label ?? ''));
+  const round = (at: string) => rounds.find((a) => inWindow(a, at))?.name ?? null;
+  const results = new Map(list<Result>(db, 'screening_result').map((r) => [r.session, r]));
+  const screenings = list<Session>(db, 'screening_session').filter((x) => x.child === childId && results.has(x.id))
+    .map((x): HistoryItem => ({
+      kind: 'screening', id: x.id, at: x.started_at, outcome: results.get(x.id)!.outcome, grade: null, round: round(x.started_at),
+    }));
+  const detailed = list<Detailed>(db, 'detailed_test').filter((d) => d.child === childId)
+    .map((d): HistoryItem => ({
+      kind: 'detailed', id: d.id, at: d.started_at, outcome: null, grade: worseEarGrade(d.points, cfg), round: round(d.started_at),
+    }));
+  return [...screenings, ...detailed].sort((a, b) => b.at.localeCompare(a.at));
+}
+
 /** Each child of the class tested in the round (from creation to the end of the deadline day): their latest
  *  screening result and their latest detailed test in it, if any. Like the original SubmittedCount + results join. */
 export function roundResults(a: Assignment) {
   const kids = new Map(classChildren(a.class_label).map((c) => [c.id, c]));
-  const from = new Date(a.created_at);
-  const end = new Date(`${a.deadline}T23:59:59.999`); // local time
-  const inRound = (x: { child: string; started_at: string }) => {
-    const at = new Date(x.started_at);
-    return kids.has(x.child) && at >= from && at <= end;
-  };
+  const inRound = (x: { child: string; started_at: string }) => kids.has(x.child) && inWindow(a, x.started_at);
   const latest = <T extends { child: string; started_at: string }>(rows: T[]) => {
     const m = new Map<string, T>();
     for (const r of rows.filter(inRound)) if (!m.has(r.child) || r.started_at > m.get(r.child)!.started_at) m.set(r.child, r);
@@ -94,4 +124,18 @@ export function roundResults(a: Assignment) {
       detailed: d ? { id: d.id, grade: worseEarGrade(d.points, cfg) } : null,
     };
   }).sort((x, y) => x.child.display_name.localeCompare(y.child.display_name));
+}
+
+type Outcome = 'PASS' | 'RETEST' | 'REFER';
+/** Each child's latest screening outcome, in one pass over the records (child id -> outcome; never screened = absent). */
+export function latestOutcomes() {
+  const results = new Map(list<Result>(db, 'screening_result').map((r) => [r.session, r.outcome]));
+  const latest = new Map<string, { at: string; o: Outcome }>();
+  for (const x of list<Session>(db, 'screening_session')) {
+    const o = results.get(x.id);
+    if (o !== 'PASS' && o !== 'RETEST' && o !== 'REFER') continue;
+    const cur = latest.get(x.child);
+    if (!cur || x.started_at > cur.at) latest.set(x.child, { at: x.started_at, o });
+  }
+  return new Map([...latest].map(([k, v]) => [k, v.o]));
 }

@@ -3,7 +3,9 @@
 import { randomUUID as mockRandomUUID } from 'crypto'; // first: jest.mock below is hoisted above the imports
 
 import { kvSet, list, put } from '../../db/store';
-import { addAssignment, addClassroom, assignments, classrooms, roundResults, strength } from '../data';
+import {
+  addAssignment, addClassroom, allAssignments, assignments, childHistory, classrooms, latestOutcomes, roundResults, strength,
+} from '../data';
 
 jest.mock('expo-crypto', () => ({ randomUUID: () => mockRandomUUID() }));
 jest.mock('@/db', () => ({ db: jest.requireActual('../../db/memDb').memDb() }));
@@ -38,4 +40,24 @@ test('classrooms group the school\'s children by label; a round counts the lates
   expect(roundResults(round).map((r) => [r.child.id, r.result?.outcome ?? null, r.detailed?.grade])).toEqual(
     [['a', 'REFER', undefined], ['b', null, 'Moderate']]);
   expect(list(db, 'assignment')).toHaveLength(1);
+});
+
+test('a child\'s history lists every screening and detailed test, newest first, with the round it fell in', () => {
+  // Continues the data above: child a has sessions s1, s2 in round "Term 1"; b has dt1 in it and "old" before it.
+  const h = childHistory('a');
+  expect(h.map((x) => [x.kind, x.id, x.outcome, x.round])).toEqual([
+    ['screening', 's2', 'REFER', 'Term 1'], ['screening', 's1', 'RETEST', 'Term 1']]);
+  expect(childHistory('b').map((x) => [x.kind, x.id, x.outcome, x.grade, x.round])).toEqual([
+    ['detailed', 'dt1', null, 'Moderate', 'Term 1'], ['screening', 'old', 'PASS', null, null]]);
+  put(db, 'screening_session', 'no-result', { child: 'a', started_at: new Date().toISOString() }); // abandoned: no result
+  expect(childHistory('a')).toHaveLength(2);
+  expect(childHistory('nobody')).toEqual([]);
+  addAssignment('6B', 'Term 2', '2000-01-01');
+  expect(allAssignments().map((a) => a.name)).toEqual(['Term 2', 'Term 1']); // soonest deadline first
+});
+
+test('latest outcome per child: the newest screening with a result wins', () => {
+  // Continues the data above: a was RETEST then REFER; b's only screening ("old") was PASS; c was never screened.
+  const o = latestOutcomes();
+  expect([o.get('a'), o.get('b'), o.get('c')]).toEqual(['REFER', 'PASS', undefined]);
 });

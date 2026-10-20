@@ -1,10 +1,15 @@
-// One-time phone setup: backend URL, teacher login (token kept in expo-secure-store), school, standard device.
-// Audit-log verify button. Developer screens (audio spike, calibration) sit at the bottom.
+// Settings tab: the logged-in teacher and Logout (demo login, src/auth.tsx); one-time phone setup: backend URL, server
+// login (token kept in expo-secure-store), school, standard device. Audit-log verify button. Developer screens (audio
+// spike, calibration) sit at the bottom.
 import * as SecureStore from 'expo-secure-store';
 import { router, type Href } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { Band } from '@/art';
+import { useAuth } from '@/auth';
 import { db } from '@/db';
 import { kvGet, kvSet, verifyAuditLog } from '@/db/store';
 import { saveFacilities } from '@/cases';
@@ -16,6 +21,8 @@ type School = { id: string; name: string; mandal: string };
 
 export default function Settings() {
   const t = useT();
+  const insets = useSafeAreaInsets();
+  const { teacher, logout } = useAuth();
   const [url, setUrl] = useState(() => kvGet(db, 'server_url') ?? 'http://192.168.1.10:8000');
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
@@ -75,36 +82,45 @@ export default function Settings() {
   }
 
   return (
-    <ScrollView contentContainerStyle={s.screen}>
-      <Section icon="server" tint={C.indigoTint} title={t('settings.backendH')}>
-        <Text style={s.muted}>{t('settings.backendP')}</Text>
-        <TextInput style={s.input} value={url} onChangeText={setUrl} autoCapitalize="none" placeholder="http://laptop-ip:8000" />
-        <TextInput style={s.input} value={user} onChangeText={setUser} autoCapitalize="none" placeholder={t('settings.username')} />
-        <TextInput style={s.input} value={password} onChangeText={setPassword} secureTextEntry placeholder={t('settings.password')} />
-        <Btn title={t('settings.login')} onPress={login} disabled={!user || !password} />
-        {schools.map((sc) => <Btn key={sc.id} kind="plain" title={sc.name} onPress={() => pickSchool(sc)} />)}
-        <P>{t('settings.school', { name: school || t('common.notSet') })}</P>
-      </Section>
+    <ScrollView style={{ backgroundColor: C.paper }} contentContainerStyle={{ paddingBottom: 28 }} keyboardShouldPersistTaps="handled">
+      <Band top={insets.top} title={t('title.settings')} sub={t('settings.sub')} />
+      <View style={[s.screen, { paddingTop: 16 }]}>
+        <Section icon="user-round" tint={C.marigoldTint} title={t('settings.teacherH')}>
+          <P>{t('settings.teacherLine', { name: teacher ?? '-', school: school || t('common.notSet') })}</P>
+          <Text style={s.muted}>{t('teacher.demoNote')}</Text>
+          <Btn kind="plain" icon="log-out" title={t('settings.logout')} onPress={() => { logout(); router.replace('/login'); }} />
+        </Section>
 
-      <Section icon="headphones" tint={C.marigoldTint} title={t('settings.deviceH')}>
-        <Text style={s.muted}>{t('settings.deviceP')}</Text>
-        <TextInput style={s.input} value={earphone} onChangeText={setEarphone} placeholder={t('settings.earphone')} />
-        <TextInput style={s.input} value={volume} onChangeText={setVolume}
-          placeholder={t('settings.volume')} />
-        <Btn title={t('settings.saveDevice')} onPress={saveDevice} disabled={!earphone.trim() || !volume.trim()} />
-      </Section>
-      {!!msg && <Text style={s.p}>{msg}</Text>}
+        <Section icon="server" tint={C.indigoTint} title={t('settings.backendH')}>
+          <Text style={s.muted}>{t('settings.backendP')}</Text>
+          <TextInput style={s.input} value={url} onChangeText={setUrl} autoCapitalize="none" placeholder="http://laptop-ip:8000" />
+          <TextInput style={s.input} value={user} onChangeText={setUser} autoCapitalize="none" placeholder={t('settings.username')} />
+          <TextInput style={s.input} value={password} onChangeText={setPassword} secureTextEntry placeholder={t('settings.password')} />
+          <Btn title={t('settings.login')} onPress={login} disabled={!user || !password} />
+          {schools.map((sc) => <Btn key={sc.id} kind="plain" title={sc.name} onPress={() => pickSchool(sc)} />)}
+          <P>{t('settings.school', { name: school || t('common.notSet') })}</P>
+        </Section>
 
-      <Section icon="circle-check" tint={C.indigoTint} title={t('settings.auditH')}>
-        <Text style={s.muted}>{t('settings.auditP')}</Text>
-        <Btn kind="plain" title={t('settings.auditVerify')} onPress={checkAudit} />
-        {!!audit && <P>{audit}</P>}
-      </Section>
+        <Section icon="headphones" tint={C.marigoldTint} title={t('settings.deviceH')}>
+          <Text style={s.muted}>{t('settings.deviceP')}</Text>
+          <TextInput style={s.input} value={earphone} onChangeText={setEarphone} placeholder={t('settings.earphone')} />
+          <TextInput style={s.input} value={volume} onChangeText={setVolume}
+            placeholder={t('settings.volume')} />
+          <Btn title={t('settings.saveDevice')} onPress={saveDevice} disabled={!earphone.trim() || !volume.trim()} />
+        </Section>
+        {!!msg && <Text style={s.p}>{msg}</Text>}
 
-      <Section icon="flask-conical" tint={C.greyTint} title={t('settings.devH')}>
-        <DevLink icon="volume-2" label="home.spike" href="/spike" />
-        <DevLink icon="sliders-horizontal" label="home.calibrate" href="/calibrate" />
-      </Section>
+        <Section icon="circle-check" tint={C.indigoTint} title={t('settings.auditH')}>
+          <Text style={s.muted}>{t('settings.auditP')}</Text>
+          <Btn kind="plain" title={t('settings.auditVerify')} onPress={checkAudit} />
+          {!!audit && <P>{audit}</P>}
+        </Section>
+
+        <Section icon="flask-conical" tint={C.greyTint} title={t('settings.devH')}>
+          <DevLink icon="volume-2" label="home.spike" href="/spike" />
+          <DevLink icon="sliders-horizontal" label="home.calibrate" href="/calibrate" />
+        </Section>
+      </View>
     </ScrollView>
   );
 }

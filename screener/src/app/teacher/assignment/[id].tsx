@@ -1,131 +1,127 @@
-// Assignment analytics: donut chart of the class, tap a slice to filter, colour-coded child cards with "More
-// Details". Copied from DhwaniSarathi audiometer/app/Screens/Educator/AssignmentAnalytics.js (Apache-2.0, the
-// DhwaniSarathi team), with its VictoryPie and colours. Changed by us: data from this phone instead of
-// /assignments/<AID>/userassignmentresults/; a child with a detailed test is placed by the estimated grade of the
-// worse ear (config hearing_grades, WHO 2021, six grades; theirs had five with different edges), a child with only a
-// screening by PASS / RETEST / REFER; a legend lists both, with counts, and filters too; their VictoryLabel loop
-// (drawn at one spot) → slice labels with percentages; card shows age band (no gender: we record none); "More Details"
-// opens the detailed results or the screening result.
-import { Link, useFocusEffect, useLocalSearchParams } from 'expo-router';
+// Assignment analytics. Ideas from DhwaniSarathi audiometer/app/Screens/Educator/AssignmentAnalytics.js (Apache-2.0, the
+// DhwaniSarathi team): a donut of the class, tap a slice to filter, colour-coded child cards with "More Details".
+// Ours: drawn with react-native-svg (src/charts.tsx); two rings, the outer for the screening outcome (PASS / RETEST /
+// REFER), the inner for the estimated grade of the worse ear from a detailed test (config hearing_grades, WHO 2021);
+// legend chips with counts that filter too; children not yet tested listed apart; tapping a child opens their tests,
+// "More details" opens this round's result. Data from this phone.
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { VictoryPie } from 'victory-native';
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
+import { Donut, type Slice } from '@/charts';
 import { cfg } from '@/config';
 import { db } from '@/db';
 import { get } from '@/db/store';
 import { useT, type Key } from '@/i18n';
-import { GRADE_COLOR, grades, onGrade } from '@/original/hearing';
-import { DS } from '@/original/paper';
-import { roundResults, type Assignment } from '@/teacher/data';
-import { OUTCOME } from '@/ui';
+import { grades } from '@/original/hearing';
+import { classChildren, roundResults, strength, type Assignment } from '@/teacher/data';
+import { Bar, C, Card, F, GRADE, LinkBtn, OUTCOME, PostRow, s, SectionH } from '@/ui';
 
-const AssignmentAnalytics = () => {
+const OUTCOMES = ['PASS', 'RETEST', 'REFER'] as const;
+
+export default function Analytics() {
   const t = useT();
+  const { width } = useWindowDimensions();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const assignment = get<Assignment>(db, 'assignment', id);
   const load = useCallback(() => {
     const a = get<Assignment>(db, 'assignment', id);
-    return a ? roundResults(a) : [];
+    return a ? { a, rows: roundResults(a), kids: classChildren(a.class_label), total: strength(a.class_label) } : null;
   }, [id]);
-  const [listUserCard, setListUserCard] = useState(load);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  useFocusEffect(useCallback(() => setListUserCard(load()), [load]));
+  const [data, setData] = useState(load);
+  const [selected, setSelected] = useState<string | null>(null);
+  useFocusEffect(useCallback(() => setData(load()), [load]));
+  if (!data) return <ScrollView contentContainerStyle={s.screen}><Text style={s.p}>{t('screen.notFound')}</Text></ScrollView>;
+  const { a, rows, kids, total } = data;
 
-  type Row = (typeof listUserCard)[number];
-  // Estimated grade (detailed test) first, else the screening outcome.
-  const getCategory = (item: Row) => item.detailed?.grade ?? item.result?.outcome ?? 'RETEST';
-  const hearingCategories = [...grades(cfg).map((g) => g.grade), 'PASS', 'RETEST', 'REFER'];
-  const isGrade = (c: string) => c in GRADE_COLOR;
-  const hearingCategoryColors = (c: string) => (isGrade(c) ? GRADE_COLOR[c] : OUTCOME[c as keyof typeof OUTCOME].fill);
-  const textOn = (c: string) => (isGrade(c) ? onGrade(c) : OUTCOME[c as keyof typeof OUTCOME].on);
-  const name = (c: string) => (isGrade(c) ? t(`ds.grade.${c}` as Key) : c);
-
-  const data3 = hearingCategories.map((category) => ({ x: category, y: listUserCard.filter((e) => getCategory(e) === category).length }));
-  // Remove categories with no data
-  const filterData = data3.filter((item) => item.y !== 0);
-  const totalStudents = data3.reduce((total, d) => total + d.y, 0);
-  const colorScale = filterData.map((point) => hearingCategoryColors(point.x));
-  const handleCategoryClick = (category: string) => setSelectedCategory((prev) => (prev === category ? null : category));
-  const searchFilter = (item: Row) => (selectedCategory ? getCategory(item) === selectedCategory : true);
-
-  const renderAssignmentCard = (item: Row) => {
-    const c = getCategory(item);
-    const href = item.detailed
-      ? { pathname: '/results/[testId]' as const, params: { testId: item.detailed.id } }
-      : { pathname: '/teacher/result/[sessionId]' as const, params: { sessionId: item.sessionId! } };
-    return (
-      <Link key={item.child.id} href={href} asChild>
-        <TouchableOpacity style={styles.card}>
-          <Text style={[styles.cardTitle, { backgroundColor: hearingCategoryColors(c), color: textOn(c) }]}>
-            {item.child.display_name} · {name(c)}{isGrade(c) ? ` (${t('ds.estimated')})` : ''}
-          </Text>
-          <Text style={styles.cardDate}>{t('teacher.age', { age: item.child.age_band })}</Text>
-          {item.detailed && item.result?.outcome && <Text style={styles.cardDate}>{t('ds.screeningWas', { outcome: item.result.outcome })}</Text>}
-          <Text style={styles.cardMore}>{t('teacher.moreDetails')}</Text>
-        </TouchableOpacity>
-      </Link>
-    );
-  };
+  type Row = (typeof rows)[number];
+  const outcomeOf = (r: Row) => r.result?.outcome ?? null;
+  const gradeOf = (r: Row) => r.detailed?.grade ?? null;
+  const outer: Slice[] = OUTCOMES.map((o) => ({ key: o, value: rows.filter((r) => outcomeOf(r) === o).length, color: OUTCOME[o].fill }));
+  const inner: Slice[] = grades(cfg).map((g) => ({ key: g.grade, value: rows.filter((r) => gradeOf(r) === g.grade).length, color: GRADE[g.grade] }));
+  const hasGrades = inner.some((x) => x.value > 0);
+  const pick = (k: string) => setSelected((prev) => (prev === k ? null : k));
+  const shown = rows.filter((r) => !selected || outcomeOf(r) === selected || gradeOf(r) === selected);
+  const untested = kids.filter((k) => !rows.some((r) => r.child.id === k.id));
+  const name = (k: string) => (k in OUTCOME ? k : t(`ds.grade.${k}` as Key));
+  const pct = (n: number) => `${Math.round((100 * n) / Math.max(1, rows.length))}%`;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{assignment?.name ?? t('ds.analytics')}</Text>
-      {totalStudents === 0 ? <Text style={styles.empty}>{t('teacher.noResults')}</Text> : (
-        <View style={styles.chartContainer}>
-          <VictoryPie
-            height={250}
-            data={filterData}
-            radius={100}
-            innerRadius={45}
-            colorScale={colorScale}
-            labels={({ datum }) => `${((datum.y / totalStudents) * 100).toFixed(0)}%`}
-            labelRadius={112}
-            style={{ labels: { fill: DS.navy, fontSize: 16, fontWeight: 'bold' } }}
-            events={[{
-              target: 'data',
-              eventHandlers: {
-                onPressIn: () => [{ target: 'data', mutation: ({ datum }: { datum: { x: string } }) => { handleCategoryClick(datum.x); return null; } }],
-              },
-            }]}
-          />
-          <View style={styles.legend}>
-            {filterData.map((point) => (
-              <Pressable key={point.x} accessibilityRole="button" accessibilityState={{ selected: selectedCategory === point.x }}
-                onPress={() => handleCategoryClick(point.x)}
-                style={[styles.legendItem, selectedCategory === point.x && { borderColor: DS.navy }]}>
-                <View style={[styles.legendBox, { backgroundColor: hearingCategoryColors(point.x) }]} />
-                <Text style={styles.legendText}>
-                  {name(point.x)}{isGrade(point.x) ? '*' : ''} {point.y} ({((point.y / totalStudents) * 100).toFixed(0)}%)
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-          <Text style={styles.note}>{t('ds.legendNote')}</Text>
+    <ScrollView contentContainerStyle={s.screen}>
+      <Card style={{ alignItems: 'center' }}>
+        <Text style={st.title}>{a.name}</Text>
+        <Text style={s.muted}>{`${a.class_label || t('teacher.noClass')} · ${t('teacher.deadline', { date: a.deadline })}`}</Text>
+        <View style={{ alignSelf: 'stretch', gap: 6 }}>
+          <Text style={s.p}>{t('teacher.progress', { done: rows.length, total })}</Text>
+          <Bar value={total ? rows.length / total : 0} />
         </View>
+        {rows.length === 0 ? <Text style={[s.muted, { textAlign: 'center' }]}>{t('teacher.noResults')}</Text> : (
+          <>
+            <Donut rings={hasGrades ? [outer, inner] : [outer]} selected={selected} onSelect={pick} size={Math.min(260, width - 80)}
+              centre={String(rows.length)} caption={t('analytics.tested')} />
+            <Legend title={t('analytics.outerRing')} slices={outer} selected={selected} onPick={pick} name={name} pct={pct} />
+            {hasGrades && <Legend title={t('analytics.innerRing')} slices={inner} selected={selected} onPick={pick} name={name} pct={pct} />}
+            <Text style={st.note}>{t(selected ? 'analytics.filtered' : 'analytics.tapHint', { name: selected ? name(selected) : '' })}</Text>
+          </>
+        )}
+      </Card>
+
+      {shown.length > 0 && <SectionH title={t('analytics.childrenH', { n: shown.length })}
+        action={selected ? <LinkBtn icon="x" title={t('analytics.clear')} onPress={() => setSelected(null)} /> : undefined} />}
+      {shown.map((r) => {
+        const o = outcomeOf(r);
+        const g = gradeOf(r);
+        const more = () => router.push(r.detailed
+          ? { pathname: '/results/[testId]', params: { testId: r.detailed.id } }
+          : { pathname: '/teacher/result/[sessionId]', params: { sessionId: r.sessionId! } });
+        return (
+          <PostRow key={r.child.id} color={o && o in OUTCOME ? OUTCOME[o as keyof typeof OUTCOME].fill : GRADE[g ?? ''] ?? C.lilac}
+            title={r.child.display_name}
+            sub={[t('teacher.age', { age: r.child.age_band }), o, g && `${name(g)} (${t('ds.estimated')})`].filter(Boolean).join(' · ')}
+            onPress={() => router.push({ pathname: '/child/[childId]', params: { childId: r.child.id } })}
+            footer={<LinkBtn icon="chart-pie" title={t('teacher.moreDetails')} onPress={more} />} />
+        );
+      })}
+
+      {untested.length > 0 && !selected && (
+        <>
+          <SectionH title={t('analytics.untestedH', { n: untested.length })} />
+          {untested.map((k) => (
+            <PostRow key={k.id} color={C.lilac} title={k.display_name} sub={t('class.notTested')}
+              onPress={() => router.push({ pathname: '/child/[childId]', params: { childId: k.id } })} />
+          ))}
+        </>
       )}
-      {listUserCard.filter(searchFilter).map(renderAssignmentCard)}
     </ScrollView>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: { paddingLeft: 5, paddingRight: 5, paddingBottom: 24, backgroundColor: 'white', flexGrow: 1 },
-  chartContainer: { alignItems: 'center' },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, color: 'white', backgroundColor: DS.red, padding: 8, textAlign: 'center' },
-  empty: { textAlign: 'center', color: 'grey', margin: 20 },
-  legend: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 6, marginHorizontal: 8 },
-  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 6, borderRadius: 8, borderWidth: 2, borderColor: 'transparent' },
-  legendBox: { width: 18, height: 18, borderRadius: 3 },
-  legendText: { fontSize: 14, color: DS.navy },
-  note: { fontSize: 12, color: 'grey', margin: 8, textAlign: 'center' },
-  card: {
-    marginBottom: 20, paddingBottom: 10, borderRadius: 5, marginHorizontal: 10, borderWidth: 1, backgroundColor: 'white',
-    borderColor: 'white', elevation: 5, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 4, shadowOffset: { width: 0, height: 2 },
-  },
-  cardTitle: { fontSize: 18, fontWeight: 'bold', paddingHorizontal: 10, paddingVertical: 5, borderTopLeftRadius: 5, borderTopRightRadius: 5 },
-  cardDate: { color: 'black', paddingHorizontal: 10, paddingVertical: 5 },
-  cardMore: { color: 'black', fontWeight: 'bold', textAlign: 'right', paddingHorizontal: 10 },
+function Legend({ title, slices, selected, onPick, name, pct }: {
+  title: string; slices: Slice[]; selected: string | null; onPick: (k: string) => void; name: (k: string) => string; pct: (n: number) => string;
+}) {
+  return (
+    <View style={{ alignSelf: 'stretch', gap: 6 }}>
+      <Text style={st.legendH}>{title}</Text>
+      <View style={st.legend}>
+        {slices.filter((x) => x.value > 0).map((x) => (
+          <Pressable key={x.key} accessibilityRole="button" accessibilityState={{ selected: selected === x.key }} onPress={() => onPick(x.key)}
+            style={[st.chip, selected === x.key && st.chipOn]}>
+            <View style={[st.swatch, { backgroundColor: x.color }]} />
+            <Text style={st.chipText}>{`${name(x.key)}  ${x.value} (${pct(x.value)})`}</Text>
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+const st = StyleSheet.create({
+  title: { color: C.night, fontFamily: F.title, fontSize: 24, lineHeight: 38, textAlign: 'center' },
+  note: { color: C.dusk, fontFamily: F.ui, fontSize: 14, lineHeight: 24, textAlign: 'center' },
+  legendH: { color: C.dusk, fontFamily: F.uiBold, fontSize: 14, lineHeight: 24 },
+  legend: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  chip: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1.5,
+    borderColor: C.lilac, backgroundColor: C.white },
+  chipOn: { borderColor: C.night, backgroundColor: C.indigoTint },
+  swatch: { width: 16, height: 16, borderRadius: 8, borderWidth: 1, borderColor: 'rgba(29,26,78,0.25)' },
+  chipText: { color: C.night, fontFamily: F.uiMed, fontSize: 14, lineHeight: 24 },
 });
-
-export default AssignmentAnalytics;

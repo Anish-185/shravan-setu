@@ -1,87 +1,96 @@
-// Home: the Night band with the setu line, then "Screen a child" and the teacher's other places. Scrolls, so long
-// Telugu labels never get cut off. Developer screens (audio spike, calibration) live in Settings → Developer.
+// Home = the teacher's page, where login lands. Ideas from DhwaniSarathi audiometer/app/Screens/Educator/EducatorHome.js
+// (Apache-2.0, the DhwaniSarathi team): welcome with the teacher's name and institute, today's date, Create Classroom
+// and the classroom list. Ours: the Night band with the setu line, "Screen a child" first, sync and quiet-spot links.
+// Developer screens (audio spike, calibration) live in Settings → Developer.
 import { router, useFocusEffect, type Href } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Arch, Muggu, SetuLine } from '@/art';
+import { Band, Muggu } from '@/art';
+import { useAuth } from '@/auth';
 import { db } from '@/db';
-import { list, outbox } from '@/db/store';
+import { kvGet, list, outbox } from '@/db/store';
 import { useT, type Key } from '@/i18n';
 import { Icon, type IconName } from '@/icons';
-import { C, F, LangToggle, s, Tile } from '@/ui';
+import ClassroomList from '@/teacher/ClassroomList';
+import { ymd } from '@/teacher/data';
+import { C, F, LinkBtn, s, SectionH, Tile } from '@/ui';
 
 export default function Home() {
   const t = useT();
   const insets = useSafeAreaInsets();
+  const { teacher } = useAuth();
   const [counts, setCounts] = useState({ cases: 0, sync: 0 });
   // Back from a test, a case or a sync: the numbers may have moved.
   useFocusEffect(useCallback(() => setCounts({
-    cases: list(db, 'case').length, sync: outbox(db).filter((r) => r.status !== 'synced').length,
+    cases: list<{ status: string }>(db, 'case').filter((c) => !c.status.startsWith('closed')).length,
+    sync: outbox(db).filter((r) => r.status !== 'synced').length,
   }), []));
+  const school = kvGet(db, 'school_name');
+  const today = ymd(new Date()).split('-').reverse().join('-'); // DD-MM-YYYY, as the original; same in both languages
 
   return (
-    <ScrollView style={{ backgroundColor: C.paper }} contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}>
-      <View style={[st.band, { paddingTop: insets.top + 6 }]}>
-        <Muggu color={C.marigold} opacity={0.13} />
-        <View style={st.langRow}><LangToggle onNight /></View>
-        <View style={st.hero}>
-          <View style={{ flex: 1, paddingBottom: 22 }}>
-            <Text style={st.name} accessibilityRole="header">Shravan{'\n'}Setu</Text>
-            <Text style={st.sub}>{t('title.home')}</Text>
-          </View>
-          <Arch width={112} height={142} bg={C.indigo} border={C.marigold} source={require('../../assets/images/peeps/home-teacher.png')}
-            imgWidth={95} imgHeight={128} offset={-6} />
+    <ScrollView style={{ backgroundColor: C.paper }} contentContainerStyle={{ paddingBottom: 28 }}>
+      <Band top={insets.top} title={t('home.welcome', { name: `\n${teacher ?? ''}` })} sub={school || t('children.pickSchool')}
+        figure={{ source: require('../../assets/images/peeps/home-teacher.png'), w: 95, h: 128 }}>
+        <View style={st.date}>
+          <Icon name="calendar-clock" size={16} color={C.marigold} />
+          <Text style={st.dateText}>{today}</Text>
         </View>
-        <SetuLine color={C.marigold} height={60} style={{ marginTop: -18 }} />
-      </View>
+      </Band>
 
       <View style={st.body}>
-        <Text style={s.muted}>{t('home.intro')}</Text>
         <Pressable accessibilityRole="button" onPress={() => router.push('/children')}
           style={({ pressed }) => [st.primary, pressed && s.pressed]}>
           <Muggu color={C.white} opacity={0.08} size={18} dot={1.6} />
           <Tile name="ear" tint={C.marigold} />
-          <Text style={st.primaryText}>{t('home.screen')}</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={st.primaryText}>{t('home.screen')}</Text>
+            <Text style={st.primarySub}>{t('home.screenSub')}</Text>
+          </View>
           <Icon name="chevron-right" size={22} color={C.white} />
         </Pressable>
-        <View>
-          <Row icon="folder-heart" tint={C.indigoTint} label="home.cases" n={counts.cases} href="/cases" />
-          <Row icon="cloud-upload" tint={C.marigoldTint} label="home.sync" n={counts.sync} href="/sync" />
-          <Row icon="calendar-clock" tint={C.indigoTint} label="title.rooms" n={0} href="/rooms" />
-          <Row icon="users" tint={C.marigoldTint} label="home.teacher" n={0} href="/teacher/login" />
-          <Row icon="settings" tint={C.greyTint} label="home.settings" n={0} href="/settings" />
+
+        <View style={st.tiles}>
+          <Small icon="folder-heart" tint={C.indigoTint} label="home.openCases" n={counts.cases} href="/cases" />
+          <Small icon="cloud-upload" tint={C.marigoldTint} label="home.sync" n={counts.sync} href="/sync" />
+          <Small icon="calendar-clock" tint={C.indigoTint} label="title.rooms" href="/rooms" />
         </View>
+
+        <SectionH title={t('teacher.classrooms')}
+          action={<LinkBtn icon="plus" title={t('home.newClass')} onPress={() => router.push('/teacher/create')} />} />
+        {kvGet(db, 'school_id') ? <ClassroomList /> : <Text style={s.muted}>{t('children.pickSchool')}</Text>}
       </View>
     </ScrollView>
   );
 }
 
-function Row({ icon, tint, label, n, href }: { icon: IconName; tint: string; label: Key; n: number; href: Href }) {
+function Small({ icon, tint, label, n, href }: { icon: IconName; tint: string; label: Key; n?: number; href: Href }) {
   const t = useT();
   return (
-    <Pressable accessibilityRole="button" onPress={() => router.push(href)} style={({ pressed }) => [st.row, pressed && { opacity: 0.7 }]}>
-      <Tile name={icon} tint={tint} />
-      <Text style={st.rowText}>{t(label)}</Text>
-      {n > 0 && <View style={st.count}><Text style={st.countText}>{n}</Text></View>}
-      <Icon name="chevron-right" size={20} color={C.dusk} />
+    <Pressable accessibilityRole="button" onPress={() => router.push(href)} style={({ pressed }) => [st.small, pressed && s.pressed]}>
+      <View style={st.smallTop}>
+        <Tile name={icon} tint={tint} size={38} />
+        {n !== undefined && <Text style={st.n}>{n}</Text>}
+      </View>
+      <Text style={st.smallText}>{t(label)}</Text>
     </Pressable>
   );
 }
 
 const st = StyleSheet.create({
-  band: { backgroundColor: C.night, overflow: 'hidden', paddingBottom: 4 },
-  langRow: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 18 },
-  hero: { flexDirection: 'row', alignItems: 'flex-end', gap: 10, paddingLeft: 22, paddingRight: 18, paddingTop: 2 },
-  name: { color: C.white, fontFamily: F.title, fontSize: 34, lineHeight: 42 },
-  sub: { color: C.bandText, fontFamily: F.title, fontSize: 18, lineHeight: 32, marginTop: 6 },
-  body: { padding: 20, paddingTop: 14, gap: 14 },
+  date: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', marginTop: 6, paddingHorizontal: 10,
+    paddingVertical: 2, borderRadius: 999, borderWidth: 1, borderColor: 'rgba(244,163,0,0.5)' },
+  dateText: { color: C.dawn, fontFamily: F.uiMed, fontSize: 14, lineHeight: 24 },
+  body: { padding: 20, paddingTop: 16, gap: 14 },
   primary: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: C.indigo, borderRadius: 24, padding: 16,
-    paddingHorizontal: 18, overflow: 'hidden', minHeight: 76 },
-  primaryText: { flex: 1, color: C.white, fontFamily: F.uiBold, fontSize: 18, lineHeight: 30 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 14, minHeight: 68, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: C.lilac },
-  rowText: { flex: 1, color: C.night, fontFamily: F.uiMed, fontSize: 17, lineHeight: 29 },
-  count: { backgroundColor: C.indigoTint, borderRadius: 999, paddingHorizontal: 11, minWidth: 30, alignItems: 'center' },
-  countText: { color: C.indigo, fontFamily: F.uiBold, fontSize: 14, lineHeight: 24 },
+    paddingHorizontal: 18, overflow: 'hidden', minHeight: 84 },
+  primaryText: { color: C.white, fontFamily: F.uiBold, fontSize: 19, lineHeight: 31 },
+  primarySub: { color: C.bandText, fontFamily: F.ui, fontSize: 14, lineHeight: 24 },
+  tiles: { flexDirection: 'row', gap: 10 },
+  small: { flex: 1, backgroundColor: C.white, borderRadius: 18, borderWidth: 1, borderColor: C.lilac, padding: 12, gap: 8 },
+  smallTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  n: { color: C.night, fontFamily: F.title, fontSize: 24, lineHeight: 36 },
+  smallText: { color: C.night, fontFamily: F.uiMed, fontSize: 14, lineHeight: 23 },
 });

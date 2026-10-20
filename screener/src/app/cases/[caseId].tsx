@@ -2,7 +2,7 @@
 // table). Screening follow-up, not a diagnosis.
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { events, moveCase, remindersFor, type CaseRec, type Facility } from '@/cases';
 import { cfg } from '@/config';
@@ -13,7 +13,7 @@ import { exportSession } from '@/result';
 import { LOST, nextStatuses, TREATMENTS } from '@/rules';
 import { TriageForm } from '@/triage';
 import { Icon } from '@/icons';
-import { Btn, C, Card, Chips, H, P, s, StatusPill } from '@/ui';
+import { Btn, C, Card, Chips, F, H, P, s, StatusPill } from '@/ui';
 
 export default function CaseDetail() {
   const t = useT();
@@ -44,7 +44,13 @@ export default function CaseDetail() {
 
   return (
     <ScrollView contentContainerStyle={s.screen}>
-      <H>{name}</H>
+      <Pressable accessibilityRole="button" accessibilityLabel={`${name}, ${t('result.childTests')}`}
+        onPress={() => router.push({ pathname: '/child/[childId]', params: { childId: c.child } })} style={st.child}>
+        <H>{name}</H>
+        <View style={{ flex: 1 }} />
+        <Icon name="history" size={18} color={C.indigo} />
+        <Text style={st.childLink}>{t('result.childTests')}</Text>
+      </Pressable>
       <View accessible accessibilityLabel={t('case.status', { status: t(`status.${c.status}` as never) })}>
         <StatusPill status={c.status} text={t(`status.${c.status}` as never)} />
       </View>
@@ -101,6 +107,8 @@ function localTime(iso: string) {
 }
 
 const st = StyleSheet.create({
+  child: { flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' },
+  childLink: { color: C.indigo, fontFamily: F.uiBold, fontSize: 15, lineHeight: 25 },
   route: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
   event: { flexDirection: 'row', gap: 12, alignItems: 'flex-start', borderLeftWidth: 2, borderLeftColor: C.lilac, marginLeft: 5,
     paddingLeft: 14, paddingBottom: 8 },

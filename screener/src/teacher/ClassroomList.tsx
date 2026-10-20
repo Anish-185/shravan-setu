@@ -1,58 +1,77 @@
-// Searchable classroom cards with a red header and "Classroom Strength". Copied from DhwaniSarathi
-// audiometer/app/Components/ClassroomList.js (Apache-2.0, the DhwaniSarathi team). Changed by us: classrooms come from
-// this phone (created classrooms plus children's class labels, src/teacher/data.ts) instead of
-// /educators/<EID>/classrooms/; cards link to /teacher/class; FlatList → map (the list sits inside the page's
-// ScrollView); fixed card width 350 → full width; texts via useT().
-import { Link, useFocusEffect } from 'expo-router';
+// Searchable classroom list for the teacher's home. Idea from DhwaniSarathi audiometer/app/Components/ClassroomList.js
+// (Apache-2.0, the DhwaniSarathi team): a search box and one card per classroom with its name and "Classroom
+// Strength". Ours: classrooms from this phone (src/teacher/data.ts); each card is a ticket with a muggu cover, the
+// children on this phone and the latest round's progress; tap opens the classroom.
+import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { useT } from '@/i18n';
-import { DS } from '@/original/paper';
-import { classrooms as loadClassrooms } from '@/teacher/data';
+import { Icon } from '@/icons';
+import { Cover } from '@/illustrations';
+import { assignments, classChildren, classrooms, roundResults } from '@/teacher/data';
+import { Bar, C, F, s } from '@/ui';
 
-const ClassroomList = () => {
+function load() {
+  return classrooms().map((c) => {
+    const rounds = assignments(c.label);
+    const last = rounds.sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
+    return { ...c, kids: classChildren(c.label).length, last: last ? { name: last.name, done: roundResults(last).length } : null };
+  });
+}
+
+export default function ClassroomList() {
   const t = useT();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [classrooms, setClassrooms] = useState(loadClassrooms);
-  // Back from creating a classroom or adding children: the list may have changed.
-  useFocusEffect(useCallback(() => setClassrooms(loadClassrooms()), []));
-
+  const [query, setQuery] = useState('');
+  const [rows, setRows] = useState(load);
+  // Back from creating a classroom, adding children or a test: counts may have moved.
+  useFocusEffect(useCallback(() => setRows(load()), []));
   const name = (label: string) => label || t('teacher.noClass');
-
-  const renderClassroomCard = (item: { label: string; count: number }) => (
-    <Link key={item.label} href={{ pathname: '/teacher/class', params: { label: item.label } }} asChild>
-      <Pressable style={[styles.card, { borderColor: DS.red, borderWidth: 1 }]}>
-        <Text style={styles.cardTitle}>{name(item.label)}</Text>
-        <Text style={styles.cardCode}>
-          <Text style={{ color: DS.red }}>{t('ds.classroomStrengthLabel')}</Text>
-          {item.count}
-        </Text>
-      </Pressable>
-    </Link>
-  );
-
-  const searchFilter = (item: { label: string }) => name(item.label).toLowerCase().includes(searchQuery.toLowerCase());
+  const shown = rows.filter((r) => name(r.label).toLowerCase().includes(query.trim().toLowerCase()));
 
   return (
-    <View style={styles.container}>
-      <TextInput style={styles.searchInput} placeholder={t('teacher.search')} placeholderTextColor="black" value={searchQuery}
-        onChangeText={setSearchQuery} />
-      {classrooms.length === 0 && <Text style={{ textAlign: 'center', color: 'grey' }}>{t('teacher.noClassrooms')}</Text>}
-      <View style={styles.listContainer}>{classrooms.filter(searchFilter).map(renderClassroomCard)}</View>
+    <View style={{ gap: 12 }}>
+      {rows.length > 3 && (
+        <View style={st.search}>
+          <Icon name="search" size={20} color={C.dusk} />
+          <TextInput style={st.searchInput} placeholder={t('teacher.search')} placeholderTextColor={C.dusk} value={query}
+            onChangeText={setQuery} accessibilityLabel={t('teacher.search')} />
+        </View>
+      )}
+      {rows.length === 0 && <Text style={s.muted}>{t('teacher.noClassrooms')}</Text>}
+      {shown.map((r) => (
+        <Pressable key={r.label} accessibilityRole="button" accessibilityLabel={`${name(r.label)}, ${t('ds.classStrength', { n: r.count })}`}
+          onPress={() => router.push({ pathname: '/teacher/class', params: { label: r.label } })}
+          style={({ pressed }) => [st.ticket, pressed && s.pressed]}>
+          <Cover seed={r.label || '-'} height={58}>
+            <Text style={st.title} numberOfLines={1}>{name(r.label)}</Text>
+          </Cover>
+          <View style={st.body}>
+            <View style={st.line}>
+              <Icon name="users" size={18} color={C.dusk} />
+              <Text style={st.meta}>{t('home.classLine', { strength: r.count, kids: r.kids })}</Text>
+              <Icon name="chevron-right" size={18} color={C.dusk} />
+            </View>
+            {r.last && (
+              <View style={{ gap: 6 }}>
+                <Text style={st.meta}>{t('home.lastRound', { name: r.last.name, done: r.last.done, total: r.count })}</Text>
+                <Bar value={r.count ? r.last.done / r.count : 0} />
+              </View>
+            )}
+          </View>
+        </Pressable>
+      ))}
     </View>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: { backgroundColor: 'white', borderColor: 'white', borderWidth: 5, borderRadius: 10, width: '100%' },
-  listContainer: { paddingHorizontal: 10 },
-  searchInput: {
-    height: 40, borderWidth: 1, borderRadius: 30, borderColor: DS.navy, paddingHorizontal: 10, marginHorizontal: 30, marginVertical: 10,
-  },
-  card: { marginBottom: 20, borderRadius: 10, overflow: 'hidden' },
-  cardTitle: { fontSize: 24, fontWeight: 'bold', paddingVertical: 5, backgroundColor: DS.red, paddingHorizontal: 10, color: 'white' },
-  cardCode: { fontSize: 18, paddingVertical: 5, color: 'black', paddingHorizontal: 10 },
+const st = StyleSheet.create({
+  search: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: C.white, borderWidth: 1.5, borderColor: C.lilac,
+    borderRadius: 999, paddingHorizontal: 16, minHeight: 50 },
+  searchInput: { flex: 1, color: C.night, fontFamily: F.ui, fontSize: 16, minHeight: 48 },
+  ticket: { backgroundColor: C.white, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: C.lilac },
+  title: { color: C.white, fontFamily: F.title, fontSize: 24, lineHeight: 38 },
+  body: { padding: 14, gap: 10 },
+  line: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  meta: { flex: 1, color: C.night, fontFamily: F.ui, fontSize: 15, lineHeight: 25 },
 });
-
-export default ClassroomList;
