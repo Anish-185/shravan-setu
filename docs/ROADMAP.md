@@ -27,5 +27,12 @@ Items planned for later rounds; none of them is built in this version.
 - **Teacher view: demo limitations (accepted 2026-10-20).** The teacher login is a demo login (name + a PIN kept on
   the phone, no account, no PIN reset; clearing the app's data resets it). Screening rounds ("assignments") are stored
   on the phone only and are not synced. Children added before the class label existed appear under "No class label";
-  there is no screen to edit a child's label yet. A real deployment would need proper teacher accounts, synced rounds
-  and label editing.
+  children can be moved between classrooms on the classroom screen. Classrooms and detailed-test results are also
+  kept on the phone only. A real deployment would need proper teacher accounts and synced classrooms, rounds and
+  detailed results.
+- **Original images: replace or license (flagged 2026-10-20).** The DhwaniSarathi images reused in the app have no
+  recorded source; several are Bing Image Creator output and two covers carry Freepik metadata (`ATTRIBUTION.md`).
+  Swap them for CC0 / own artwork, or record a licence, before any public release.
+- **Detailed test: masking and range.** Masked thresholds need a calibrated masking noise (dropped for now); the
+  loudest playable level is 30 dB at 500 Hz and 60 dB at 1-4 kHz with the current baseline, so higher thresholds show
+  as "not heard up to" that level.

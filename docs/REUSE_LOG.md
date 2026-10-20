@@ -356,3 +356,47 @@ Owner instruction: reuse the original DhwaniSarathi teacher, classroom, assignme
 - react-native-view-shot, expo-media-library, expo-clipboard: their features (share results as an image, copy
   assignment ID) are dropped, so not needed.
 
+
+## Original UI, second pass (2026-10-20)
+
+Owner instruction: reuse the original DhwaniSarathi code and assets as they are (the first pass rebuilt them in our
+design system and was too far from the original). Per-file plan: `docs/INTEGRATION_PLAN.md`; credits:
+`ATTRIBUTION.md`.
+
+### 1. Screens, state machine, images
+
+- Decision: (b) copy and adapt: BeforeTest1, QuietPlaceDetection, EarTest, AudiometryTest + utils/Audiometry,
+  Results, EducatorHome, EducatorCreate, ClassroomList, AssignmentList, AssignmentAnalytics, and 21 of their images.
+  Licence: Apache-2.0 (repo `LICENSE`). Image provenance is unclear for all of them and flagged in `ATTRIBUTION.md`
+  (Bing Image Creator C2PA tags, Freepik XMP, watermarked thumbnails not used).
+
+### 2. UI kit (their react-native-paper)
+
+- Candidates: react-native-paper 5.15.3 (MIT, 3.8 MB, maintained, last publish 2026-06-15; deps color, use-latest-callback,
+  @callstack/react-theme-provider; peer react-native-safe-area-context, already installed); rebuilding Button / Card /
+  ProgressBar in our `ui.tsx` (first pass).
+- Decision: (a) dependency. Keeps the copied JSX almost line for line. Its icon lookup would need
+  @expo/vector-icons (7 MB of icon fonts, and it failed to render under jest); instead `PaperProvider settings.icon`
+  draws the three icons the screens use with our Lucide set.
+
+### 3. Charts (their victory-native 36)
+
+- Candidates (searches in the first-pass entry above): victory-native 37.3.6 (MIT, 2025-01-14, the last of their SVG line,
+  peer react >= 16.6, depends only on victory-* / d3 / lodash, all MIT / ISC / BSD-3); victory-native 42 (Skia, a
+  different API); our 30-line react-native-svg pie from the first pass (no line charts).
+- Decision: (a) dependency, victory-native 37.3.6. Same components as their code (VictoryPie, VictoryChart, VictoryLine,
+  VictoryScatter, VictoryAxis, VictoryLegend, plus VictoryArea for the WHO bands). Measured +35 MB in node_modules
+  (over the 5 MB guideline; owner allowed it for a chart library). Renders under React 19 / RN 0.86 in jest
+  (`src/__tests__/victory.smoke.test.tsx`); jest needed it added to `transformIgnorePatterns` (ERR-047). The first-pass
+  `src/teacher/Pie.tsx` is removed.
+
+### 4. Share as PDF (their react-native-view-shot JPEG)
+
+- Candidates: expo-print 57.0.2 (MIT, Expo SDK module, in Expo Go, offline HTML → PDF); react-native-view-shot 6.1.1
+  (MIT, image only, needs html2canvas-pro peer on web); react-native-html-to-pdf (needs a dev build).
+- Decision: (a) expo-print + expo-sharing (already a dependency). All three share options open the phone's share sheet.
+
+### 5. Masking noise
+
+- Their masked WAVs carry near-silent noise; a proper narrow-band masking noise would need its own calibration.
+- Decision: drop the masked phase (config `detailed_test.masking`, false). Nothing to reuse or build.

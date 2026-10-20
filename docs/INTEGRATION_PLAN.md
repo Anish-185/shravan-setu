@@ -1,141 +1,149 @@
-# Integration plan: original teacher, classroom, assignment, analytics and results screens
+# Integration plan: the original DhwaniSarathi experience in Shravan Setu
 
-Date: 2026-10-20. Rollback point: git tag `pre-integration` (`33023fe37766c8c662c98d01d27706b3f3f3e33d`).
+Date: 2026-10-20. Rollback point: git tag `pre-original-ui` (`9ab43607506311a57273b23867f9ab02ff6ddd1f`). The earlier
+plan (tag `pre-integration`) rebuilt the original screens in our own design system and dropped grades, charts, images
+and the share menu; the owner judged it too far from the original. This plan **copies the original code and assets**
+from `audiometer/app/` (Apache-2.0, `LICENSE` in the repo root) and changes only what our app needs: Expo SDK 57,
+expo-router, data on the phone, our calibration. `audiometer/` itself is not edited. The originals have no licence
+headers; every copied file starts with a notice naming the original file and our changes (Apache-2.0 section 4(b)).
 
-We copy the original DhwaniSarathi screens (Apache-2.0, `LICENSE` in the repo root) from `audiometer/app/` into
-`screener/` and change only what our app needs. `audiometer/` itself is not edited. None of the original files carry a
-licence header, so there is none to keep; each copied file gets a header naming the original file and our changes
-(Apache-2.0 section 4(b): modified files carry a notice).
+Screening and referral tool, never a diagnosis. Our screening test (fixed level, PASS / RETEST / REFER) stays the
+default and is unchanged. The original threshold test comes in as an optional second mode, the **detailed hearing
+test**, offered after a REFER and from the teacher view. Its grades are labelled estimates.
 
-This is a screening and referral tool, never a diagnostic one. The original screens show hearing-loss grades
-(Normal / Mild / Moderate / ... from a pure-tone average in dB HL). Our app screens at one fixed level and measures no
-thresholds, so every grade, PTA, dB value and audiogram is replaced by our outcome (PASS / RETEST / REFER) and the
-per-frequency heard / not heard / not tested status.
+## Calibration decision (owner, 2026-10-20)
 
-## What the original screens do
+The original maps volume to dB with `MAX_DB = 75` for every frequency (`utils/CONFIG.js`, `dB2Vol`). That is an
+assumption, not a measurement, so it is **not used**. Every dB value in the new screens is **dB re: team baseline**:
+a tone at level L plays at `calibration.baseline_dbfs[f] + L` dB re the tone file's full scale (our provisional
+calibration: 7 adult volunteers, Redmi + Samsung, per frequency, so 500 Hz is corrected). Each frequency stops at the
+loudest level the phone can play (baseline + level <= 0): 30 dB at 500 Hz and 60 dB at 1-4 kHz with today's
+baseline. At 1-4 kHz the baseline is an upper bound limited by the playback floor (ERR-044), so values near 0 there
+may read too low; the results screen says so when it happens.
 
-### `Screens/Login.js` (teacher and student login)
+## Libraries (Expo Go, SDK 57)
 
-- Does: mobile number + password, signs in with Firebase Auth (`signInWithEmailAndPassword`), then fetches
-  `/logininfos/<uid>/` from the Django backend to decide teacher (Type 1 → `EducatorHome`) or student (`HomeNew`).
-  Also "Skip To Home" and a "Sign up" card.
-- Data: Firebase user + `LoginInfo {FID, Type}`.
-- Libraries: react-native-paper (`Card`, `TextInput`, `Button`, `PaperProvider` theme), react-i18next, firebase,
-  AsyncStorage, expo-router.
-- Changes: **Demo login** (labelled so on screen): teacher name + PIN kept on this phone (first login sets the PIN,
-  later logins must match it). No Firebase, no network, no student branch, no Skip / Sign-up. Paper components →
-  our `Card`, `s.input`, `Btn`. AsyncStorage → our `kv` table. i18next `t()` → our `useT()`.
+| Original library | Decision |
+|---|---|
+| react-native-paper 5.11 (all their screens) | **Used**, 5.15.3 (MIT, 3.8 MB). One app-wide `PaperProvider` with their theme (`src/original/paper.tsx`). Paper's icons are drawn with our Lucide set, so no icon font (@expo/vector-icons) is added |
+| victory-native 36 (pie, audiogram) | **Used**, 37.3.6 (MIT), the last release of the same SVG line (v42 is a different Skia library). Renders under our React 19 / RN 0.86 in jest (`src/__tests__/victory.smoke.test.tsx`); phone check in the checklist. 35 MB in node_modules (over the ~5 MB guideline; allowed by the owner for a chart library) |
+| expo-av (tones, recording) | Not used: our expo-audio player and mic (`useScreeningAudio`) |
+| react-native-view-shot + expo-media-library (share as image) | Not used: share is a PDF from **expo-print** (MIT, in Expo Go) through **expo-sharing** |
+| firebase, AsyncStorage, react-i18next, react-native-virtualized-view, react-native-floating-action, expo-clipboard | Not used: demo login (no Firebase), SQLite `kv`, our `useT()`, `ScrollView`; their unused help FAB and "Copy Assignment ID" dropped |
 
-### `Screens/Educator/EducatorHome.js` (teacher profile + classrooms)
+## Navigation
 
-- Does: fetches `/educators/<EID>` (name, institute), shows a header band (background image, avatar, "Welcome",
-  teacher name, institute), today's date, a "Create Classroom" button, a "Classrooms" bar and `<ClassroomList>`.
-- Data: `Educator {EID, EducatorName, InstituteName}`.
-- Libraries: react-native-virtualized-view (`ScrollView`), AsyncStorage, expo-router.
-- Changes: name from the demo login, institute = the school picked in Settings (`kv school_name`). Header images
-  (`background.png`, `profile.png`) → our Night band + `user-round` tile (the original images have no recorded
-  source). react-native-virtualized-view → React Native `ScrollView` (the list is small; not in Expo Go's set of
-  needed modules). "Create Classroom" → "Add children": our classrooms are made from children's class labels, so a
-  classroom appears when a child with that label is added. Keeps the date line and "Classrooms" bar.
+The original `_layout.js` is a `Slot` under an empty `Header`: there is **no bottom tab bar** in the original. We add a
+simple one (`src/TabBar.tsx`): Home, Children, Cases, Teacher, Settings; hidden while a screening or detailed test runs.
 
-### `Screens/Educator/EducatorCreate.js` (create classroom: name + strength)
+## Screens
 
-- Does: POST `/classrooms/` with `ClassroomName`, typed `Count`, `EID`.
-- Changes: **not copied.** Our class strength must be the real number of children (brief), so a typed strength
-  would be wrong. Its job is done by the class label field on our "Add a child" form.
+### 1. Pre-test checklist: `Screens/BeforeTest1.js` → `src/original/MakeSure.tsx`
 
-### `Components/ClassroomList.js` (searchable classroom cards)
+- Original: "Make sure.." title, six images in three rows (`images/shh.png`, `headphones.png`, `mute.png`,
+  `equalizer.png`, `silence.png`, `noise-pollution.png`), Paper `ProgressBar` (0.3) and a contained Next button
+  pushing `/Screens/QuietPlaceDetection`.
+- Change: Next calls `onNext`; the progress bar shows only in the detailed test (the screening flow has its stepper);
+  title margins reduced. Used in the screening flow after consent and in the detailed test.
 
-- Does: fetches `/educators/<EID>/classrooms/`, search box filters by name, each card shows `ClassroomName` and
-  "Classroom Strength: Count", links to `AssignmentList` with `CID`, `Count`.
-- Changes: data from local SQLite: children of the selected school grouped by `class_label` (strength = number of
-  children). Link → `/teacher/class?label=…`. Same search filter and card (title + strength) in our card style.
-  Children with no label are grouped as "No class label".
+### 2. Check your surrounding: `Screens/QuietPlaceDetection.js` → `src/original/Surrounding.tsx`
 
-### `Screens/Educator/AssignmentList.js` (a classroom's assignments)
+- Original: title, `images/microphone.png`, a coloured bar with the raw expo-av metering, Start/Stop Recording, and
+  Continue → `Alert` "Test Confirmation" (High / Moderate / Low noise from fixed -40 / -80 dB) with Stop / Continue.
+- Change: the reading is **our** room-noise measurement (rules `ambientLevel` and `apply500HzPolicy`, config
+  `noise.*`), moved unchanged from the screening screen into `measureAmbient`. The dialog keeps its title and buttons
+  and shows our relative value and our rule's reason; bar colour follows our gate (red too noisy, amber 500 Hz left
+  out, blue fine). One timed measurement replaces Start/Stop.
 
-- Does: fetches `/classrooms/<CID>/assignments/` (each with `SubmittedCount`, deadline), search box, one Paper card
-  per assignment with a random stock cover image, deadline, class strength, progress `SubmittedCount/Count` with a bar,
-  "Copy Assignment ID" (students typed the ID into their own app). Bottom form: name + (unwired) deadline →
-  POST `/assignments/` (server default deadline: now + 7 days).
-- Libraries: react-native-paper, expo-clipboard, react-native-vector-icons/FontAwesome, `assets/AssignmentImages/*.jpg`.
-- Changes: an assignment = one **screening round** for a class, stored on the phone as a local record
-  (`assignment`: school, class label, name, created, deadline; not synced). Deadline keeps their default of 7 days.
-  Progress = children of the class screened in the round (a screening session started between creation and the end of
-  the deadline day) ÷ class strength, from our `screening_session` records. Paper → our `Card`; FontAwesome → our
-  `Icon`; random cover images dropped (no recorded source); "Copy Assignment ID" dropped (children have no app of their
-  own, so there is nothing to type it into); the unwired deadline input dropped.
+### 3. Which ear: `Screens/EarTest.js` → `src/original/WhichEar.tsx`
 
-### `Screens/Educator/AssignmentAnalytics.js` (assignment results + pie chart)
+- Original: "Which ear do you hear the sound in?", `images/questionmark.jpeg` (two ears), Play, Left / Right / None?,
+  alerts "Correct!", "Please switch your headphones!", "EQUIPMENT MALFUNCTION!"; their `left.wav` / `right.wav` at
+  volume 0.1.
+- Change: **our** left/right logic (was `LrStep`): random ear per Play, 1000 Hz at our calibrated screening level,
+  wired earphones only, `earphone_check.trials` correct in a row, wrong answer restarts the count; the alerts say our
+  messages; answers wait for a Play; a counter line under the buttons.
 
-- Does: fetches `/assignments/<AID>/userassignmentresults/`, puts each student into a hearing-loss category from the
-  worse ear's PTA (`Normal` -10..19, `Mild`, `Moderate`, `Severe`, `Profound`), draws a `VictoryPie` of the
-  categories (tap a slice to filter the list), labels with percentages, and lists students (name coloured by category,
-  age, gender, "More Details" → `Results`).
-- Libraries: victory-native (`VictoryPie`, `VictoryLabel`).
-- Changes: categories → our outcome (PASS / RETEST / REFER) of the child's latest screening in the round; colours →
-  our `OUTCOME` colours. Same pie, slice tap filters the list, percentage labels, card list. **No severity grades.**
-  Card: name, age band (no gender: we record none by default), outcome pill, "More details" → results.
-  Chart library swapped, see below.
+### 4. Detailed hearing test: `AudiometryTest.js` + `utils/Audiometry.js` → `src/original/AudiometryTest.tsx`, `src/original/Audiometry.ts`, `src/app/detailed/[childId].tsx`
 
-### `Screens/Results.js` (one test's results)
+- Original: start card (`images/atest_icon.jpeg`), masked/unmasked chip, "Can you hear the sound?", progress bar,
+  ear label and head image (`images/left_ear.png` / `right_ear.png`), threshold bar, frequency / Replay / dB chips,
+  Yes / No; state machine over ear × masking × frequency (250-8000 Hz) × level (0-140 dB, +10 per No, first Yes =
+  threshold); results POSTed to their server.
+- Change: frequencies 500, 1000, 2000, 4000 Hz (the ones with a calibration baseline and a tone file; config
+  `detailed_test.frequencies_hz`); levels 0, 10, 20 ... dB re: team baseline up to the loudest playable level
+  (`detailed_test.levels_db_re_team_baseline`); playback through our calibrated player, only while wired earphones are
+  detected (stops at once if unplugged; never the speaker); a frequency never heard is recorded as no response (they
+  dropped it, which lowered the average); first tone plays on Start.
+- **Masking: dropped.** Their masked files carry near-silent noise (Day 1 audit) and we have no calibrated masking
+  level, so a "masked" phase would not be real masking (config `detailed_test.masking`, false). Their results used
+  only the unmasked thresholds anyway.
+- Flow (`/detailed/[childId]`): our consent → Make sure (0.3) → our device check → Check your surrounding (0.6) →
+  Which ear (1.0) → test → saved on the phone as `detailed_test` (points, device, earphone model, volume setting,
+  config version, calibration flags; not synced) → Your Results. Offered after a REFER (result screen button) and on
+  the teacher's classroom screen. Off on an uncalibrated phone.
 
-- Does: from the `results` param (list of `{ear, frequency, threshold, measurementType}`), computes a PTA per ear,
-  a category per ear and combined, shows a category table with dB HL ranges, left/right ear cards with ear images and
-  "NN dB", a Victory audiogram (two charts, one over a background image) and a share modal (view-shot image,
-  WhatsApp, a no-op "Share with Doctor").
-- Libraries: victory-native, react-native-view-shot, expo-sharing, expo-file-system, expo-media-library, AsyncStorage,
-  @expo/vector-icons, react-i18next.
-- Changes: param = our `sessionId`; data = our `screening_result` (`outcome`, `ear_outcomes`,
-  `frequency_results`). Keep the layout: title, top grid item (outcome + one-line meaning instead of category + dB
-  range), legend grid item (PASS / RETEST / REFER meanings instead of grade ranges), left / right ear cards (ear
-  outcome pill instead of "NN dB" + grade), and the audiogram grid item becomes a per-frequency table (heard / not
-  heard / not tested per ear). **No PTA, no grades, no dB thresholds, no audiogram.** Share modal dropped (no export of
-  child results as images; our session export stays on the test result step).
+### 5. Your Results: `Screens/Results.js` → `src/app/results/[testId].tsx`, `src/original/hearing.ts`
 
-### `utils/Audiometry.js`
+- Original: share icon + modal (Export to PDF, Share on WhatsApp, Share with Doctor), red "Your Results" band,
+  category description, category table (Normal -10-19 ... Profound 80+, dB HL), left / right ear cards (`leftear.png`,
+  `rightear.png`, "NN dB", category), "Your Audiogram" (Victory line + scatter, both ears, legend) and a second
+  audiogram over `audiogram-bg.png` with `legend.jpeg`. Data from the `results` param; sample data if missing.
+- Change: data from the stored detailed test; grades from config `hearing_grades` (WHO World report on hearing 2021,
+  Table 1; Olusanya et al. 2019, doi:10.2471/BLT.19.230367, their own citation); each grade says "Estimated"; table
+  header "Range (WHO, dB HL)" with a source line saying our values are dB re: team baseline; one small line
+  "Estimated from a phone test with provisional calibration." (shown while the calibration is provisional); a note
+  under the audiogram when a 1-4 kHz value is 0 (ERR-044); no sample data. Ear average = mean of the four frequencies
+  (their PTA), "≥" when a frequency was not heard (counted at the loudest level). Charts: same Victory components on
+  our four frequencies; never-heard points are down triangles. **The coloured-band audiogram is redrawn** with Victory
+  bands at the WHO boundaries in the original colours: their `audiogram-bg.png` bands (0/20/40/70/90 dB) contradict the
+  table on the same screen. Share: all three options make a PDF with expo-print (numbers, table, WHO source, the
+  screening-only statement) and open the phone's share sheet; no accounts, no paid API. Category descriptions are the
+  original's text with typos fixed.
 
-- Does: the original test's state machine (ear × masking × frequency × amplitude sweep, `expo-av` tone playback),
-  producing the `{ear, frequency, threshold}` list that `Results.js` reads.
-- Changes: **not copied.** Our screening engine (`screener/src/engine/`, fixed level, rules in `src/rules/`) is
-  unchanged, as the brief requires. `Results.js` is adapted to read our engine's stored result instead.
+### 6. Teacher view: `Screens/Educator/EducatorHome.js`, `EducatorCreate.js`, `Components/ClassroomList.js` → `src/app/teacher/index.tsx`, `src/app/teacher/create.tsx`, `src/teacher/ClassroomList.tsx`
 
-### Server: `server/apigateway/` (`Educator`, `Classroom`, `Assignment`, `UserAssignmentResults`)
+- Original: red "Teacher Profile Page" strip, header over `background.png` with `profile.png` avatar, "Welcome",
+  name, institute, date box, Create Classroom → form (name + strength) → POST; navy "Classrooms" pill; search; cards
+  with a red title and "Classroom Strength: N".
+- Change: demo login kept (no Firebase); name from it, institute = the school picked in Settings; classrooms saved on
+  the phone (`classroom` record: name + typed strength, not synced). Children are put in a classroom through their
+  class label (synced with the child, migration 0005): on the classroom screen ("Add children to this classroom",
+  "Remove"), or by typing the class when adding a child. Class labels without a created classroom still show up
+  (strength = number of children).
 
-- `Educator {EID, EducatorName, InstituteName}`, `Classroom {CID, EID, ClassroomName, Count}`,
-  `Assignment {AID, CID, AssignmentName, Deadline}`, `UserAssignmentResults {AID, UID, CID, Results JSON}`; views add
-  `SubmittedCount` per assignment and join `User` details onto results.
-- Changes: none to `apigateway` (kept as the original). Our `referrals.Child` gets an optional `class_label`
-  (max 20 characters, e.g. "5A", no other personal data) with migration `0005`. It reaches the server through the
-  existing `/api/sync/` child upsert (`fields = "__all__"`), so sync code does not change. (`referrals.Classroom`, an
-  FK used by the seed command, is left as it is.)
+### 7. Assignments: `Screens/Educator/AssignmentList.js` → `src/app/teacher/class.tsx`
 
-## Libraries and Expo Go SDK 57
+- Original: Paper cards with a random cover from `AssignmentImages/0-5.jpg`, name, deadline (bell), class strength
+  (user), progress `SubmittedCount/Count` with a red bar, Copy Assignment ID; search; Create New Assignment (name +
+  an unwired deadline box).
+- Change: assignments on the phone; progress = children of the class tested in the round (screening or detailed
+  test, from creation to the end of the deadline day) ÷ class strength; deadline box wired (YYYY-MM-DD, default 7
+  days, as their server set); cover chosen from the assignment id (stable); covers 3 and 5 not used (watermarked stock
+  previews, see Attribution); Copy Assignment ID dropped (children have no app to type it into). Added: the class's
+  children with Screen / Detailed hearing test buttons.
 
-| Original library | Runs in our app? | Decision |
-|---|---|---|
-| victory-native 36 (pie, audiogram) | Its maintained SVG line, `victory-native@37.3.6` (MIT), installs 40 MB in 51 packages, over CLAUDE.md's ~5 MB ask-first limit; React 19 / RN 0.86 support not verified | Swap only the chart: a ~40-line pie on **react-native-svg** (already installed). Same props idea (`data` of `{x, y}`, `colorScale`, slice tap). Audiogram not needed (no thresholds) |
-| react-native-paper | Pure JS, would run, but our design system replaces its look | Not added; our `Card` / `Btn` / `s.input` |
-| firebase | Banned (CLAUDE.md) | Removed (demo login) |
-| react-native-vector-icons | Not installed; we have our own icon set | Our `Icon` |
-| react-native-virtualized-view | Not needed | React Native `ScrollView` |
-| expo-clipboard | In Expo Go | Not needed (copy ID dropped) |
-| react-native-view-shot, expo-media-library | In Expo Go | Not needed (share modal dropped) |
-| AsyncStorage | Not installed | Our SQLite `kv` table |
-| react-i18next | Not installed | Our `useT()`; new strings `TODO_TE` |
+### 8. Assignment analytics: `Screens/Educator/AssignmentAnalytics.js` → `src/app/teacher/assignment/[id].tsx`
 
-## Navigation (expo-router, `screener/src/app/`)
+- Original: red title, `VictoryPie` (outer 100, inner 45, their colours) with tap-to-filter, a `VictoryLabel` per
+  category (all drawn at one spot), child cards with the name on the category colour, age, gender, More Details.
+- Change: a child with a detailed test is placed by the estimated grade of the worse ear (six WHO grades; theirs had
+  five with different edges), a child with only a screening by PASS / RETEST / REFER (our outcome colours). Slice
+  labels show percentages; a legend under the chart lists both kinds with counts and also filters. No gender (we record
+  none). More Details opens the detailed results or the screening result.
 
-| Original route | New route | File |
-|---|---|---|
-| `/Screens/Login` (teacher branch) | `/teacher/login` | `src/app/teacher/login.tsx` |
-| `/Screens/Educator/EducatorHome?EID=` | `/teacher` | `src/app/teacher/index.tsx` + `src/teacher/ClassroomList.tsx` |
-| `/Screens/Educator/AssignmentList?CID=&Count=` | `/teacher/class?label=` | `src/app/teacher/class.tsx` |
-| `/Screens/Educator/AssignmentAnalytics?AID=` | `/teacher/assignment/[id]` | `src/app/teacher/assignment/[id].tsx` + `src/teacher/Pie.tsx` |
-| `/Screens/Results?results=` | `/teacher/result/[sessionId]` | `src/app/teacher/result/[sessionId].tsx` |
+### 9. Navigation and visuals
 
-Home gets one more row, "Teacher view", to `/teacher/login`. Local data queries live in `src/teacher/data.ts`.
+- Bottom tab bar (ours, see Navigation). Original header-banner pattern (red strip over `background.png`, picture on
+  the right) as `src/original/Banner.tsx` on Children (with `images/ears.jpeg`) and Cases. Not changed: Home's own
+  band, the screening child mode.
+
+## Data flow summary
+
+All on the phone (SQLite, offline). New local record types: `classroom`, `detailed_test` (and `assignment`, from the
+previous integration). Synced as before: child (with class label), consent, screening session and result, cases.
+Nothing new is synced; the detailed test result is not sent to the server (a later item).
 
 ## Not changed
 
-Screening engine, rules, timing, calibration, sync code, `audiometer/`, `server/apigateway/`.
+Screening engine, rules, timing, sync, audit log, calibration values, `audiometer/`, `server/`.

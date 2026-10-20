@@ -47,24 +47,52 @@ The original Django backend lives in `server/apigateway/`; our changes to `serve
 | Noise-standards info | `audiometer/app/Screens/LegalComplianceInformation.js` | Links to pollution control board websites |
 | English / Hindi UI | `audiometer/app/locales/` | i18next |
 
-### Integrated into `screener/` with our adaptations (2026-10-20)
+### Integrated into `screener/` (2026-10-20, second pass: original code and assets)
 
-These original screens are copied into our app and adapted (plan and per-file details: `docs/INTEGRATION_PLAN.md`).
-`audiometer/` itself is unchanged. The originals carry no licence headers; each adapted file starts with a notice naming
-the original file and what we changed (Apache-2.0 section 4(b)).
+Copied from `audiometer/app/` and changed only where our app needs it (plan and details: `docs/INTEGRATION_PLAN.md`).
+`audiometer/` itself is unchanged. The originals carry no licence headers; each copied file starts with a notice
+naming the original file and what we changed (Apache-2.0 section 4(b)).
 
 | Original (theirs) | In `screener/` | What we changed |
 |---|---|---|
-| `Screens/Login.js` (teacher branch) | `src/app/teacher/login.tsx` | Firebase sign-in → "Demo login" (teacher name + PIN kept on the phone); student branch, skip and sign-up removed |
-| `Screens/Educator/EducatorHome.js` | `src/app/teacher/index.tsx` | Name from the demo login, institute = selected school; header images → our band and icon; "Create Classroom" → "Add children" |
-| `Components/ClassroomList.js` | `src/teacher/ClassroomList.tsx` | Classrooms = children grouped by our optional class label; strength = number of children |
-| `Screens/Educator/AssignmentList.js` | `src/app/teacher/class.tsx` | Assignment = one screening round for a class, stored on the phone; progress = children screened ÷ class strength from our sessions; cover images and "Copy Assignment ID" removed |
-| `Screens/Educator/AssignmentAnalytics.js` | `src/app/teacher/assignment/[id].tsx`, `src/teacher/Pie.tsx` | Hearing-loss categories → our PASS / RETEST / REFER; VictoryPie → our react-native-svg donut; gender removed |
-| `Screens/Results.js` | `src/app/teacher/result/[sessionId].tsx` | PTA, grades, dB HL ranges and audiogram → our outcome and a per-ear, per-tone heard / not heard / not tested table; share modal removed |
+| `Screens/BeforeTest1.js` | `src/original/MakeSure.tsx` | Next calls back instead of routing; progress bar optional; margins |
+| `Screens/QuietPlaceDetection.js` | `src/original/Surrounding.tsx` | Reading = our relative room-noise rule; dialog shows our value and reason; bar colour = our gate; one timed measurement |
+| `Screens/EarTest.js` | `src/original/WhichEar.tsx` | Our left/right logic (random ear, calibrated 1000 Hz tone, N correct in a row); our messages |
+| `AudiometryTest.js` | `src/original/AudiometryTest.tsx` | Our calibrated playback, wired earphones only; masked chip removed; first tone on Start; results to the phone, not their server |
+| `utils/Audiometry.js` | `src/original/Audiometry.ts` | Levels in dB re: team baseline from config, capped at the loudest playable level; no-response recorded; masking dropped; no expo-av |
+| `Screens/Results.js` (+ its category logic) | `src/app/results/[testId].tsx`, `src/original/hearing.ts` | Stored detailed test; WHO grades from config, labelled estimates; provisional-calibration line; band audiogram redrawn at WHO edges; share = expo-print PDF via share sheet |
+| `Screens/Educator/EducatorHome.js` | `src/app/teacher/index.tsx` | Demo login name, school from Settings; no network |
+| `Screens/Educator/EducatorCreate.js` | `src/app/teacher/create.tsx` | Classroom saved on the phone; whole-number strength |
+| `Components/ClassroomList.js` | `src/teacher/ClassroomList.tsx` | Classrooms from the phone (created + class labels); full-width cards |
+| `Screens/Educator/AssignmentList.js` | `src/app/teacher/class.tsx` | Local assignments; progress = children tested ÷ strength; deadline wired; stable cover; Copy ID dropped; class children added |
+| `Screens/Educator/AssignmentAnalytics.js` | `src/app/teacher/assignment/[id].tsx` | Estimated grade or PASS / RETEST / REFER per child; legend with both; no gender |
+| `Screens/Login.js` (teacher branch, first pass) | `src/app/teacher/login.tsx` | Demo login instead of Firebase (unchanged from the first pass) |
+| Paper theme from each screen | `src/original/paper.tsx` | One provider; Paper icons drawn with our Lucide set |
+| EducatorHome header pattern | `src/original/Banner.tsx` | Ours, built from their header for the Children and Cases screens |
 
-Not copied: `Screens/Educator/EducatorCreate.js` (typed class strength; ours is counted), `utils/Audiometry.js` (our
-screening engine is unchanged). All data comes from the phone's SQLite; none of their network calls are kept. Every
-screen uses our design system and our English/Telugu strings.
+Moved, not copied: our own consent and device steps went from the screening screen to `src/steps.tsx` unchanged.
+Not copied: `notRequired/*`, `Maps.js`, `ML.js`, `JewelleryDetection.js`, signup/student screens, their tone WAVs
+(we play our own generated tones), `audiogram-bg.png` and `legend.jpeg` (redrawn, see the plan).
+
+#### Original images used (`screener/assets/images/original/`)
+
+Copied from `audiometer/app/assets/`, some resized and stripped of metadata to keep the app small (sizes in brackets).
+The original repo records **no source or licence for any image**; the repo's Apache-2.0 licence covers them only if
+the original team made them. What the files themselves show:
+
+| File (theirs) | Used on | Provenance found in the file | Flag |
+|---|---|---|---|
+| `images/shh.png`, `headphones.png`, `mute.png`, `equalizer.png`, `silence.png`, `noise-pollution.png` (128 px) | Make sure | None. Flat-icon style typical of icon sites (e.g. Flaticon, which needs attribution under its own licence) | **Unclear source** |
+| `images/microphone.png` (→ 400 px), `left_ear.png`, `right_ear.png` (→ 500 px) | Surrounding, detailed test | None in the PNGs; same style as the next row | **Probably AI-generated, unclear** |
+| `images/questionmark.jpeg`, `atest_icon.jpeg` (→ 500 px), `ears.jpeg` (→ 600 px) | Which ear, detailed test, Children banner | C2PA tag: "AI Generated Image", Bing Image Creator, 2023-12-15 | **AI-generated (Bing); copyright status unclear** |
+| `leftear.png`, `rightear.png` (320 px) | Results ear cards | None | **Unclear source** |
+| `background.png` (→ 1200 px), `profile.png` (→ 300 px) | Teacher page, Create Classroom, banners | None | **Unclear source** |
+| `AssignmentImages/0.jpg`, `2.jpg` (→ 800 px) | Assignment covers | XMP: "Freepik Company S.L. - www.freepik.com" | **Freepik: free use needs attribution; not on our allowlist** |
+| `AssignmentImages/1.jpg` (→ 800 px), `4.jpg` (WebP, → JPEG 800 px) | Assignment covers | 1: Adobe Illustrator export; 4: none | **Unclear source** |
+| `AssignmentImages/3.jpg`, `5.jpg` | **Not used** | 225 px thumbnails with a faint stock watermark | Watermarked previews |
+
+Until the owner decides, these images are used as the original team shipped them, credited here to the
+DhwaniSarathi team. Replacing any of them is a file swap in `screener/assets/images/original/` (same name).
 
 ## Our features
 
