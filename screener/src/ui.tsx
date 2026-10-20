@@ -151,6 +151,74 @@ export function Warn({ children }: { children: ReactNode }) {
   );
 }
 
+/** Estimated-grade colours (config hearing_grades, WHO 2021): one warm hue, light to dark (an ordered scale), apart
+ *  from the PASS / RETEST / REFER colours so a chart can show both. GRADE_ON is the text colour on each. */
+export const GRADE: Record<string, string> = {
+  Normal: '#FFF3D6', Mild: '#FFDB9A', Moderate: '#F9B862', 'Moderately severe': '#EE8A4A', Severe: '#C24F25', Profound: '#8F2A00',
+};
+export const GRADE_ON = (g: string) => (g === 'Severe' || g === 'Profound' ? C.white : C.night);
+/** Ear colours, the audiogram convention: left ear blue cross, right ear red circle (indigo and coral here). */
+export const EAR = { left: C.indigo, right: C.coral } as const;
+
+/** A list row standing on a bridge post: coloured bar on the left edge, title, second line, extra content, chevron. */
+export function PostRow({ color, title, sub, children, footer, onPress, label }: {
+  color: string; title: string; sub?: string; children?: ReactNode; onPress?: () => void; label?: string;
+  /** Own buttons under the row, outside its tap area (a button inside a button is not allowed). */
+  footer?: ReactNode;
+}) {
+  return (
+    <View style={s.post}>
+      <View style={[s.postBar, { backgroundColor: color }]} />
+      <View style={{ flex: 1 }}>
+        <Pressable accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={label} onPress={onPress} disabled={!onPress}
+          style={({ pressed }) => [s.postMain, pressed && { opacity: 0.75 }]}>
+          <View style={{ flex: 1, gap: 4, paddingVertical: 12 }}>
+            <Text style={s.postTitle}>{title}</Text>
+            {!!sub && <Text style={s.postSub}>{sub}</Text>}
+            {children}
+          </View>
+          {onPress && <Icon name="chevron-right" size={20} color={C.dusk} />}
+        </Pressable>
+        {footer && <View style={{ paddingBottom: 8 }}>{footer}</View>}
+      </View>
+    </View>
+  );
+}
+
+/** Section heading: three muggu dots, the title, and an optional action on the right. */
+export function SectionH({ title, action }: { title: string; action?: ReactNode }) {
+  return (
+    <View style={s.sectionH}>
+      <View style={{ flexDirection: 'row', gap: 3 }}>
+        {[C.marigold, C.indigo, C.coral].map((c) => <View key={c} style={[s.dot, { backgroundColor: c }]} />)}
+      </View>
+      <Text accessibilityRole="header" style={s.sectionTitle}>{title}</Text>
+      {action}
+    </View>
+  );
+}
+
+/** Small text button for a section heading or a card corner. */
+export function LinkBtn({ icon, title, onPress }: { icon?: IconName; title: string; onPress: () => void }) {
+  return (
+    <Pressable accessibilityRole="button" onPress={onPress} hitSlop={8} style={({ pressed }) => [s.linkBtn, pressed && s.pressed]}>
+      {icon && <Icon name={icon} size={18} color={C.indigo} />}
+      <Text style={s.linkBtnText}>{title}</Text>
+    </Pressable>
+  );
+}
+
+/** Progress track: indigo fill with a marigold head, 0..1. */
+export function Bar({ value, color = C.indigo }: { value: number; color?: string }) {
+  const pct = Math.max(0, Math.min(1, value)) * 100;
+  return (
+    <View style={s.track} accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: 100, now: Math.round(pct) }}>
+      <View style={[s.fill, { width: `${pct}%`, backgroundColor: color }]} />
+      {pct > 0 && <View style={[s.head, { left: `${pct}%` }]} />}
+    </View>
+  );
+}
+
 export const H = ({ children }: { children: ReactNode }) => <Text accessibilityRole="header" style={s.h}>{children}</Text>;
 export const P = ({ children }: { children: ReactNode }) => <Text style={s.p}>{children}</Text>;
 
@@ -200,5 +268,20 @@ export const s = StyleSheet.create({
     minHeight: 52, color: C.night, fontFamily: F.ui, fontSize: 16 },
   warn: { color: C.warnText, fontFamily: F.uiBold, fontSize: 16, lineHeight: 27 },
   ok: { color: C.okText, fontFamily: F.uiBold, fontSize: 16, lineHeight: 27 },
+  post: { flexDirection: 'row', gap: 12, backgroundColor: C.white, borderRadius: 16, borderWidth: 1, borderColor: C.lilac,
+    overflow: 'hidden', minHeight: 64 },
+  postMain: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingRight: 12 },
+  postBar: { width: 8, alignSelf: 'stretch' },
+  postTitle: { color: C.night, fontFamily: F.uiBold, fontSize: 17, lineHeight: 28 },
+  postSub: { color: C.dusk, fontFamily: F.ui, fontSize: 15, lineHeight: 25 },
+  sectionH: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 10, marginTop: 6 },
+  dot: { width: 6, height: 6, borderRadius: 3 },
+  sectionTitle: { flexGrow: 1, flexShrink: 1, minWidth: '45%', color: C.night, fontFamily: F.title, fontSize: 22, lineHeight: 36 },
+  linkBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 40, paddingHorizontal: 4 },
+  linkBtnText: { color: C.indigo, fontFamily: F.uiBold, fontSize: 15, lineHeight: 25 },
+  track: { height: 10, borderRadius: 99, backgroundColor: C.lilac, justifyContent: 'center' },
+  fill: { position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 99 },
+  head: { position: 'absolute', width: 14, height: 14, marginLeft: -7, borderRadius: 7, backgroundColor: C.marigold, borderWidth: 2,
+    borderColor: C.white },
   tag: { fontSize: 12, lineHeight: 20, fontFamily: F.ui, color: '#7A4F00', backgroundColor: C.marigoldTint, paddingHorizontal: 6, borderRadius: 4 },
 });

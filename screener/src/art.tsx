@@ -1,10 +1,10 @@
 // Original artwork for Direction B v2 (docs/DESIGN.md): the muggu lattice, the setu line, arch windows and the
-// bridge-arch stepper. Static drawings; nothing here animates.
+// bridge-arch stepper, and the band that opens each screen. Static drawings; nothing here animates.
 import { useId, type ReactNode } from 'react';
-import { Image, View, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'react-native';
+import { Image, Text, View, type ImageSourcePropType, type StyleProp, type ViewStyle } from 'react-native';
 import { Circle, Defs, G, Line, Path, Pattern, Rect, Svg, Text as SvgText } from 'react-native-svg';
 
-import { C, F } from '@/ui';
+import { C, F, LangToggle } from '@/ui';
 
 /** Muggu-inspired lattice: a dot grid with a looping line passing between the dots. Fills its parent. */
 export function Muggu({ color, opacity, size = 22, dot = 2.2 }: { color: string; opacity: number; size?: number; dot?: number }) {
@@ -82,6 +82,34 @@ export function Stepper({ current, label }: { current: number; label: string }) 
           );
         })}
       </Svg>
+    </View>
+  );
+}
+
+/** The Night band that opens a screen: muggu lattice, title, a line under it, an optional figure in an arch on the
+ *  right (or any `side` content), and the setu line along the bottom. `top` adds the status-bar inset and the
+ *  language toggle, for tab screens that draw their own header. */
+export function Band({ title, sub, figure, side, top, children }: {
+  title: string; sub?: string; figure?: { source: ImageSourcePropType; w: number; h: number }; side?: ReactNode;
+  top?: number; children?: ReactNode;
+}) {
+  return (
+    <View style={{ backgroundColor: C.night, overflow: 'hidden', paddingTop: top === undefined ? 14 : top + 6 }}>
+      <Muggu color={C.marigold} opacity={0.13} />
+      {top !== undefined && <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 18 }}><LangToggle onNight /></View>}
+      <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 12, paddingLeft: 22, paddingRight: 18 }}>
+        <View style={{ flex: 1, paddingBottom: 18, gap: 4 }}>
+          <Text accessibilityRole="header" style={{ color: C.white, fontFamily: F.title, fontSize: 28, lineHeight: 44 }}>{title}</Text>
+          {!!sub && <Text style={{ color: C.bandText, fontFamily: F.ui, fontSize: 16, lineHeight: 27 }}>{sub}</Text>}
+          {children}
+        </View>
+        {figure && (
+          <Arch width={Math.round(figure.w * 1.12)} height={Math.round(figure.h * 1.08)} bg={C.indigo} border={C.marigold}
+            source={figure.source} imgWidth={figure.w} imgHeight={figure.h} offset={-6} />
+        )}
+        {side}
+      </View>
+      <SetuLine color={C.marigold} height={44} style={{ marginTop: figure ? -14 : -6 }} />
     </View>
   );
 }

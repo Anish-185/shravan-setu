@@ -1643,5 +1643,285 @@
   "en": "Referral cases: {n}. Tap a case to update its status.",
   "te": "రిఫరల్ కేసులు: {n}. స్థితిని మార్చడానికి కేసును నొక్కండి.",
   "where": "Cases screen: header banner text"
+ },
+ "title.history": {
+  "en": "Child's tests",
+  "te": "TODO_TE",
+  "where": "Screen title in the header: one child's tests over time"
+ },
+ "login.tagline": {
+  "en": "School hearing screening and referral",
+  "te": "TODO_TE",
+  "where": "Login screen: one line under the app name"
+ },
+ "login.firstTime": {
+  "en": "First time on this phone: type your name and choose a PIN of 4 to 8 digits. Demo login: it stays on this phone.",
+  "te": "TODO_TE",
+  "where": "Login screen, shown before the first login"
+ },
+ "home.welcome": {
+  "en": "Welcome,{name}",
+  "te": "TODO_TE",
+  "where": "Home band title; {name} = a line break and the teacher's name (the name shows on its own line)"
+ },
+ "home.screenSub": {
+  "en": "Pick a child, then start the test",
+  "te": "TODO_TE",
+  "where": "Home: second line on the big 'Screen a child' button"
+ },
+ "home.openCases": {
+  "en": "Open cases",
+  "te": "TODO_TE",
+  "where": "Home: small tile, referral cases not yet closed (count shown above)"
+ },
+ "home.newClass": {
+  "en": "New classroom",
+  "te": "TODO_TE",
+  "where": "Home: small button beside the 'Classrooms' heading"
+ },
+ "home.classLine": {
+  "en": "Strength {strength} · {kids} on this phone",
+  "te": "TODO_TE",
+  "where": "Classroom card: class strength typed by the teacher, and children added on this phone"
+ },
+ "home.lastRound": {
+  "en": "{name}: {done} of {total} tested",
+  "te": "TODO_TE",
+  "where": "Classroom card: latest assignment and how many children were tested in it"
+ },
+ "assign.sub": {
+  "en": "Screening rounds for each class, with a deadline",
+  "te": "TODO_TE",
+  "where": "Assignments tab band: line under the title"
+ },
+ "assign.listH": {
+  "en": "Assignments ({n})",
+  "te": "TODO_TE",
+  "where": "Assignments tab: list heading with the number shown"
+ },
+ "assign.filter.open": {
+  "en": "Open",
+  "te": "TODO_TE",
+  "where": "Assignments tab filter chip: deadline not passed"
+ },
+ "assign.filter.past": {
+  "en": "Past deadline",
+  "te": "TODO_TE",
+  "where": "Assignments tab filter chip: deadline passed"
+ },
+ "assign.filter.all": {
+  "en": "All",
+  "te": "TODO_TE",
+  "where": "Assignments tab filter chip: every assignment"
+ },
+ "assign.pastDeadline": {
+  "en": "Deadline passed: {date}",
+  "te": "TODO_TE",
+  "where": "Assignment card: the deadline is over"
+ },
+ "assign.needClass": {
+  "en": "Create a classroom first (Home → New classroom).",
+  "te": "TODO_TE",
+  "where": "Create-assignment form when the school has no classroom"
+ },
+ "assign.weeks": {
+  "en": "{n} weeks",
+  "te": "TODO_TE",
+  "where": "Create-assignment form: quick deadline chip, e.g. '2 weeks' from today"
+ },
+ "assign.deadline": {
+  "en": "Deadline",
+  "te": "TODO_TE",
+  "where": "Create-assignment form: label for the deadline box (screen readers)"
+ },
+ "class.addHint": {
+  "en": "Tap a child to put them in this classroom.",
+  "te": "TODO_TE",
+  "where": "Classroom page: hint above the list of other children"
+ },
+ "class.notTested": {
+  "en": "not tested yet",
+  "te": "TODO_TE",
+  "where": "Child row: the child has no screening result yet"
+ },
+ "create.preview": {
+  "en": "Preview of the classroom card",
+  "te": "TODO_TE",
+  "where": "Create classroom: screen-reader label of the live preview"
+ },
+ "create.namePlaceholder": {
+  "en": "e.g. 5A",
+  "te": "TODO_TE",
+  "where": "Create classroom: example in the empty name box"
+ },
+ "children.sub": {
+  "en": "{n} children on this phone",
+  "te": "TODO_TE",
+  "where": "Children tab band: line under the title"
+ },
+ "children.empty": {
+  "en": "No children yet. Add the first child above.",
+  "te": "TODO_TE",
+  "where": "Children tab: empty list"
+ },
+ "history.class": {
+  "en": "Class {label}",
+  "te": "TODO_TE",
+  "where": "Child's tests band: the child's class"
+ },
+ "history.screenAgain": {
+  "en": "Screen again",
+  "te": "TODO_TE",
+  "where": "Child's tests: button, start a new screening for this child"
+ },
+ "history.openCase": {
+  "en": "Open the referral case",
+  "te": "TODO_TE",
+  "where": "Child's tests: button to the child's referral case"
+ },
+ "history.testsH": {
+  "en": "Tests ({n})",
+  "te": "TODO_TE",
+  "where": "Child's tests: list heading with the number of tests"
+ },
+ "history.empty": {
+  "en": "No tests yet. Tap Screen to start this child's first test.",
+  "te": "TODO_TE",
+  "where": "Child's tests: empty list"
+ },
+ "history.screening": {
+  "en": "Screening",
+  "te": "TODO_TE",
+  "where": "Child's tests: type of a test (the quick screening)"
+ },
+ "history.inRound": {
+  "en": "In assignment: {name}",
+  "te": "TODO_TE",
+  "where": "Child's tests: the test was done during this assignment of the child's class"
+ },
+ "history.individual": {
+  "en": "Individual test",
+  "te": "TODO_TE",
+  "where": "Child's tests: the test was not part of an assignment (the original's 'Self Test')"
+ },
+ "history.view": {
+  "en": "View result",
+  "te": "TODO_TE",
+  "where": "Child's tests: link on each test to its full result"
+ },
+ "result.childTests": {
+  "en": "All tests of this child",
+  "te": "TODO_TE",
+  "where": "Button/link to the child's tests from a result or a case"
+ },
+ "results.earsH": {
+  "en": "Left and right ear",
+  "te": "TODO_TE",
+  "where": "Detailed results: heading over the two ear cards and the comparison bars"
+ },
+ "results.bandsH": {
+  "en": "Audiogram with grade bands",
+  "te": "TODO_TE",
+  "where": "Detailed results: heading over the coloured-band audiogram"
+ },
+ "results.shareNote": {
+  "en": "All three make the same PDF and open your phone's share menu.",
+  "te": "TODO_TE",
+  "where": "Share menu on the detailed results: note under the three options"
+ },
+ "results.shareFailed": {
+  "en": "Could not make the PDF: {error}",
+  "te": "TODO_TE",
+  "where": "Detailed results: error if making or sharing the PDF fails"
+ },
+ "analytics.tested": {
+  "en": "tested",
+  "te": "TODO_TE",
+  "where": "Analytics donut: word under the number of children tested, in the middle of the chart"
+ },
+ "analytics.outerRing": {
+  "en": "Outer ring: screening result",
+  "te": "TODO_TE",
+  "where": "Analytics: legend heading for PASS / RETEST / REFER"
+ },
+ "analytics.innerRing": {
+  "en": "Inner ring: estimated grade from the detailed test (WHO 2021 grades, dB re: team baseline)",
+  "te": "TODO_TE",
+  "where": "Analytics: legend heading for the grade ring"
+ },
+ "analytics.tapHint": {
+  "en": "Tap a slice or a colour to see only those children.",
+  "te": "TODO_TE",
+  "where": "Analytics: hint under the chart"
+ },
+ "analytics.filtered": {
+  "en": "Showing: {name}. Tap it again to show everyone.",
+  "te": "TODO_TE",
+  "where": "Analytics: shown while a slice is selected; {name} = PASS, RETEST, REFER or a grade"
+ },
+ "analytics.childrenH": {
+  "en": "Children ({n})",
+  "te": "TODO_TE",
+  "where": "Analytics: heading of the child list"
+ },
+ "analytics.clear": {
+  "en": "Show all",
+  "te": "TODO_TE",
+  "where": "Analytics: button to clear the slice filter"
+ },
+ "analytics.untestedH": {
+  "en": "Not tested yet ({n})",
+  "te": "TODO_TE",
+  "where": "Analytics: heading of the children of the class with no test in this assignment"
+ },
+ "chart.noResponse": {
+  "en": "not heard up to {max} dB",
+  "te": "TODO_TE",
+  "where": "Audiogram read-out: the tone was never heard, up to the loudest level played"
+ },
+ "chart.notHeard": {
+  "en": "not heard (at the loudest level played)",
+  "te": "TODO_TE",
+  "where": "Audiogram legend: the ▽ mark"
+ },
+ "chart.tapColumn": {
+  "en": "Tap a frequency to read its values.",
+  "te": "TODO_TE",
+  "where": "Audiogram: hint under the chart"
+ },
+ "chart.earBarsLabel": {
+  "en": "Left and right ear, softest tone heard at each frequency",
+  "te": "TODO_TE",
+  "where": "Screen-reader label of the left/right comparison bars"
+ },
+ "chart.earBarsNote": {
+  "en": "Longer bar = a louder tone was needed (dB re: team baseline).",
+  "te": "TODO_TE",
+  "where": "Note under the left/right comparison bars"
+ },
+ "settings.sub": {
+  "en": "Teacher, school, earphones and data",
+  "te": "TODO_TE",
+  "where": "Settings tab band: line under the title"
+ },
+ "settings.teacherH": {
+  "en": "Teacher",
+  "te": "TODO_TE",
+  "where": "Settings: section heading for the logged-in teacher"
+ },
+ "settings.teacherLine": {
+  "en": "Logged in as {name} · School: {school}",
+  "te": "TODO_TE",
+  "where": "Settings: the logged-in teacher and the school"
+ },
+ "settings.logout": {
+  "en": "Log out",
+  "te": "TODO_TE",
+  "where": "Settings: button, ends the demo login; the app goes back to the login screen"
+ },
+ "assign.week": {
+  "en": "1 week",
+  "te": "TODO_TE",
+  "where": "Create-assignment form: quick deadline chip, one week from today"
  }
 }
