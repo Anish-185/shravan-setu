@@ -25,9 +25,10 @@ export default function Children() {
   useFocusEffect(useCallback(() => setCases(latestCases()), []));
   const [name, setName] = useState('');
   const [age, setAge] = useState<(typeof AGE_BANDS)[number] | null>(null);
+  const [label, setLabel] = useState(''); // optional class, e.g. "5A"; kept for the next child of the same class
 
   function add() {
-    put(db, 'child', Crypto.randomUUID(), { school, display_name: name.trim(), age_band: age });
+    put(db, 'child', Crypto.randomUUID(), { school, display_name: name.trim(), age_band: age, class_label: label.trim() });
     setName('');
     setAge(null);
     setChildren(list<Child>(db, 'child'));
@@ -40,6 +41,8 @@ export default function Children() {
         <H>{t('children.addH')}</H>
         <TextInput style={s.input} value={name} onChangeText={setName} placeholder={t('children.namePlaceholder')} />
         <Chips options={AGE_BANDS} value={age} onChange={setAge} />
+        <TextInput style={s.input} value={label} onChangeText={setLabel} maxLength={20} autoCapitalize="characters"
+          placeholder={t('children.classPlaceholder')} />
         <Btn icon="user-plus" title={t('children.add')} onPress={add} disabled={!school || !name.trim() || !age} />
       </Card>
       <H>{t('children.listH')}</H>
