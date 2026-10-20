@@ -16,9 +16,9 @@ import { get } from '@/db/store';
 import { createEngine, type Engine, type Snapshot } from '@/engine/engine';
 import { useT, type Key } from '@/i18n';
 import { Icon } from '@/icons';
-import BeforeTest1 from '@/original/MakeSure';
+import MakeSure from '@/original/MakeSure';
 import QuietPlaceDetection, { type Ambient } from '@/original/Surrounding';
-import EarTest from '@/original/WhichEar';
+import WhichEar from '@/original/WhichEar';
 import { ResultStep } from '@/result';
 import { saveSession } from '@/session';
 import { ConsentStep, DeviceStep } from '@/steps';
@@ -79,7 +79,7 @@ export default function Screen() {
         <ConsentStep childId={childId} onDone={(id) => { setConsentId(id); setStep('checklist'); }} />
       )}
       {step === 'checklist' && (
-        <BeforeTest1 onNext={() => setStep('device')} />
+        <MakeSure onNext={() => setStep('device')} />
       )}
       {step === 'device' && (
         <DeviceStep audio={audio} onMic={setMicStart} onDone={() => setStep('lr')} />
@@ -146,7 +146,7 @@ function LrStep({ audio, voice, onDone }: { audio: Audio; voice: Voice; onDone: 
   return (
     <View style={st.step}>
       <VoiceBtn onPress={() => voice.play(['lr'])} placeholder={isPlaceholder(['lr'])} />
-      <EarTest audio={audio} onDone={onDone} />
+      <WhichEar audio={audio} onDone={onDone} />
     </View>
   );
 }

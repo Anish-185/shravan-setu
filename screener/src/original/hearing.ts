@@ -38,14 +38,3 @@ export function worseEarGrade(points: Point[], cfg: Config) {
   const avgs = (['left', 'right'] as const).map((e) => calculateAverage(points, e)?.db).filter((x) => x !== undefined);
   return avgs.length ? determineHearingCategory(Math.max(...(avgs as number[])), cfg).category : null;
 }
-
-// The original's colours per grade (AssignmentAnalytics.js hearingCategoryColors; "Moderately severe" added by us
-// between their Moderate and Severe), and the audiogram band colours (their audiogram-bg.png and legend.jpeg).
-export const GRADE_COLOR: Record<string, string> = {
-  Normal: '#00FF00', Mild: '#ffbf00', Moderate: '#FFA500', 'Moderately severe': '#F4511E', Severe: '#d22b2b', Profound: '#800080',
-};
-export const BAND_COLOR: Record<string, string> = {
-  Normal: '#00B0F0', Mild: '#FFCCFF', Moderate: '#FFFF99', 'Moderately severe': '#FFE0A0', Severe: '#99FF99', Profound: '#F8CBAD',
-};
-/** Text colour on a grade colour: the original's white, navy on the three light ones so the name stays readable. */
-export const onGrade = (g: string) => (['Normal', 'Mild', 'Moderate'].includes(g) ? '#2b3467' : '#FFFFFF');

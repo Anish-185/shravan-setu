@@ -6,7 +6,6 @@
 | `make_rule_fixtures.py` | Writes `shared/fixtures/*.json` (hand-written expectations) |
 | `analyze_spike.py` | Phase 1 spike analysis (`docs/SPIKE.md` §5, CLAIMS SPK-01..05): `python scripts/analyze_spike.py data/raw/spike/*.json` |
 | `make_tones.py` | Generates click-free per-ear tone WAVs from `config/screening.json` into `screener/assets/tones/generated/` |
-| `make_art.py` | Draws the images on the original DhwaniSarathi screens (`screener/assets/images/original/`, made by Team JL); needs rsvg-convert and ImageMagick |
 
 | `analyze_phase4.py` | Device-trial session summaries (play latency, taps from play() and from playback start, late-start replays): `python scripts/analyze_phase4.py data/raw/phase5/*.json` |
 | `telugu_strings.py` | Writes `docs/TELUGU_STRINGS.md` and `docs/VOICE_SCRIPT.md`; `--check` is run by pytest |

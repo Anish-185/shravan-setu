@@ -8,7 +8,7 @@ import * as Crypto from 'expo-crypto';
 import * as Device from 'expo-device';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { useScreeningAudio } from '@/audio/useScreeningAudio';
 import { cfg, CONFIG_VERSION } from '@/config';
@@ -17,11 +17,28 @@ import { get, kvGet, put } from '@/db/store';
 import { useT } from '@/i18n';
 import AudiometryTest from '@/original/AudiometryTest';
 import type { Point } from '@/original/hearing';
-import BeforeTest1 from '@/original/MakeSure';
+import MakeSure from '@/original/MakeSure';
 import QuietPlaceDetection, { type Ambient } from '@/original/Surrounding';
-import EarTest from '@/original/WhichEar';
+import WhichEar from '@/original/WhichEar';
 import { ConsentStep, DeviceStep } from '@/steps';
 import { C, F, P, s } from '@/ui';
+
+const PRE = ['ds.makeSure', 'ds.checkSurrounding', 'ds.whichEar'] as const;
+
+/** Where the teacher is before the test: Make sure → Check your surrounding → Which ear (the original's progress bar). */
+function PreSteps({ current }: { current: number }) {
+  const t = useT();
+  return (
+    <View style={{ flexDirection: 'row', gap: 6 }} accessible accessibilityLabel={t(PRE[current])}>
+      {PRE.map((k, i) => (
+        <View key={k} style={{ flex: 1, gap: 4 }}>
+          <View style={{ height: 6, borderRadius: 3, backgroundColor: i <= current ? C.indigo : C.lilac }} />
+          <Text numberOfLines={2} style={{ color: i === current ? C.night : C.dusk, fontFamily: i === current ? F.uiBold : F.ui, fontSize: 12, lineHeight: 20 }}>{t(k)}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
 
 type Step = 'consent' | 'checklist' | 'device' | 'ambient' | 'lr' | 'test';
 
@@ -55,17 +72,19 @@ export default function Detailed() {
     router.replace({ pathname: '/results/[testId]', params: { testId: id } });
   }
 
+  const pre = ['checklist', 'ambient', 'lr'].indexOf(step === 'device' ? 'checklist' : step);
   return (
-    <ScrollView contentContainerStyle={[s.screen, { backgroundColor: C.white }]}>
+    <ScrollView contentContainerStyle={s.screen}>
       <Text style={{ color: C.dusk, fontFamily: F.uiBold, fontSize: 16, lineHeight: 27 }}>{child.display_name}</Text>
+      {pre >= 0 && <PreSteps current={pre} />}
       {!!audio.error && <Text style={s.warn}>{audio.error}</Text>}
       {step === 'consent' && <ConsentStep childId={childId} onDone={(id) => { setConsentId(id); setStep('checklist'); }} />}
-      {step === 'checklist' && <BeforeTest1 progress={0.3} onNext={() => setStep('device')} />}
+      {step === 'checklist' && <MakeSure onNext={() => setStep('device')} />}
       {step === 'device' && <DeviceStep audio={audio} onMic={setMicStart} onDone={() => setStep('ambient')} />}
       {step === 'ambient' && (
-        <QuietPlaceDetection audio={audio} micStart={micStart} progress={0.6} onContinue={(a) => { setAmbient(a); setStep('lr'); }} />
+        <QuietPlaceDetection audio={audio} micStart={micStart} onContinue={(a) => { setAmbient(a); setStep('lr'); }} />
       )}
-      {step === 'lr' && <EarTest audio={audio} progress={1} onDone={(ok) => { setLrPassed(ok); setStep('test'); }} />}
+      {step === 'lr' && <WhichEar audio={audio} onDone={(ok) => { setLrPassed(ok); setStep('test'); }} />}
       {step === 'test' && <AudiometryTest audio={audio} onDone={save} />}
     </ScrollView>
   );

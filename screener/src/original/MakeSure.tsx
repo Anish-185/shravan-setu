@@ -1,60 +1,44 @@
-// Pre-test checklist ("Make sure.."). Copied from DhwaniSarathi audiometer/app/Screens/BeforeTest1.js (Apache-2.0,
-// the DhwaniSarathi team), with its six images. Changed by us: Next calls onNext instead of pushing
-// /Screens/QuietPlaceDetection; the progress bar is shown only when `progress` is given (the screening flow has its
-// own stepper); one app-wide PaperProvider; i18next t() → our useT(); unused state and styles removed.
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { Button, ProgressBar } from 'react-native-paper';
+// Pre-test checklist ("Make sure…"). Idea and the six checks from DhwaniSarathi audiometer/app/Screens/BeforeTest1.js
+// (Apache-2.0, the DhwaniSarathi team): quiet place, headphones, notifications off, equalizer neutral, no talking,
+// noise cancelling off, then Next. Ours: our design and our own drawings (src/illustrations.tsx) instead of their
+// pictures; "headphones" made specific (wired earphones: our test never plays through Bluetooth or the speaker).
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
 import { useT, type Key } from '@/i18n';
-import { DS } from '@/original/paper';
+import {
+  EqualizerNeutral, NoiseCancelOff, NoTalking, NotificationsOff, QuietPlace, WiredEarphones,
+} from '@/illustrations';
+import { Btn, C, F } from '@/ui';
 
-const ITEMS: [number, Key][] = [
-  [require('@/assets/images/original/shh.png'), 'ds.quietPlace'],
-  [require('@/assets/images/original/headphones.png'), 'ds.headphones'],
-  [require('@/assets/images/original/mute.png'), 'ds.notificationsOff'],
-  [require('@/assets/images/original/equalizer.png'), 'ds.equalizerNeutral'],
-  [require('@/assets/images/original/silence.png'), 'ds.noTalking'],
-  [require('@/assets/images/original/noise-pollution.png'), 'ds.noiseCancelOff'],
+const ITEMS: [typeof QuietPlace, Key][] = [
+  [QuietPlace, 'ds.quietPlace'], [WiredEarphones, 'ds.headphones'], [NotificationsOff, 'ds.notificationsOff'],
+  [EqualizerNeutral, 'ds.equalizerNeutral'], [NoTalking, 'ds.noTalking'], [NoiseCancelOff, 'ds.noiseCancelOff'],
 ];
 
-const BeforeTest1 = ({ onNext, progress }: { onNext: () => void; progress?: number }) => {
+export default function MakeSure({ onNext }: { onNext: () => void }) {
   const t = useT();
+  const { width } = useWindowDimensions();
+  const size = Math.min(120, (width - 40 - 12) / 2 - 24);
   return (
-    <View style={styles.container}>
-      {progress !== undefined && <ProgressBar progress={progress} color={DS.navy} style={{ margin: 15 }} />}
-      <Text style={styles.title}>{t('ds.makeSure')}</Text>
-      {[0, 2, 4].map((row) => (
-        <View key={row} style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-          {ITEMS.slice(row, row + 2).map(([src, label], i) => (
-            <View key={label} style={{ padding: 0, margin: 0, width: '50%' }}>
-              <Image style={i === 0 ? styles.image1 : styles.image2} source={src} resizeMode="cover" />
-              <Text style={styles.title2}>{t(label)}</Text>
-            </View>
-          ))}
-        </View>
-      ))}
-      <Button style={styles.button} mode="contained" onPress={onNext}>
-        <Text style={styles.buttonText}>{t('ds.next')}</Text>
-      </Button>
+    <View style={{ gap: 16 }}>
+      <Text accessibilityRole="header" style={st.title}>{t('ds.makeSure')}</Text>
+      <View style={st.grid}>
+        {ITEMS.map(([Art, label]) => (
+          <View key={label} style={st.tile}>
+            <Art size={size} />
+            <Text style={st.label}>{t(label)}</Text>
+          </View>
+        ))}
+      </View>
+      <Btn title={t('ds.next')} onPress={onNext} />
     </View>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    padding: 24,
-    justifyContent: 'flex-start',
-    borderColor: 'white',
-    borderWidth: 5,
-    borderRadius: 10,
-  },
-  image1: { width: 90, height: 90, alignSelf: 'center', marginBottom: 10 },
-  image2: { width: 83, height: 83, alignSelf: 'center', marginBottom: 15 },
-  title: { fontSize: 28, marginBottom: 40, textAlign: 'center', fontWeight: 'bold' }, // marginBottom 65 in the original
-  title2: { fontSize: 18, fontWeight: 'bold', alignSelf: 'center', textAlign: 'center', marginBottom: 30 }, // 50
-  button: { marginTop: 'auto', paddingVertical: 15, width: '100%', borderColor: 'white' },
-  buttonText: { fontSize: 20, color: '#fff' },
+const st = StyleSheet.create({
+  title: { color: C.night, fontFamily: F.title, fontSize: 26, lineHeight: 40 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  tile: { width: '48%', flexGrow: 1, alignItems: 'center', gap: 6, backgroundColor: C.white, borderRadius: 20, paddingVertical: 12,
+    paddingHorizontal: 8, borderWidth: 1, borderColor: C.lilac },
+  label: { color: C.night, fontFamily: F.uiBold, fontSize: 15, lineHeight: 25, textAlign: 'center' },
 });
-
-export default BeforeTest1;

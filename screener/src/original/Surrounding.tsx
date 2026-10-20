@@ -1,18 +1,17 @@
-// "Check Your Surrounding": microphone illustration, a coloured reading bar, a record button and the "Test
-// Confirmation" dialog. Copied from DhwaniSarathi audiometer/app/Screens/QuietPlaceDetection.js (Apache-2.0, the
-// DhwaniSarathi team). Changed by us: the reading is OUR relative room-noise measurement (rules ambientLevel and
-// apply500HzPolicy, config noise.*), not expo-av's raw metering; the dialog shows our reading and our noise rule
-// instead of their fixed -40 / -80 dB bands; the bar colour follows our noise gate; Start/Stop recording → one
-// timed measurement; Continue calls onContinue instead of pushing /Screens/EarTest; i18next → useT().
+// "Check your surrounding". Idea from DhwaniSarathi audiometer/app/Screens/QuietPlaceDetection.js (Apache-2.0, the
+// DhwaniSarathi team): a microphone picture, a coloured reading, a measure button and a "Test Confirmation" step.
+// Ours: OUR relative room-noise measurement (rules ambientLevel and apply500HzPolicy, config noise.*), not expo-av's
+// raw metering; the confirmation shows our reading and our noise rule instead of their fixed -40 / -80 dB bands, inline
+// instead of an alert; the colour follows our noise gate; one timed measurement; our design and drawing.
 import { useState } from 'react';
-import { Alert, Image, StyleSheet, Text, View } from 'react-native';
-import { Button, ProgressBar } from 'react-native-paper';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { cfg } from '@/config';
 import { useT } from '@/i18n';
-import { DS } from '@/original/paper';
+import { MicMeter } from '@/illustrations';
 import { ambientLevel, apply500HzPolicy, v, type Sample } from '@/rules';
 import type { ScreeningAudio } from '@/audio/useScreeningAudio';
+import { Btn, C, Card, F, OUTCOME, s } from '@/ui';
 
 export type Ambient = { db: number | null; include500: boolean; reason: string };
 
@@ -30,73 +29,58 @@ export function measureAmbient(audio: ScreeningAudio, micStart: number, done: (a
   }, wait);
 }
 
-const QuietPlaceDetection = ({ audio, micStart, onContinue, progress }: {
-  audio: ScreeningAudio; micStart: number; onContinue: (a: Ambient) => void; progress?: number;
-}) => {
+export default function QuietPlaceDetection({ audio, micStart, onContinue }: {
+  audio: ScreeningAudio; micStart: number; onContinue: (a: Ambient) => void;
+}) {
   const t = useT();
-  const [isRecording, setIsRecording] = useState(false);
+  const [measuring, setMeasuring] = useState(false);
   const [result, setResult] = useState<Ambient | null>(null);
+  const [confirming, setConfirming] = useState(false);
 
-  const startRecording = () => {
-    setIsRecording(true);
-    measureAmbient(audio, micStart, (a) => { setResult(a); setIsRecording(false); });
+  const measure = () => {
+    setMeasuring(true);
+    setConfirming(false);
+    measureAmbient(audio, micStart, (a) => { setResult(a); setMeasuring(false); });
   };
 
   const noisy = result?.db != null && result.db > v(cfg, 'noise', 'gate_db_above_baseline');
-  // Was calculateRGB(raw metering); now our gate: red = too noisy, amber = 500 Hz left out, blue = quiet enough.
-  const barColor = !result ? DS.blue : noisy ? '#d22b2b' : !result.include500 ? '#E0A100' : DS.blue;
-
-  const showAlert = () => {
-    if (!result) return Alert.alert(t('ds.testConfirmation'), t('ds.checkFirst'));
-    let message = result.db === null ? t('ambient.couldNot') : t('ambient.value', { value: result.db.toFixed(1) });
-    message += `\n${t.reason(result.reason)}`;
-    if (noisy) message = `${t('ambient.noisy')}\n${message}`;
-    Alert.alert(t('ds.testConfirmation'), message, [
-      { text: t('ds.stop'), style: 'cancel' },
-      { text: t('common.continue'), onPress: () => onContinue(result) },
-    ], { cancelable: false });
-  };
+  // Our gate: rust = too noisy, amber = 500 Hz left out, teal = quiet enough.
+  const [rings, color] = !result ? [measuring ? 1 : 0, C.indigo] : noisy ? [3, OUTCOME.REFER.fill]
+    : !result.include500 ? [2, OUTCOME.RETEST.fill] : [1, OUTCOME.PASS.fill];
+  const reading = measuring ? t('ambient.measuring') : !result ? t('ds.notMeasured')
+    : result.db === null ? t('ambient.couldNot') : t('ambient.value', { value: result.db.toFixed(1) });
 
   return (
-    <View>
-      {progress !== undefined && <ProgressBar progress={progress} color={DS.navy} style={{ margin: 15 }} />}
-      <View style={{ padding: 16 }}>
-        <Text style={styles.title}>{t('ds.checkSurrounding')}</Text>
-        <Image style={{ width: 200, height: 200, alignSelf: 'center' }} source={require('@/assets/images/original/microphone.png')}
-          resizeMode="cover" />
-        <View style={[styles.bar, { backgroundColor: barColor }]}>
-          <Text style={styles.barText}>
-            {isRecording ? t('ambient.measuring') : !result ? t('ds.notMeasured')
-              : result.db === null ? t('ambient.couldNot') : t('ambient.value', { value: result.db.toFixed(1) })}
-          </Text>
-        </View>
-        <Button mode="contained" onPress={startRecording} disabled={isRecording} style={{ margin: 5 }}>
-          {isRecording ? t('ambient.measuring') : t(result ? 'ds.measureAgain' : 'ambient.measure')}
-        </Button>
-        <Button mode="contained" onPress={showAlert} disabled={isRecording} style={{ margin: 10 }}>
-          {t('common.continue')}
-        </Button>
+    <View style={{ gap: 16 }}>
+      <Text accessibilityRole="header" style={st.title}>{t('ds.checkSurrounding')}</Text>
+      <View style={{ alignItems: 'center' }}><MicMeter size={170} rings={rings} color={color} /></View>
+      <View style={[st.reading, { borderColor: result ? color : C.lilac }]} accessibilityLiveRegion="polite">
+        <View style={[st.dot, { backgroundColor: result ? color : C.lilac }]} />
+        <Text style={st.readingText}>{reading}</Text>
       </View>
+      {confirming && result ? (
+        <Card>
+          <Text style={st.h}>{t('ds.testConfirmation')}</Text>
+          {noisy && <Text style={s.warn}>{t('ambient.noisy')}</Text>}
+          <Text style={s.p}>{t.reason(result.reason)}</Text>
+          <Btn title={t('common.continue')} onPress={() => onContinue(result)} />
+          <Btn kind="plain" title={t('ds.measureAgain')} onPress={measure} />
+        </Card>
+      ) : (
+        <>
+          <Btn kind={result ? 'plain' : 'primary'} icon="mic" title={measuring ? t('ambient.measuring') : t(result ? 'ds.measureAgain' : 'ambient.measure')}
+            onPress={measure} disabled={measuring} />
+          {result && <Btn title={t('common.continue')} onPress={() => setConfirming(true)} disabled={measuring} />}
+        </>
+      )}
     </View>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  title: { fontSize: 24, alignSelf: 'center', fontWeight: 'bold', marginBottom: 24, color: DS.navy }, // marginBottom 40
-  bar: {
-    marginTop: 20,
-    paddingVertical: 30,
-    width: '100%',
-    minHeight: 90,
-    borderColor: 'white',
-    borderWidth: 1,
-    elevation: 10,
-    alignSelf: 'center',
-    marginBottom: 30,
-    borderRadius: 10,
-    justifyContent: 'center',
-  },
-  barText: { textAlign: 'center', fontSize: 15, fontWeight: 'bold', alignSelf: 'center', color: 'white', paddingHorizontal: 8 },
+const st = StyleSheet.create({
+  title: { color: C.night, fontFamily: F.title, fontSize: 26, lineHeight: 40 },
+  reading: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: C.white, borderWidth: 2, borderRadius: 18, padding: 16 },
+  dot: { width: 14, height: 14, borderRadius: 7 },
+  readingText: { flex: 1, color: C.night, fontFamily: F.uiBold, fontSize: 17, lineHeight: 28 },
+  h: { color: C.night, fontFamily: F.uiBold, fontSize: 18, lineHeight: 30 },
 });
-
-export default QuietPlaceDetection;
