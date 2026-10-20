@@ -1198,5 +1198,450 @@
   "en": "Not tested",
   "te": "పరీక్షించలేదు",
   "where": "Child result screen, per-tone status"
+ },
+ "ds.makeSure": {
+  "en": "Make sure..",
+  "te": "TODO_TE",
+  "where": "Pre-test checklist title (original DhwaniSarathi screen), above six pictures"
+ },
+ "ds.quietPlace": {
+  "en": "Quiet Place",
+  "te": "TODO_TE",
+  "where": "Pre-test checklist picture label"
+ },
+ "ds.headphones": {
+  "en": "Headphones",
+  "te": "TODO_TE",
+  "where": "Pre-test checklist picture label (wired earphones)"
+ },
+ "ds.notificationsOff": {
+  "en": "Notifications Off",
+  "te": "TODO_TE",
+  "where": "Pre-test checklist picture label"
+ },
+ "ds.equalizerNeutral": {
+  "en": "Equalizer Neutral",
+  "te": "TODO_TE",
+  "where": "Pre-test checklist picture label (phone sound equalizer flat)"
+ },
+ "ds.noTalking": {
+  "en": "No Talking",
+  "te": "TODO_TE",
+  "where": "Pre-test checklist picture label"
+ },
+ "ds.noiseCancelOff": {
+  "en": "Noise-Cancel Off",
+  "te": "TODO_TE",
+  "where": "Pre-test checklist picture label"
+ },
+ "ds.next": {
+  "en": "Next",
+  "te": "TODO_TE",
+  "where": "Button under the pre-test checklist"
+ },
+ "ds.checkSurrounding": {
+  "en": "Check Your Surrounding",
+  "te": "TODO_TE",
+  "where": "Room noise screen title"
+ },
+ "ds.testConfirmation": {
+  "en": "Test Confirmation",
+  "te": "TODO_TE",
+  "where": "Title of the dialog after the room noise check"
+ },
+ "ds.checkFirst": {
+  "en": "Please check the surrounding sound before you proceed for the test",
+  "te": "TODO_TE",
+  "where": "Dialog text when Continue is pressed before measuring room noise"
+ },
+ "ds.stop": {
+  "en": "Stop",
+  "te": "TODO_TE",
+  "where": "Dialog button: do not continue to the test"
+ },
+ "ds.notMeasured": {
+  "en": "Not measured yet",
+  "te": "TODO_TE",
+  "where": "Room noise bar before the first measurement"
+ },
+ "ds.measureAgain": {
+  "en": "Measure again",
+  "te": "TODO_TE",
+  "where": "Button: measure room noise again"
+ },
+ "ds.whichEar": {
+  "en": "Which ear do you hear the sound in?",
+  "te": "TODO_TE",
+  "where": "Left/right earphone check title"
+ },
+ "ds.play": {
+  "en": "Play",
+  "te": "TODO_TE",
+  "where": "Button: play the left/right check tone"
+ },
+ "ds.none": {
+  "en": "None?",
+  "te": "TODO_TE",
+  "where": "Button: no sound heard in either ear"
+ },
+ "ds.noneHeard": {
+  "en": "No sound in either ear? Check the earphones are plugged in and the media volume is up, then play again.",
+  "te": "TODO_TE",
+  "where": "Alert after None? in the left/right check"
+ },
+ "ds.correctSoFar": {
+  "en": "Correct in a row: {n} of {total}",
+  "te": "TODO_TE",
+  "where": "Left/right check counter under the buttons"
+ },
+ "ds.ptaTitle": {
+  "en": "Pure Tone Audiometry Test",
+  "te": "TODO_TE",
+  "where": "Detailed test start card title (original wording)"
+ },
+ "ds.startTest": {
+  "en": "Start Test",
+  "te": "TODO_TE",
+  "where": "Button: start the detailed test"
+ },
+ "ds.canYouHear": {
+  "en": "Can you hear the sound?",
+  "te": "TODO_TE",
+  "where": "Detailed test question above Yes / No"
+ },
+ "ds.progress": {
+  "en": "Progress",
+  "te": "TODO_TE",
+  "where": "Detailed test: label of the progress bar over frequencies"
+ },
+ "ds.threshold": {
+  "en": "Threshold",
+  "te": "TODO_TE",
+  "where": "Detailed test: label of the loudness bar, and its help title"
+ },
+ "ds.thresholdHelp": {
+  "en": "Loudness of this tone, in dB re: team baseline. It goes up in 10 dB steps until the child hears it.",
+  "te": "TODO_TE",
+  "where": "Detailed test: help text for the loudness bar"
+ },
+ "ds.replay": {
+  "en": "Replay",
+  "te": "TODO_TE",
+  "where": "Detailed test button: play the tone again"
+ },
+ "ds.earphonesNeeded": {
+  "en": "Plug in the wired earphones. Tones play through earphones only.",
+  "te": "TODO_TE",
+  "where": "Detailed test warning when no wired earphones are detected"
+ },
+ "ds.needsCalibration": {
+  "en": "The detailed test needs a calibrated phone (config calibration). This phone has no calibration, so the detailed test is off.",
+  "te": "TODO_TE",
+  "where": "Detailed test screen when the app is uncalibrated"
+ },
+ "ds.detailedTest": {
+  "en": "Detailed hearing test",
+  "te": "TODO_TE",
+  "where": "Screen title and teacher-view button for the optional detailed test"
+ },
+ "ds.detailedOffer": {
+  "en": "Detailed hearing test (optional)",
+  "te": "TODO_TE",
+  "where": "Button on a REFER result: start the optional detailed test"
+ },
+ "ds.yourResults": {
+  "en": "Your Results",
+  "te": "TODO_TE",
+  "where": "Detailed test results: title band"
+ },
+ "ds.share": {
+  "en": "Share",
+  "te": "TODO_TE",
+  "where": "Accessibility label of the share button on the results"
+ },
+ "ds.exportPdf": {
+  "en": "Export to PDF",
+  "te": "TODO_TE",
+  "where": "Share menu option"
+ },
+ "ds.shareWhatsApp": {
+  "en": "Share on WhatsApp",
+  "te": "TODO_TE",
+  "where": "Share menu option (opens the phone's share sheet)"
+ },
+ "ds.shareDoctor": {
+  "en": "Share with doctor",
+  "te": "TODO_TE",
+  "where": "Share menu option (opens the phone's share sheet)"
+ },
+ "ds.cancel": {
+  "en": "Cancel",
+  "te": "TODO_TE",
+  "where": "Share menu: close it"
+ },
+ "ds.estimateLine": {
+  "en": "Estimated from a phone test with provisional calibration.",
+  "te": "TODO_TE",
+  "where": "Small line under the results title"
+ },
+ "ds.estimatedGrade": {
+  "en": "Estimated: {grade}",
+  "te": "TODO_TE",
+  "where": "Results: heading with the grade of both ears together"
+ },
+ "ds.estimated": {
+  "en": "estimated",
+  "te": "TODO_TE",
+  "where": "Teacher analytics card: after a grade name"
+ },
+ "ds.rangeLine": {
+  "en": "Average hearing level in the {range} dB range (dB re: team baseline).",
+  "te": "TODO_TE",
+  "where": "Results: line under the estimated grade"
+ },
+ "ds.info.Normal": {
+  "en": "You can hear a whisper, rustling leaves, and ticking clocks.",
+  "te": "TODO_TE",
+  "where": "Results: what the Normal grade usually means (original wording)"
+ },
+ "ds.info.Mild": {
+  "en": "You can hear a conversation in a quiet room, but may have difficulty hearing a whisper or soft sounds.",
+  "te": "TODO_TE",
+  "where": "Results: what the Mild grade usually means (original wording)"
+ },
+ "ds.info.Moderate": {
+  "en": "You may have difficulty hearing some quieter conversations.",
+  "te": "TODO_TE",
+  "where": "Results: what the Moderate grade usually means (original wording)"
+ },
+ "ds.info.Moderately severe": {
+  "en": "You may have difficulty hearing a normal conversation. You may lip-read or use hearing aids to help with communication.",
+  "te": "TODO_TE",
+  "where": "Results: what the Moderately severe grade usually means (original wording)"
+ },
+ "ds.info.Severe": {
+  "en": "You can understand speech only if the speaker is close by.",
+  "te": "TODO_TE",
+  "where": "Results: what the Severe grade usually means (original wording)"
+ },
+ "ds.info.Profound": {
+  "en": "You may have problems understanding speech, and may not hear loud sounds such as lawn mowers or passing cars.",
+  "te": "TODO_TE",
+  "where": "Results: what the Profound grade usually means (original wording)"
+ },
+ "ds.grade.Normal": {
+  "en": "Normal",
+  "te": "TODO_TE",
+  "where": "WHO hearing grade name (table, cards, chart legend)"
+ },
+ "ds.grade.Mild": {
+  "en": "Mild",
+  "te": "TODO_TE",
+  "where": "WHO hearing grade name"
+ },
+ "ds.grade.Moderate": {
+  "en": "Moderate",
+  "te": "TODO_TE",
+  "where": "WHO hearing grade name"
+ },
+ "ds.grade.Moderately severe": {
+  "en": "Moderately severe",
+  "te": "TODO_TE",
+  "where": "WHO hearing grade name"
+ },
+ "ds.grade.Severe": {
+  "en": "Severe",
+  "te": "TODO_TE",
+  "where": "WHO hearing grade name"
+ },
+ "ds.grade.Profound": {
+  "en": "Profound",
+  "te": "TODO_TE",
+  "where": "WHO hearing grade name"
+ },
+ "ds.categories": {
+  "en": "Categories",
+  "te": "TODO_TE",
+  "where": "Results: grade table column header"
+ },
+ "ds.rangeHeader": {
+  "en": "Range (WHO, dB HL)",
+  "te": "TODO_TE",
+  "where": "Results: grade table column header"
+ },
+ "ds.whoCite": {
+  "en": "Grades: WHO World report on hearing (2021), average of 500, 1000, 2000 and 4000 Hz, in dB HL. Our values are dB re: team baseline, so the grade is an estimate.",
+  "te": "TODO_TE",
+  "where": "Results: source line under the grade table"
+ },
+ "ds.average": {
+  "en": "Average",
+  "te": "TODO_TE",
+  "where": "PDF report: column header"
+ },
+ "ds.audiogramH": {
+  "en": "Your Audiogram",
+  "te": "TODO_TE",
+  "where": "Results: audiogram card title"
+ },
+ "ds.audiogramP": {
+  "en": "An audiogram shows how loud sounds need to be at different frequencies for you to hear them.",
+  "te": "TODO_TE",
+  "where": "Results: audiogram explanation (original wording)"
+ },
+ "ds.noResponseNote": {
+  "en": "▼ = not heard up to the loudest level the phone can play; the average counts it at that level (≥).",
+  "te": "TODO_TE",
+  "where": "Results: note under the audiogram"
+ },
+ "ds.floorNote": {
+  "en": "Values near 0 dB at 1-4 kHz may be limited by the phone's playback floor, so the true level may be lower.",
+  "te": "TODO_TE",
+  "where": "Results: note when a 1-4 kHz value is 0 dB"
+ },
+ "ds.pdfNotDiagnosis": {
+  "en": "Screening and referral tool, not a diagnosis. Refer for a full hearing assessment by a qualified professional.",
+  "te": "TODO_TE",
+  "where": "PDF report: last line"
+ },
+ "ds.teacherProfile": {
+  "en": "Teacher Profile Page",
+  "te": "TODO_TE",
+  "where": "Teacher page: red title band"
+ },
+ "ds.createClassroom": {
+  "en": "Create Classroom",
+  "te": "TODO_TE",
+  "where": "Teacher page button, create screen title and button"
+ },
+ "ds.classroomName": {
+  "en": "Classroom Name",
+  "te": "TODO_TE",
+  "where": "Create classroom: name box"
+ },
+ "ds.classroomStrength": {
+  "en": "Classroom Strength",
+  "te": "TODO_TE",
+  "where": "Create classroom: number of children box"
+ },
+ "ds.classroomStrengthLabel": {
+  "en": "Classroom Strength: ",
+  "te": "TODO_TE",
+  "where": "Classroom card: before the number (keep the space at the end)"
+ },
+ "ds.classroomCreated": {
+  "en": "Classroom created successfully",
+  "te": "TODO_TE",
+  "where": "Alert after creating a classroom"
+ },
+ "ds.classStrength": {
+  "en": "Class Strength: {n}",
+  "te": "TODO_TE",
+  "where": "Assignment card line"
+ },
+ "ds.assignments": {
+  "en": "Assignments",
+  "te": "TODO_TE",
+  "where": "Classroom screen: list title"
+ },
+ "ds.createAssignment": {
+  "en": "Create New Assignment",
+  "te": "TODO_TE",
+  "where": "Classroom screen: form title and button"
+ },
+ "ds.assignmentName": {
+  "en": "Assignment Name",
+  "te": "TODO_TE",
+  "where": "Create assignment: name box"
+ },
+ "ds.deadlinePlaceholder": {
+  "en": "Deadline (YYYY-MM-DD, default {date})",
+  "te": "TODO_TE",
+  "where": "Create assignment: deadline box"
+ },
+ "ds.deadlineFormat": {
+  "en": "Deadline must be a date like 2026-10-31.",
+  "te": "TODO_TE",
+  "where": "Create assignment: wrong deadline format"
+ },
+ "ds.classChildren": {
+  "en": "Children in this classroom ({n})",
+  "te": "TODO_TE",
+  "where": "Classroom screen: children list title"
+ },
+ "ds.noChildrenInClass": {
+  "en": "No children in this classroom yet.",
+  "te": "TODO_TE",
+  "where": "Classroom screen: empty children list"
+ },
+ "ds.screen": {
+  "en": "Screen",
+  "te": "TODO_TE",
+  "where": "Classroom screen button: start a screening for this child"
+ },
+ "ds.removeFromClass": {
+  "en": "Remove",
+  "te": "TODO_TE",
+  "where": "Classroom screen button: take the child out of this classroom"
+ },
+ "ds.addChildrenToClass": {
+  "en": "Add children to this classroom",
+  "te": "TODO_TE",
+  "where": "Classroom screen: show the school's other children"
+ },
+ "ds.hideAddChildren": {
+  "en": "Hide the list",
+  "te": "TODO_TE",
+  "where": "Classroom screen: hide the other children"
+ },
+ "ds.analytics": {
+  "en": "Assignments Analytics",
+  "te": "TODO_TE",
+  "where": "Analytics title when the assignment has no name"
+ },
+ "ds.screeningWas": {
+  "en": "Screening: {outcome}",
+  "te": "TODO_TE",
+  "where": "Analytics card: the child's screening result next to a detailed-test grade"
+ },
+ "ds.legendNote": {
+  "en": "* Estimated grade from the detailed test (WHO 2021 grades, dB re: team baseline). PASS / RETEST / REFER: screening result, for children with no detailed test. Tap a slice or a colour to filter.",
+  "te": "TODO_TE",
+  "where": "Analytics: note under the chart legend"
+ },
+ "tab.home": {
+  "en": "Home",
+  "te": "TODO_TE",
+  "where": "Bottom tab bar"
+ },
+ "tab.children": {
+  "en": "Children",
+  "te": "TODO_TE",
+  "where": "Bottom tab bar"
+ },
+ "tab.cases": {
+  "en": "Cases",
+  "te": "TODO_TE",
+  "where": "Bottom tab bar"
+ },
+ "tab.teacher": {
+  "en": "Teacher",
+  "te": "TODO_TE",
+  "where": "Bottom tab bar"
+ },
+ "tab.settings": {
+  "en": "Settings",
+  "te": "TODO_TE",
+  "where": "Bottom tab bar"
+ },
+ "ds.bannerChildren": {
+  "en": "Add each child once, then tap a name to start a screening.",
+  "te": "TODO_TE",
+  "where": "Children screen: header banner text"
+ },
+ "ds.bannerCases": {
+  "en": "Referral cases: {n}. Tap a case to update its status.",
+  "te": "TODO_TE",
+  "where": "Cases screen: header banner text"
  }
 }
