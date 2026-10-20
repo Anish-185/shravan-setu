@@ -988,5 +988,215 @@
   "en": "No likely treatable cause reported: DEIC for further hearing assessment. Triage, not diagnosis.",
   "te": "ప్రశ్నల్లో చికిత్స చేయగల కారణం ఏదీ కనిపించలేదు: తదుపరి వినికిడి పరీక్ష కోసం DEIC కి. ప్రాథమిక పరిశీలన మాత్రమే, వ్యాధి నిర్ధారణ కాదు.",
   "where": "Triage result after saving the checklist (route to DEIC). English must match config/screening.json triage.default_reason"
+ },
+ "children.classPlaceholder": {
+  "en": "Class label (optional), e.g. 5A",
+  "te": "TODO_TE",
+  "where": "Children screen, class box hint; groups children into classrooms in the teacher view"
+ },
+ "home.teacher": {
+  "en": "Teacher view",
+  "te": "TODO_TE",
+  "where": "Home screen link to the teacher view (classrooms, screening rounds)"
+ },
+ "title.teacherLogin": {
+  "en": "Demo login",
+  "te": "TODO_TE",
+  "where": "Screen title in the header: teacher demo login"
+ },
+ "title.teacher": {
+  "en": "Teacher view",
+  "te": "TODO_TE",
+  "where": "Screen title in the header: teacher's classrooms"
+ },
+ "title.class": {
+  "en": "Classroom",
+  "te": "TODO_TE",
+  "where": "Screen title in the header: one classroom's screening rounds"
+ },
+ "title.round": {
+  "en": "Screening round",
+  "te": "TODO_TE",
+  "where": "Screen title in the header: one screening round's results and chart"
+ },
+ "title.childResult": {
+  "en": "Screening result",
+  "te": "TODO_TE",
+  "where": "Screen title in the header: one child's result, per ear and tone"
+ },
+ "teacher.demoNote": {
+  "en": "Demo login: the name and PIN stay on this phone. No account. The first login sets the PIN.",
+  "te": "TODO_TE",
+  "where": "Demo login screen, under the title"
+ },
+ "teacher.name": {
+  "en": "Teacher name",
+  "te": "TODO_TE",
+  "where": "Demo login, name box hint"
+ },
+ "teacher.pin": {
+  "en": "PIN",
+  "te": "TODO_TE",
+  "where": "Demo login, PIN box hint"
+ },
+ "teacher.login": {
+  "en": "Log in",
+  "te": "TODO_TE",
+  "where": "Demo login button"
+ },
+ "teacher.wrongPin": {
+  "en": "Wrong PIN for this phone.",
+  "te": "TODO_TE",
+  "where": "Demo login, shown when the PIN does not match"
+ },
+ "teacher.welcome": {
+  "en": "Welcome",
+  "te": "TODO_TE",
+  "where": "Teacher view header, above the teacher's name"
+ },
+ "teacher.date": {
+  "en": "Date: {date}",
+  "te": "TODO_TE",
+  "where": "Teacher view; {date} = today, DD-MM-YYYY"
+ },
+ "teacher.addChildren": {
+  "en": "Add children",
+  "te": "TODO_TE",
+  "where": "Teacher view button: opens the children screen"
+ },
+ "teacher.classrooms": {
+  "en": "Classrooms",
+  "te": "TODO_TE",
+  "where": "Teacher view, heading above the classroom list"
+ },
+ "teacher.search": {
+  "en": "Search",
+  "te": "TODO_TE",
+  "where": "Search box hint on the classroom and round lists"
+ },
+ "teacher.strength": {
+  "en": "Class strength: {n}",
+  "te": "TODO_TE",
+  "where": "Classroom card and round card; {n} = number of children"
+ },
+ "teacher.noClass": {
+  "en": "No class label",
+  "te": "TODO_TE",
+  "where": "Classroom card title for children without a class label"
+ },
+ "teacher.noClassrooms": {
+  "en": "No classrooms yet. Add children with a class label.",
+  "te": "TODO_TE",
+  "where": "Teacher view, empty list"
+ },
+ "teacher.roundsH": {
+  "en": "Screening rounds",
+  "te": "TODO_TE",
+  "where": "Classroom screen heading (one round = one screening of the class)"
+ },
+ "teacher.deadline": {
+  "en": "Deadline: {date}",
+  "te": "TODO_TE",
+  "where": "Round card; {date} = YYYY-MM-DD"
+ },
+ "teacher.progress": {
+  "en": "Progress: {done}/{total} screened",
+  "te": "TODO_TE",
+  "where": "Round card; {done} children screened in this round of {total}"
+ },
+ "teacher.noRounds": {
+  "en": "No screening rounds yet.",
+  "te": "TODO_TE",
+  "where": "Classroom screen, empty list"
+ },
+ "teacher.newRoundH": {
+  "en": "Create new screening round",
+  "te": "TODO_TE",
+  "where": "Classroom screen, form heading"
+ },
+ "teacher.roundName": {
+  "en": "Round name, e.g. \"Term 1\"",
+  "te": "TODO_TE",
+  "where": "Classroom screen, round name box hint"
+ },
+ "teacher.createRound": {
+  "en": "Create round",
+  "te": "TODO_TE",
+  "where": "Classroom screen button"
+ },
+ "teacher.noResults": {
+  "en": "No child in this class has been screened in this round yet.",
+  "te": "TODO_TE",
+  "where": "Round screen, empty list"
+ },
+ "teacher.pieHint": {
+  "en": "Tap a slice to show only that outcome. Tap it again to show all.",
+  "te": "TODO_TE",
+  "where": "Round screen, under the pie chart"
+ },
+ "teacher.age": {
+  "en": "Age: {age}",
+  "te": "TODO_TE",
+  "where": "Round screen child card; {age} = age band, e.g. 9-11"
+ },
+ "teacher.moreDetails": {
+  "en": "More details",
+  "te": "TODO_TE",
+  "where": "Round screen child card link to the child's result"
+ },
+ "teacher.outcomesH": {
+  "en": "What the outcomes mean",
+  "te": "TODO_TE",
+  "where": "Child result screen, heading of the outcome legend"
+ },
+ "teacher.meaning.PASS": {
+  "en": "PASS: every tone tested was heard.",
+  "te": "TODO_TE",
+  "where": "Child result screen legend; PASS stays in English"
+ },
+ "teacher.meaning.RETEST": {
+  "en": "RETEST: not clear yet (noise, a tone not tested or unreliable taps). Test again.",
+  "te": "TODO_TE",
+  "where": "Child result screen legend; RETEST stays in English"
+ },
+ "teacher.meaning.REFER": {
+  "en": "REFER: a tone was not heard. Refer for a full hearing check.",
+  "te": "TODO_TE",
+  "where": "Child result screen legend; REFER stays in English"
+ },
+ "teacher.leftEar": {
+  "en": "Left ear",
+  "te": "TODO_TE",
+  "where": "Child result screen, ear card"
+ },
+ "teacher.rightEar": {
+  "en": "Right ear",
+  "te": "TODO_TE",
+  "where": "Child result screen, ear card"
+ },
+ "teacher.tonesH": {
+  "en": "Each tone",
+  "te": "TODO_TE",
+  "where": "Child result screen, heading of the per-tone table"
+ },
+ "teacher.tonesP": {
+  "en": "Tones are played at one fixed screening level. These are not hearing thresholds.",
+  "te": "TODO_TE",
+  "where": "Child result screen, under the per-tone heading"
+ },
+ "teacher.heard": {
+  "en": "Heard",
+  "te": "TODO_TE",
+  "where": "Child result screen, per-tone status"
+ },
+ "teacher.notHeard": {
+  "en": "Not heard",
+  "te": "TODO_TE",
+  "where": "Child result screen, per-tone status"
+ },
+ "teacher.notTested": {
+  "en": "Not tested",
+  "te": "TODO_TE",
+  "where": "Child result screen, per-tone status"
  }
 }
