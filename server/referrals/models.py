@@ -47,6 +47,7 @@ class Child(Base):
     age_band = models.CharField(max_length=5, choices=AGE_BANDS)
     sex = models.CharField(max_length=1, choices=SEX, blank=True)
     guardian_phone = models.CharField(max_length=20, blank=True, help_text="Optional.")
+    class_label = models.CharField(max_length=20, blank=True, help_text="Optional, e.g. '5A'. Groups children into classrooms.")
 
     def __str__(self):
         return self.display_name

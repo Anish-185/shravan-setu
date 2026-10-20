@@ -20,9 +20,10 @@ The full session log (trials, metering numbers) stays on the phone; only the res
 
 ## What we deliberately do not collect
 
-- **Class / section.** The phone never asks for it, and the camp PDF/CSV has no Class column (dropped 2026-10-19,
-  ERR-033, owner decision: data minimisation). Camp lists group children by school only. The server model still has an
-  optional, always-empty `classroom` field from Phase 2; it can be removed or used later if a school asks for it.
+- **Class / section, beyond an optional label.** Since 2026-10-20 (owner decision, teacher view integration) a child
+  can have an optional class label such as "5A" (`class_label`, phone and server), used only to group children into
+  classrooms in the teacher view. Nothing else about the class is recorded. The camp PDF/CSV still has no Class column
+  (dropped 2026-10-19, ERR-033). The server model also has an optional, always-empty `classroom` field from Phase 2.
 - **Date of birth, address, photo, Aadhaar or any ID number.**
 - **Audio recordings.**
 - **Sex.** The server model has an optional field; the phone never fills it.
