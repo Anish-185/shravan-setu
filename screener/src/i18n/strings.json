@@ -1160,7 +1160,7 @@
   "where": "Child result screen legend; RETEST stays in English"
  },
  "teacher.meaning.REFER": {
-  "en": "REFER: a tone was not heard. Refer for a full hearing check.",
+  "en": "REFER: a tone was not heard, even when tested again. Refer for a full hearing check.",
   "te": "TODO_TE",
   "where": "Child result screen legend; REFER stays in English"
  },

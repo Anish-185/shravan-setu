@@ -243,7 +243,7 @@ text with a `[TODO_TE]` marker in Telugu mode.
 | 228 | `teacher.outcomesH` | What the outcomes mean | Child result screen, heading of the outcome legend | `screener/src/i18n/strings.json` |  |
 | 229 | `teacher.meaning.PASS` | PASS: every tone tested was heard. | Child result screen legend; PASS stays in English | `screener/src/i18n/strings.json` |  |
 | 230 | `teacher.meaning.RETEST` | RETEST: not clear yet (noise, a tone not tested or unreliable taps). Test again. | Child result screen legend; RETEST stays in English | `screener/src/i18n/strings.json` |  |
-| 231 | `teacher.meaning.REFER` | REFER: a tone was not heard. Refer for a full hearing check. | Child result screen legend; REFER stays in English | `screener/src/i18n/strings.json` |  |
+| 231 | `teacher.meaning.REFER` | REFER: a tone was not heard, even when tested again. Refer for a full hearing check. | Child result screen legend; REFER stays in English | `screener/src/i18n/strings.json` |  |
 | 232 | `teacher.leftEar` | Left ear | Child result screen, ear card | `screener/src/i18n/strings.json` |  |
 | 233 | `teacher.rightEar` | Right ear | Child result screen, ear card | `screener/src/i18n/strings.json` |  |
 | 234 | `teacher.tonesH` | Each tone | Child result screen, heading of the per-tone table | `screener/src/i18n/strings.json` |  |
