@@ -2,8 +2,10 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { View } from "react-native";
 
 import { LangProvider, useT } from "@/i18n";
+import { Paper } from "@/original/paper";
 import { C, F, LangToggle } from "@/ui";
 
 // Fonts load from the bundle (offline) while the splash screen stays up.
@@ -61,7 +63,11 @@ export default function RootLayout() {
   if (!ready) return null;
   return (
     <LangProvider>
-      <Screens />
+      <Paper>
+        <View style={{ flex: 1, backgroundColor: C.paper }}>
+          <Screens />
+        </View>
+      </Paper>
     </LangProvider>
   );
 }
