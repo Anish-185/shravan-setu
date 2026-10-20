@@ -599,3 +599,25 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: server pytest 231 passed.
 - Lesson: a new config section goes into both config files, appended as text so the existing lines stay untouched.
+
+### ERR-052: `git mv` refused to move the Telugu batch file
+- Phase / date: Telugu batch 4 / 2026-10-20
+- Symptom: `fatal: not under version control, source=TELUGU_BATCH_4.md, destination=docs/TELUGU_BATCH_4.md`; the
+  rest of the `&&` chain (apply script, regenerate) did not run.
+- Where: one-off shell command in the repo root
+- Root cause: the owner's batch file was new and untracked, so `git mv` had nothing to move.
+- Fix: plain `mv`, then the same chain. No file changed by the failed run.
+- Status: FIXED
+- Verification: `docs/TELUGU_BATCH_4.md` exists; repo root has no copy.
+- Lesson: use `mv` (not `git mv`) for files the owner just dropped in; check `git status` first.
+
+### ERR-053: the Telugu apply script rewrote strings.json in a different JSON layout
+- Phase / date: Telugu batch 4 / 2026-10-20
+- Symptom: `git diff --stat` showed `strings.json | 1648 +---` for 89 changed values (the whole file on one line).
+- Where: scratch apply script (not committed), `screener/src/i18n/strings.json`
+- Root cause: the script guessed the indent from a 2-space prefix; the file uses 1-space indent, so the guess fell
+  back to no indent at all.
+- Fix: rewrote with `json.dumps(..., ensure_ascii=False, indent=1)`, the file's own layout. Caught before commit.
+- Status: FIXED
+- Verification: `git diff --numstat` = `89 89 strings.json`, and every changed line is a `"te"` line.
+- Lesson: after a scripted JSON rewrite, check the diff size matches the number of values changed before going on.
