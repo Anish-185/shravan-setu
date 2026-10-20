@@ -1,64 +1,97 @@
 // Teacher view data, read from this phone's SQLite (works offline). Stands in for the DhwaniSarathi backend endpoints
 // the original screens fetched (server/apigateway/views.py: educator_classrooms, classroom_assignments with
-// SubmittedCount, assignment_userassignmentresults). Screening outcomes only, never a diagnosis.
+// SubmittedCount, assignment_userassignmentresults). Classrooms and assignments are local records (not synced); a
+// child belongs to a classroom through its class label (synced with the child).
 import * as Crypto from 'expo-crypto';
 
+import { cfg } from '@/config';
 import { db } from '@/db';
 import { kvGet, list, put } from '@/db/store';
+import { worseEarGrade, type Point } from '@/original/hearing';
 
 export type Child = { display_name: string; age_band: string; school: string; class_label?: string };
-/** One screening round for a class (the original "assignment"). Local only, not synced. */
+/** The original Classroom {ClassroomName, Count}: name and the strength the teacher typed. */
+export type Classroom = { school: string; name: string; strength: number; created_at: string };
+/** One screening round for a class (the original "assignment"). */
 export type Assignment = { school: string; class_label: string; name: string; created_at: string; deadline: string };
 export type Result = {
   session: string; outcome: string | null; ear_outcomes: Record<string, string>; frequency_results: Record<string, string>;
 };
 type Session = { child: string; started_at: string };
+type Detailed = { child: string; started_at: string; points: Point[] };
 
-const schoolChildren = () => {
-  const school = kvGet(db, 'school_id');
-  return list<Child>(db, 'child').filter((c) => c.school === school);
-};
+const school = () => kvGet(db, 'school_id');
+const schoolChildren = () => list<Child>(db, 'child').filter((c) => c.school === school());
 
-/** Classrooms of the selected school: children grouped by class label, strength = number of children. */
+/** Classrooms of the selected school: the ones created here, plus any class label children have without one
+ *  (strength = number of those children), so no child drops out of the teacher view. */
 export function classrooms() {
-  const m = new Map<string, number>();
-  for (const c of schoolChildren()) m.set(c.class_label ?? '', (m.get(c.class_label ?? '') ?? 0) + 1);
-  return [...m].map(([label, count]) => ({ label, count })).sort((a, b) => a.label.localeCompare(b.label));
+  const made = list<Classroom>(db, 'classroom').filter((c) => c.school === school())
+    .map((c) => ({ label: c.name, count: c.strength }));
+  const labels = new Map<string, number>();
+  for (const c of schoolChildren()) labels.set(c.class_label ?? '', (labels.get(c.class_label ?? '') ?? 0) + 1);
+  const extra = [...labels].filter(([l]) => !made.some((m) => m.label === l)).map(([label, count]) => ({ label, count }));
+  return [...made, ...extra].sort((a, b) => a.label.localeCompare(b.label));
 }
 
+export function addClassroom(name: string, strength: number) {
+  put(db, 'classroom', Crypto.randomUUID(), { school: school(), name, strength, created_at: new Date().toISOString() });
+}
+
+/** Class strength: the typed strength of a created classroom, else the number of children with that label. */
+export const strength = (label: string) => classrooms().find((c) => c.label === label)?.count ?? classChildren(label).length;
+
 export const classChildren = (label: string) => schoolChildren().filter((c) => (c.class_label ?? '') === label);
+export const allChildren = schoolChildren;
+
+/** Put a child in a classroom (or take it out with ''): the child record is saved and synced as before. */
+export function assignChild(child: Child & { id: string }, label: string) {
+  const { id, ...data } = child;
+  put(db, 'child', id, { ...data, class_label: label });
+}
 
 /** Local calendar date, YYYY-MM-DD. */
 export const ymd = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-export function addAssignment(label: string, name: string) {
-  const now = new Date();
-  // Deadline default of 7 days, as the original server set it (apigateway assignment_list POST).
+/** Deadline default of 7 days, as the original server set it (apigateway assignment_list POST). */
+export const defaultDeadline = () => ymd(new Date(Date.now() + 7 * 86400000));
+
+export function addAssignment(label: string, name: string, deadline = defaultDeadline()) {
   put(db, 'assignment', Crypto.randomUUID(), {
-    school: kvGet(db, 'school_id'), class_label: label, name,
-    created_at: now.toISOString(), deadline: ymd(new Date(now.getTime() + 7 * 86400000)),
+    school: school(), class_label: label, name, created_at: new Date().toISOString(), deadline,
   });
 }
 
-export const assignments = (label: string) => {
-  const school = kvGet(db, 'school_id');
-  return list<Assignment>(db, 'assignment').filter((a) => a.school === school && a.class_label === label);
-};
+export const assignments = (label: string) =>
+  list<Assignment>(db, 'assignment').filter((a) => a.school === school() && a.class_label === label);
 
-/** Each child of the class screened in the round (session started between creation and the end of the deadline
- *  day), with the result of their latest session in it. Like the original SubmittedCount + results join. */
+/** Each child of the class tested in the round (from creation to the end of the deadline day): their latest
+ *  screening result and their latest detailed test in it, if any. Like the original SubmittedCount + results join. */
 export function roundResults(a: Assignment) {
   const kids = new Map(classChildren(a.class_label).map((c) => [c.id, c]));
-  const results = new Map(list<Result>(db, 'screening_result').map((r) => [r.session, r]));
+  const from = new Date(a.created_at);
   const end = new Date(`${a.deadline}T23:59:59.999`); // local time
-  const latest = new Map<string, Session & { id: string }>();
-  for (const s of list<Session>(db, 'screening_session')) {
-    const at = new Date(s.started_at);
-    if (!kids.has(s.child) || at < new Date(a.created_at) || at > end) continue;
-    const prev = latest.get(s.child);
-    if (!prev || s.started_at > prev.started_at) latest.set(s.child, s);
-  }
-  return [...latest.values()].filter((s) => results.has(s.id))
-    .map((s) => ({ child: kids.get(s.child)!, sessionId: s.id, result: results.get(s.id)! }));
+  const inRound = (x: { child: string; started_at: string }) => {
+    const at = new Date(x.started_at);
+    return kids.has(x.child) && at >= from && at <= end;
+  };
+  const latest = <T extends { child: string; started_at: string }>(rows: T[]) => {
+    const m = new Map<string, T>();
+    for (const r of rows.filter(inRound)) if (!m.has(r.child) || r.started_at > m.get(r.child)!.started_at) m.set(r.child, r);
+    return m;
+  };
+  const results = new Map(list<Result>(db, 'screening_result').map((r) => [r.session, r]));
+  const sessions = latest(list<Session>(db, 'screening_session').filter((s) => results.has(s.id)));
+  const detailed = latest(list<Detailed>(db, 'detailed_test'));
+  return [...kids.keys()].filter((id) => sessions.has(id) || detailed.has(id)).map((id) => {
+    const s = sessions.get(id);
+    const d = detailed.get(id);
+    return {
+      child: kids.get(id)!,
+      sessionId: s?.id ?? null,
+      result: s ? results.get(s.id)! : null,
+      detailed: d ? { id: d.id, grade: worseEarGrade(d.points, cfg) } : null,
+    };
+  }).sort((x, y) => x.child.display_name.localeCompare(y.child.display_name));
 }
