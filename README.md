@@ -6,14 +6,14 @@ unchanged. Credits: `ATTRIBUTION.md`.
 
 **Calibration is provisional.** Tone levels come from a team baseline measured with 7 consenting adult volunteers on one phone and earphone model (Redmi 2201117TI + Samsung wired earphones, media volume 6 steps, 2026-10-19), not from children and not against an audiometer. At 500 Hz the baseline is a measured median. At 1, 2 and 4 kHz the phone could not play quietly enough to find the volunteers' real thresholds, so the baseline there is an upper bound. In plain words: the 1-4 kHz tones may be louder than intended, so the screen may miss milder hearing loss until the Stage 2 recalibration (`docs/ROADMAP.md`; `docs/CLAIMS.md` CAL-01..03; `docs/ERROR_LOG.md` ERR-044). Levels are dB re: team baseline, never dB HL.
 
-**Teacher view and detailed test (demo).** The original DhwaniSarathi screens are integrated with their code, images
-and charts (`docs/INTEGRATION_PLAN.md`, `ATTRIBUTION.md`): the pre-test checklist, room check and left/right check in
+**Teacher view and detailed test (demo).** The original DhwaniSarathi screens are integrated with their code and
+charts (`docs/INTEGRATION_PLAN.md`, `ATTRIBUTION.md`): the pre-test checklist, room check and left/right check in
 front of our screening; the teacher page, classrooms, assignments and analytics; and the original threshold test as an
 optional **detailed hearing test**, offered after a REFER and to teachers. Our screening (PASS / RETEST / REFER) stays
 the default. The detailed test's results show WHO (2021) grades as **estimates**: its levels are dB re: team baseline
 with the provisional calibration, not dB HL. Screening and referral tool, never a diagnosis. Demo limitations: demo
 login with a PIN kept on the phone and no reset; classrooms, assignments and detailed tests stay on the phone (not
-synced); the original images have no recorded source (flagged in `ATTRIBUTION.md`); see `docs/ROADMAP.md`.
+synced); see `docs/ROADMAP.md`.
 
 ## Design: Direction B "Setu Line" (chosen, v2)
 

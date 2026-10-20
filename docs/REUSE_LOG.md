@@ -400,3 +400,22 @@ design system and was too far from the original). Per-file plan: `docs/INTEGRATI
 
 - Their masked WAVs carry near-silent noise; a proper narrow-band masking noise would need its own calibration.
 - Decision: drop the masked phase (config `detailed_test.masking`, false). Nothing to reuse or build.
+
+## Images on the original screens: replacement (2026-10-20)
+
+Owner instruction: replace every image flagged in `ATTRIBUTION.md` (2 Freepik covers, 3 Bing AI images, all with no
+recorded source) with a free image with a clear licence, or with our own SVG art; same names, sizes and subjects.
+
+- Queries (`gh search repos`): "hearing ear illustration svg" (no results), "open peeps illustration", "openmoji",
+  "cc0 icons svg headphones" (no results); npm `lucide-static`.
+- Candidates:
+  - OpenMoji (hfg-gmuend/openmoji, last update 2026-10-17): **CC BY-SA 4.0**, share-alike, not on the allowlist. Rejected.
+  - Open Peeps (Pablo Stanley, CC0 per openpeeps.com): the assets are not in a repo with a licence file; the GitHub
+    generators found (openpeeps-generator MIT 2026-05-16, Peepify MIT 2026-06-01, peeps-generator and peeps-builder
+    with no licence) license their code, not clearly the artwork. Rejected (unclear terms for the art).
+  - unDraw: its own licence, not CC0 or on the allowlist. Not used.
+  - lucide-static 1.59.0 (ISC, already our icon set, `screener/src/icons.tsx`): has ear, mic, headphones, school items.
+- Decision: (c) build ourselves, `scripts/make_art.py`: flat SVG in our palette and setu motif, with Lucide glyphs
+  (ISC, copied untouched) for the ear, microphone and school items; rendered with rsvg-convert + ImageMagick on the dev
+  laptop. 20 files, 504 KB in total (the originals were 1.9 MB). No new app dependency. Check:
+  `scripts/test_make_art.py` (every file present at its original size and format).

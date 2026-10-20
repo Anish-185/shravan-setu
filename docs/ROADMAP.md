@@ -30,9 +30,6 @@ Items planned for later rounds; none of them is built in this version.
   children can be moved between classrooms on the classroom screen. Classrooms and detailed-test results are also
   kept on the phone only. A real deployment would need proper teacher accounts and synced classrooms, rounds and
   detailed results.
-- **Original images: replace or license (flagged 2026-10-20).** The DhwaniSarathi images reused in the app have no
-  recorded source; several are Bing Image Creator output and two covers carry Freepik metadata (`ATTRIBUTION.md`).
-  Swap them for CC0 / own artwork, or record a licence, before any public release.
 - **Detailed test: masking and range.** Masked thresholds need a calibrated masking noise (dropped for now); the
   loudest playable level is 30 dB at 500 Hz and 60 dB at 1-4 kHz with the current baseline, so higher thresholds show
   as "not heard up to" that level.

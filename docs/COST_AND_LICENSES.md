@@ -71,7 +71,8 @@ no Expo account needed for local development.
 | react-native-paper (original DhwaniSarathi screens, 2026-10-20) | 5.15.3 | MIT (deps: color, color-string, color-convert, color-name, simple-swizzle, is-arrayish, use-latest-callback, @callstack/react-theme-provider, deepmerge, hoist-non-react-statics: MIT / BSD-3-Clause) | 0 | None |
 | victory-native (original pie and audiogram charts, 2026-10-20) | 37.3.6 | MIT (pulls 50 victory-* / d3-* / lodash packages: MIT, ISC, BSD-3-Clause for d3-ease and d3-voronoi, "MIT AND ISC" for victory-vendor). **35 MB in node_modules**, over the 5 MB guideline, allowed by the owner for a chart library; the Android JS bundle is 6.4 MB in total | 0 | None (draws with react-native-svg) |
 | expo-print (results PDF, 2026-10-20) | 57.0.2 | MIT | 0 | None (renders HTML to a PDF on the phone; sharing opens the Android share sheet) |
-| Original DhwaniSarathi images in `assets/images/original/` (21 files, 1.9 MB) | — | Repo Apache-2.0; **source of each image unrecorded**, see ATTRIBUTION.md (AI-generated, Freepik and unknown-source flags) | 0 | None |
+| Images on the original screens in `assets/images/original/` (20 files, 504 KB; replaced 2026-10-20) | — | Made by Team JL (`scripts/make_art.py`), Apache-2.0; Lucide glyphs ISC. See ATTRIBUTION.md | 0 | None |
+| rsvg-convert, ImageMagick (only to run `scripts/make_art.py` on a dev laptop; not shipped) | system | LGPL-2.1+ (librsvg), ImageMagick licence (Apache-2.0 style) | 0 | None |
 
 Teacher-view integration (2026-10-20, `docs/INTEGRATION_PLAN.md`) added **no dependency**. The original screens'
 libraries were not carried over: victory-native (its maintained SVG line installs 40 MB; replaced by a small donut on

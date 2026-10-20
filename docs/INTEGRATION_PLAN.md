@@ -137,6 +137,9 @@ simple one (`src/TabBar.tsx`): Home, Children, Cases, Teacher, Settings; hidden 
 - Bottom tab bar (ours, see Navigation). Original header-banner pattern (red strip over `background.png`, picture on
   the right) as `src/original/Banner.tsx` on Children (with `images/ears.jpeg`) and Cases. Not changed: Home's own
   band, the screening child mode.
+- Images (2026-10-20): every original image named in this plan is **redrawn by Team JL** (`scripts/make_art.py`,
+  same file name, pixel size and subject), because none of the originals had a recorded source or licence. Details
+  and licences: `ATTRIBUTION.md`.
 
 ## Data flow summary
 

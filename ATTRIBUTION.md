@@ -74,25 +74,32 @@ Moved, not copied: our own consent and device steps went from the screening scre
 Not copied: `notRequired/*`, `Maps.js`, `ML.js`, `JewelleryDetection.js`, signup/student screens, their tone WAVs
 (we play our own generated tones), `audiogram-bg.png` and `legend.jpeg` (redrawn, see the plan).
 
-#### Original images used (`screener/assets/images/original/`)
+#### Images on the original screens (`screener/assets/images/original/`)
 
-Copied from `audiometer/app/assets/`, some resized and stripped of metadata to keep the app small (sizes in brackets).
-The original repo records **no source or licence for any image**; the repo's Apache-2.0 licence covers them only if
-the original team made them. What the files themselves show:
+**Made by Team JL, 2026-10-20**, with `scripts/make_art.py` (flat SVG drawn in our palette with the setu line from
+`screener/src/art.tsx`, rendered to PNG/JPEG). Licence: Apache-2.0, like the rest of our code (repo `LICENSE`). Glyphs
+drawn with `lu(...)` in that script are Lucide 1.59.0 shapes, copied untouched (ISC,
+`screener/licenses/lucide-LICENSE.txt`). The figures are generic cartoons; no photos, no real people.
 
-| File (theirs) | Used on | Provenance found in the file | Flag |
-|---|---|---|---|
-| `images/shh.png`, `headphones.png`, `mute.png`, `equalizer.png`, `silence.png`, `noise-pollution.png` (128 px) | Make sure | None. Flat-icon style typical of icon sites (e.g. Flaticon, which needs attribution under its own licence) | **Unclear source** |
-| `images/microphone.png` (→ 400 px), `left_ear.png`, `right_ear.png` (→ 500 px) | Surrounding, detailed test | None in the PNGs; same style as the next row | **Probably AI-generated, unclear** |
-| `images/questionmark.jpeg`, `atest_icon.jpeg` (→ 500 px), `ears.jpeg` (→ 600 px) | Which ear, detailed test, Children banner | C2PA tag: "AI Generated Image", Bing Image Creator, 2023-12-15 | **AI-generated (Bing); copyright status unclear** |
-| `leftear.png`, `rightear.png` (320 px) | Results ear cards | None | **Unclear source** |
-| `background.png` (→ 1200 px), `profile.png` (→ 300 px) | Teacher page, Create Classroom, banners | None | **Unclear source** |
-| `AssignmentImages/0.jpg`, `2.jpg` (→ 800 px) | Assignment covers | XMP: "Freepik Company S.L. - www.freepik.com" | **Freepik: free use needs attribution; not on our allowlist** |
-| `AssignmentImages/1.jpg` (→ 800 px), `4.jpg` (WebP, → JPEG 800 px) | Assignment covers | 1: Adobe Illustrator export; 4: none | **Unclear source** |
-| `AssignmentImages/3.jpg`, `5.jpg` | **Not used** | 225 px thumbnails with a faint stock watermark | Watermarked previews |
+They replace the images the original team shipped, which had no recorded source or licence (three carried a Bing Image
+Creator "AI Generated Image" C2PA tag, two Freepik XMP metadata, two were watermarked stock previews, the rest had no
+provenance at all). Same file names, pixel sizes and subjects, so the screens keep the original layout. The original
+files are still in `audiometer/app/assets/` (unchanged, not used by our app).
 
-Until the owner decides, these images are used as the original team shipped them, credited here to the
-DhwaniSarathi team. Replacing any of them is a file swap in `screener/assets/images/original/` (same name).
+| File | Size | Used on | Subject | Source / licence / author |
+|---|---|---|---|---|
+| `shh.png`, `headphones.png`, `mute.png`, `equalizer.png`, `silence.png`, `noise-pollution.png` | 128 px | Make sure | Finger on lips; wired headphones; bell crossed out; equalizer with every slider in the middle; head talking, crossed out; noise burst behind headphones | Made by Team JL, Apache-2.0 |
+| `microphone.png` | 400 px | Check your surrounding | Microphone with sound bars and arcs | Team JL, Apache-2.0; mic and audio-lines glyphs Lucide (ISC) |
+| `left_ear.png`, `right_ear.png` | 500 px | Detailed test | Head in profile (facing left / mirrored), ear highlighted | Team JL, Apache-2.0; ear glyph Lucide (ISC) |
+| `leftear.png`, `rightear.png` | 320 px | Your Results ear cards | Left ear / mirrored right ear | Lucide ear glyph (ISC), drawn large by Team JL |
+| `questionmark.jpg` | 500 px | Which ear | Two ears either side of a question mark | Team JL, Apache-2.0; ear glyph Lucide (ISC) |
+| `atest_icon.jpg` | 500 px | Detailed test start card | Ear with incoming sound arcs | Team JL, Apache-2.0; ear glyph Lucide (ISC) |
+| `ears.jpg` | 600 px | Children banner | Two ears back to back on a dot grid | Team JL, Apache-2.0; ear glyph Lucide (ISC) |
+| `background.png` | 1200 px | Teacher page, Create Classroom, banners | School doodles round the edges, transparent middle | Team JL layout; glyphs Lucide (ISC) |
+| `profile.png` | 300 px | Teacher avatar | Generic cartoon person | Made by Team JL, Apache-2.0 |
+| `AssignmentImages/0.jpg`, `1.jpg`, `2.jpg`, `4.jpg` | 800 px | Assignment covers | Pattern of school items on night / teal / indigo / marigold | Team JL layout; glyphs Lucide (ISC) |
+
+Not carried over: their `AssignmentImages/3.jpg` and `5.jpg` (watermarked; the screen never used them).
 
 ## Our features
 
