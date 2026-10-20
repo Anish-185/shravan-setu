@@ -31,6 +31,11 @@ function Screens() {
       <Stack.Screen name="camp" options={{ title: t("title.camp") }} />
       <Stack.Screen name="sync" options={{ title: t("title.sync") }} />
       <Stack.Screen name="rooms" options={{ title: t("title.rooms") }} />
+      <Stack.Screen name="teacher/login" options={{ title: t("title.teacherLogin") }} />
+      <Stack.Screen name="teacher/index" options={{ title: t("title.teacher") }} />
+      <Stack.Screen name="teacher/class" options={{ title: t("title.class") }} />
+      <Stack.Screen name="teacher/assignment/[id]" options={{ title: t("title.round") }} />
+      <Stack.Screen name="teacher/result/[sessionId]" options={{ title: t("title.childResult") }} />
       <Stack.Screen name="settings" options={{ title: t("title.settings") }} />
       <Stack.Screen name="spike" options={{ title: t("title.spike") }} />
       <Stack.Screen name="calibrate" options={{ title: t("title.calibrate") }} />

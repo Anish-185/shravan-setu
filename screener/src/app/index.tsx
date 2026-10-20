@@ -50,6 +50,7 @@ export default function Home() {
           <Row icon="folder-heart" tint={C.indigoTint} label="home.cases" n={counts.cases} href="/cases" />
           <Row icon="cloud-upload" tint={C.marigoldTint} label="home.sync" n={counts.sync} href="/sync" />
           <Row icon="calendar-clock" tint={C.indigoTint} label="title.rooms" n={0} href="/rooms" />
+          <Row icon="users" tint={C.marigoldTint} label="home.teacher" n={0} href="/teacher/login" />
           <Row icon="settings" tint={C.greyTint} label="home.settings" n={0} href="/settings" />
         </View>
       </View>
