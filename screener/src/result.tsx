@@ -17,8 +17,8 @@ import { Btn, C, Card, F, Note, OUTCOME, P, Pill, s } from '@/ui';
 
 type Saved = { sessionId: string; caseId: string | null };
 
-export function ResultStep({ snap, calibrated, provisional = false, onSave }: {
-  snap: Snapshot; calibrated: boolean; provisional?: boolean; onSave: () => Saved;
+export function ResultStep({ snap, calibrated, provisional = false, onSave, childId }: {
+  snap: Snapshot; calibrated: boolean; provisional?: boolean; onSave: () => Saved; childId?: string;
 }) {
   const t = useT();
   const r = snap.result!;
@@ -45,6 +45,10 @@ export function ResultStep({ snap, calibrated, provisional = false, onSave }: {
       {r.outcome === 'REFER' && <P>{t('result.refer')}</P>}
       {r.outcome === 'RETEST' && <P>{t('result.retest')}</P>}
       {ids?.caseId && <TriageForm caseId={ids.caseId} />}
+      {r.outcome === 'REFER' && childId && calibrated && (
+        <Btn kind="plain" icon="ear" title={t('ds.detailedOffer')}
+          onPress={() => router.push({ pathname: '/detailed/[childId]', params: { childId } })} />
+      )}
       {ids && <Btn kind="plain" icon="share-2" title={t('result.export')} onPress={() => exportSession(ids.sessionId)} />}
       <Btn title={t('result.done')} onPress={() => router.back()} />
     </View>

@@ -38,6 +38,8 @@ function Screens() {
       <Stack.Screen name="teacher/class" options={{ title: t("title.class") }} />
       <Stack.Screen name="teacher/assignment/[id]" options={{ title: t("title.round") }} />
       <Stack.Screen name="teacher/result/[sessionId]" options={{ title: t("title.childResult") }} />
+      <Stack.Screen name="detailed/[childId]" options={{ title: t("ds.detailedTest") }} />
+      <Stack.Screen name="results/[testId]" options={{ title: t("ds.yourResults") }} />
       <Stack.Screen name="settings" options={{ title: t("title.settings") }} />
       <Stack.Screen name="spike" options={{ title: t("title.spike") }} />
       <Stack.Screen name="calibrate" options={{ title: t("title.calibrate") }} />
