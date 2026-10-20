@@ -126,5 +126,73 @@
       },
       "source": "Design choice: stubbed reminder (logged as 'would send', never sent; real SMS is a future cost). {date} is filled from \"date\" (en ' on 24 Oct 2026', te '24-10-2026 న', where Telugu puts the date before the camp) or empty when no camp is booked. Telugu reviewed and approved by a native speaker (docs/TELUGU_REVIEW.md #167)."
     }
+  },
+  "detailed_test": {
+    "frequencies_hz": {
+      "value": [
+        500,
+        1000,
+        2000,
+        4000
+      ],
+      "source": "DhwaniSarathi audiometer/app/utils/CONFIG.js FREQUENCY_PTS (250-8000 Hz), limited to the frequencies that have a team calibration baseline (calibration.baseline_dbfs) and a generated tone file (scripts/make_tones.py). 250 and 8000 Hz have neither. Same four frequencies as the WHO pure-tone average (hearing_grades)."
+    },
+    "levels_db_re_team_baseline": {
+      "value": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100,
+        110,
+        120
+      ],
+      "source": "DhwaniSarathi audiometer/app/utils/CONFIG.js AMPLITUDE_PTS: ascending 10 dB steps from 0, first 'Yes' = threshold (their utils/Audiometry.js; they went up to 140). Levels are dB re: team baseline, played at calibration.baseline_dbfs + level. Each frequency stops at the loudest level the phone can play (baseline + level <= 0 dB re full scale): 30 at 500 Hz and 60 at 1-4 kHz with the provisional baseline. A tone not heard up to there is recorded as no response."
+    },
+    "masking": {
+      "value": false,
+      "source": "Decision 2026-10-20 (owner asked to either use a proper noise file or drop the masked phase): dropped. The original's masked tone files carry near-silent noise (Day 1 audit), and we have no calibrated masking noise level, so a 'masked' phase would not be real masking. The original's results only used the unmasked thresholds."
+    }
+  },
+  "hearing_grades": {
+    "value": [
+      {
+        "grade": "Normal",
+        "min_db": -10,
+        "max_db": 19
+      },
+      {
+        "grade": "Mild",
+        "min_db": 20,
+        "max_db": 34
+      },
+      {
+        "grade": "Moderate",
+        "min_db": 35,
+        "max_db": 49
+      },
+      {
+        "grade": "Moderately severe",
+        "min_db": 50,
+        "max_db": 64
+      },
+      {
+        "grade": "Severe",
+        "min_db": 65,
+        "max_db": 79
+      },
+      {
+        "grade": "Profound",
+        "min_db": 80,
+        "max_db": null
+      }
+    ],
+    "source": "World Health Organization, World report on hearing (2021), Table 1, grades of hearing loss by pure-tone average of 500, 1000, 2000 and 4000 Hz: <20, 20-<35, 35-<50, 50-<65, 65-<80, 80-<95 and >=95 dB HL (Profound and Complete merged here as 80+, as in the original DhwaniSarathi Results.js). Grades proposed in Olusanya BO, Davis AC, Hoffman HJ (2019), Hearing loss grades and the International classification of functioning, disability and health, Bull World Health Organ 97(10):725-728, doi:10.2471/BLT.19.230367 (the reference cited in the original Results.js). WHO grades are in dB HL; the detailed test measures dB re: team baseline, so every grade it shows is an estimate and is labelled so."
   }
 }
