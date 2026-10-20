@@ -47,6 +47,25 @@ The original Django backend lives in `server/apigateway/`; our changes to `serve
 | Noise-standards info | `audiometer/app/Screens/LegalComplianceInformation.js` | Links to pollution control board websites |
 | English / Hindi UI | `audiometer/app/locales/` | i18next |
 
+### Integrated into `screener/` with our adaptations (2026-10-20)
+
+These original screens are copied into our app and adapted (plan and per-file details: `docs/INTEGRATION_PLAN.md`).
+`audiometer/` itself is unchanged. The originals carry no licence headers; each adapted file starts with a notice naming
+the original file and what we changed (Apache-2.0 section 4(b)).
+
+| Original (theirs) | In `screener/` | What we changed |
+|---|---|---|
+| `Screens/Login.js` (teacher branch) | `src/app/teacher/login.tsx` | Firebase sign-in → "Demo login" (teacher name + PIN kept on the phone); student branch, skip and sign-up removed |
+| `Screens/Educator/EducatorHome.js` | `src/app/teacher/index.tsx` | Name from the demo login, institute = selected school; header images → our band and icon; "Create Classroom" → "Add children" |
+| `Components/ClassroomList.js` | `src/teacher/ClassroomList.tsx` | Classrooms = children grouped by our optional class label; strength = number of children |
+| `Screens/Educator/AssignmentList.js` | `src/app/teacher/class.tsx` | Assignment = one screening round for a class, stored on the phone; progress = children screened ÷ class strength from our sessions; cover images and "Copy Assignment ID" removed |
+| `Screens/Educator/AssignmentAnalytics.js` | `src/app/teacher/assignment/[id].tsx`, `src/teacher/Pie.tsx` | Hearing-loss categories → our PASS / RETEST / REFER; VictoryPie → our react-native-svg donut; gender removed |
+| `Screens/Results.js` | `src/app/teacher/result/[sessionId].tsx` | PTA, grades, dB HL ranges and audiogram → our outcome and a per-ear, per-tone heard / not heard / not tested table; share modal removed |
+
+Not copied: `Screens/Educator/EducatorCreate.js` (typed class strength; ours is counted), `utils/Audiometry.js` (our
+screening engine is unchanged). All data comes from the phone's SQLite; none of their network calls are kept. Every
+screen uses our design system and our English/Telugu strings.
+
 ## Our features
 
 Filled in per phase.

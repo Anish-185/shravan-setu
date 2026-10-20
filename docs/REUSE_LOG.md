@@ -317,3 +317,42 @@ Candidates and the icon inspection are in `docs/DESIGN.md` (section 0 and "Not u
   and they would add a second metering path next to expo-audio's, which our noise reference was measured with.
 - Decision: (c) build, reusing what we have: the mic meter in `useScreeningAudio`, the shared `ambientLevel()` rule
   and the `noise.*` config. New code is a ~25-line ranking function (`screener/src/rooms.ts`, jest) and one screen.
+
+## Teacher-view integration (2026-10-20)
+
+Owner instruction: reuse the original DhwaniSarathi teacher, classroom, assignment, analytics and results screens
+(`audiometer/app/`, Apache-2.0, our upstream) instead of building them. Per-file plan: `docs/INTEGRATION_PLAN.md`.
+
+### 1. The screens themselves
+
+- Decision: (b) copy and adapt. Login.js, EducatorHome.js, ClassroomList.js, AssignmentList.js, AssignmentAnalytics.js
+  and Results.js are copied into `screener/` with our data source, demo login, outcomes instead of hearing-loss grades
+  and our design system. Licence: Apache-2.0 (repo `LICENSE`); the files have no headers to keep; each adapted file
+  carries a notice of the original file and our changes. Credited in `ATTRIBUTION.md`.
+
+### 2. Pie chart (their `VictoryPie`)
+
+- Queries: `gh search repos` "react native pie chart svg" (no results), "react native donut chart"; npm:
+  victory-native, react-native-pie-chart, react-native-svg-charts, react-native-gifted-charts.
+- Candidates:
+  - victory-native 36.9.2 (their version) / 37.3.6 `legacy` tag (MIT, SVG): installs 40 MB in 51 packages (measured with
+    `npm install --ignore-scripts`), over the ~5 MB ask-first limit; React 19 / RN 0.86 support not verified.
+  - victory-native 42.0.1 (MIT, 2026-08-31): a different library (Victory Native XL) on Skia; would not keep their
+    component structure.
+  - react-native-pie-chart 4.0.2 (MIT, 2025-12-25, 337 kB, depends on d3-shape): viable.
+  - react-native-svg-charts 5.4.0 (MIT): last release 2022-05-14, unmaintained.
+  - react-native-gifted-charts 1.4.81 (MIT, 2026-10-05): full chart kit, more than one pie needs.
+  - GitHub donut repos: ppoliani/rn-donut-chart and alexfigliolia/react-native-donut-chart (no licence),
+    aliaksandr-andreyeu/react-native-donut-chart and hoahoang311/react-native-donut-chart (MIT, small, little use).
+- Decision: (c) build: `screener/src/teacher/Pie.tsx`, about 30 lines on `react-native-svg` (already a dependency),
+  same inputs as their `VictoryPie` call (`data` of `{x, y}`, `colorScale`, radii, slice tap). Under the 100-line
+  build threshold, and no new dependency.
+
+### 3. Other original libraries
+
+- react-native-paper, react-native-vector-icons, react-native-virtualized-view, AsyncStorage, react-i18next: replaced by
+  what we already have (our `ui.tsx` components, `icons.tsx`, React Native `ScrollView`, SQLite `kv`, `useT()`).
+- firebase: banned (CLAUDE.md); demo login instead.
+- react-native-view-shot, expo-media-library, expo-clipboard: their features (share results as an image, copy
+  assignment ID) are dropped, so not needed.
+

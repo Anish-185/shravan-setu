@@ -69,6 +69,12 @@ no Expo account needed for local development.
 | Fonts: Hind Guntur (3 weights), Tiro Telugu (+ Italic), Baloo Tammudu 2 SemiBold, bundled in `assets/fonts/` (2.6 MB) | — | SIL OFL 1.1 | 0 | None (loaded from the app bundle) |
 | Lucide icon shapes in `src/icons.tsx` | 1.59.0 | ISC (+ MIT for Feather-derived icons) | 0 | None |
 
+Teacher-view integration (2026-10-20, `docs/INTEGRATION_PLAN.md`) added **no dependency**. The original screens'
+libraries were not carried over: victory-native (its maintained SVG line installs 40 MB; replaced by a small donut on
+`react-native-svg`, already a dependency), react-native-paper (replaced by our design system), firebase (banned;
+replaced by a demo login kept on the phone), react-native-view-shot / expo-media-library / expo-clipboard (features
+dropped). No new network calls: the teacher screens read only the phone's SQLite.
+
 Phase 7 added one dependency, `@noble/hashes` (MIT, synchronous SHA-256 for the audit log; no network). The
 quiet-spot finder added none. No new network calls.
 
