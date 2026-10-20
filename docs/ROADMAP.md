@@ -24,3 +24,8 @@ Items planned for later rounds; none of them is built in this version.
   tolerance set from team-test retest data. Not designed in detail or tested yet.
 - **School pilot (via SFIC field-testing support).** The deployment plan in `docs/COST_MODEL.md` (students per phone,
   scenarios, classroom tips) is proposed, not tested; a pilot would measure minutes per child, coverage and follow-up.
+- **Teacher view: demo limitations (accepted 2026-10-20).** The teacher login is a demo login (name + a PIN kept on
+  the phone, no account, no PIN reset; clearing the app's data resets it). Screening rounds ("assignments") are stored
+  on the phone only and are not synced. Children added before the class label existed appear under "No class label";
+  there is no screen to edit a child's label yet. A real deployment would need proper teacher accounts, synced rounds
+  and label editing.
