@@ -11,6 +11,7 @@ import { db } from '@/db';
 import { kvGet, list, put } from '@/db/store';
 import { useT } from '@/i18n';
 import { Icon } from '@/icons';
+import { Banner } from '@/original/Banner';
 import { Btn, C, Card, Chips, F, H, P, s, StatusPill, Tile } from '@/ui';
 
 const AGE_BANDS = ['6-8', '9-11', '12-14', '15-18'] as const;
@@ -36,6 +37,7 @@ export default function Children() {
 
   return (
     <ScrollView contentContainerStyle={s.screen}>
+      <Banner title={t('title.children')} text={t('ds.bannerChildren')} image={require('@/assets/images/original/ears.jpg')} />
       {!school && <P>{t('children.pickSchool')}</P>}
       <Card>
         <H>{t('children.addH')}</H>

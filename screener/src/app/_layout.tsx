@@ -6,6 +6,7 @@ import { View } from "react-native";
 
 import { LangProvider, useT } from "@/i18n";
 import { Paper } from "@/original/paper";
+import { TabBar } from "@/TabBar";
 import { C, F, LangToggle } from "@/ui";
 
 // Fonts load from the bundle (offline) while the splash screen stays up.
@@ -69,6 +70,7 @@ export default function RootLayout() {
       <Paper>
         <View style={{ flex: 1, backgroundColor: C.paper }}>
           <Screens />
+          <TabBar />
         </View>
       </Paper>
     </LangProvider>
