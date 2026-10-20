@@ -1,4 +1,4 @@
-# Phone checklist: Phase 6 build (V-Y DONE 2026-10-19; Z and team tests NEED YOU)
+# Phone checklist: Phase 6 build (CLOSED: V-Y passed 2026-10-19; Z superseded; team tests done)
 
 **Setup:** `git pull`; restart `runserver`; fully close Expo Go (swipe it away), reopen and reload. Same Redmi +
 Samsung wired earphones, fixed media volume.
@@ -38,6 +38,10 @@ Redmi 2201117TI, Samsung wired earphones, media volume zero then 6 steps.
 - **Y** pass: loudest level comfortable at zero then 6 steps → `calibration.media_volume_steps` = 6.
 
 ## Z. Quick look at the two warning changes (after `git pull` and a reload)
+
+**Closed 2026-10-20, superseded:** the on-screen "Screening only" notes were removed by owner decision (2026-10-20;
+the disclaimer stays in the camp-request PDF and the docs), and UNCALIBRATED became the provisional-calibration line
+(`docs/PHASE7_DEVICE_CHECKLIST.md` A). The team tests ran with 7 volunteers (V1-V7, CLAIMS CAL-01..03).
 
 - Home, the test steps, the result, triage, Cases, a case, camp requests: "Screening only, not a diagnosis" is a
   small grey one-line note with an ⓘ, no box. English and Telugu, not cut off.

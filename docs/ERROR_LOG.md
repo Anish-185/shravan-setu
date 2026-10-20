@@ -629,7 +629,7 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Root cause: `<Link asChild>` renders through expo-router's `Slot`, which merges props into the child and throws on an array `style`.
 - Fix: every `Link asChild` replaced by a `Pressable` with `router.push`; lint rule `no-restricted-syntax` on `asChild` in `screener/eslint.config.js`.
 - Status: FIXED
-- Verification: `src/__tests__/routes.smoke.test.tsx` reproduced it (`/teacher` failed on console.error) and now passes every route; eslint finds no `asChild`.
+- Verification: `src/__tests__/routes.smoke.test.tsx` reproduced it (`/teacher` failed on console.error) and now passes every route; eslint finds no `asChild`. On the Redmi (owner, 2026-10-20): tapping a classroom card opens the classroom, no crash (`docs/ORIGINAL_UI_DEVICE_CHECKLIST.md` B3).
 - Lesson: render every route in jest with a console-error gate.
 
 ### ERR-055: `npm i -D @testing-library/react-native` failed with ERESOLVE

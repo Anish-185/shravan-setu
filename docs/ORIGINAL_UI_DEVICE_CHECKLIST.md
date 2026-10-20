@@ -1,4 +1,4 @@
-# Original UI phone checklist (Redmi 2201117TI, Samsung wired earphones, Expo Go)
+# Original UI phone checklist (Redmi 2201117TI, Samsung wired earphones, Expo Go) (DONE 2026-10-20, all passed)
 
 Updated 2026-10-20 for the fix-and-finish pass (login first, five tabs, child's tests, our design). After `git pull`
 and a reload of the app. Use fake children only (Student T1, T2 ...). Report pass / fail and anything odd for each
@@ -45,3 +45,17 @@ number. Plan and parity table: `docs/INTEGRATION_PLAN.md`.
    (batch 5 filled the last 56 strings, `docs/TELUGU_BATCH_5.md`). English left on purpose: PASS / RETEST / REFER,
    dB, Hz, WHO, PDF, WhatsApp, PIN, dates.
 2. Home shows "స్వాగతం," with your name on the next line.
+
+## Results (owner, 2026-10-20): all passed
+
+Redmi 2201117TI, Samsung wired earphones, Expo Go, fake children only.
+
+- **A** pass: login first, stays logged in after a restart, logout and wrong / right PIN.
+- **B** pass: five tabs; tapping a classroom card opens the classroom with no crash (ERR-054 confirmed on the phone).
+- **C** pass: child's tests open from every entry point (Children, classroom, analytics, case name); new rows at the
+  top; "View result" opens the result.
+- **D** pass: Make sure, Check your surrounding, Which ear.
+- **E** pass: detailed test, including Yes / No / Replay greyed out while the earphones are unplugged.
+- **F** pass: both audiograms and the ear bars draw on the phone; tapping a frequency shows its values; PDF share;
+  analytics donut draws and slice / legend filtering works.
+- **G** pass: Telugu with no `[TODO_TE]` markers and nothing cut off.
