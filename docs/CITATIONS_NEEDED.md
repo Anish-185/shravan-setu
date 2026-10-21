@@ -27,3 +27,4 @@ Not reachable: the ASHA (1997) *Guidelines for Audiologic Screening* page (`asha
 | 7 | Typical class size in the target schools (or a government statistic) | 40 students per class (placeholder) | `config/cost_model.json` `students_per_class`; scenario C kit count (COST-03) |
 | 8 | Optional: teacher cost per hour, and SMS price per message | Rupee value of ~5 min per child; future SMS cost | `config/cost_model.json` |
 | 9 | Optional: an Indian school hearing-screening protocol (state or national programme, e.g. RBSK) | Would let us cite a local screening level and frequencies alongside AAA (2011) | `config/screening.json`, `scripts/eval_nhanes.py` |
+| 10 | The source for **12.16 crore children in government schools** (owner-supplied, 2026-10-21) | Year, school types and grades covered. Not matched by our search: UDISE+ 2024-25 and 2025-26 give other totals for government schools | `README.md` "The problem in 3 numbers" |
