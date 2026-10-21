@@ -698,3 +698,13 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: 30 PNGs in `docs/screens/`, each checked visually (contact sheet).
 - Lesson: assert the input list is the expected length before a batch loop.
+
+### ERR-061: release build failed: NDK licence "not accepted" although `sdkmanager --licenses` had run
+- Phase / date: Phase 8 APK / 2026-10-21
+- Symptom: `LicenceNotAcceptedException: Failed to install the following Android SDK packages as some licences have not been accepted. ndk;27.1.12297006` (`./gradlew assembleRelease`, after 4 min).
+- Where: `scripts/build_apk.sh` (Gradle configuring `:app`); setup step `yes | sdkmanager --licenses >/dev/null 2>&1 || true`
+- Root cause: command-line tools 23.0 deprecated `sdkmanager --licenses` ("The --licenses option is no longer needed") and it no longer writes `sdk/licenses/android-sdk-license`, which Gradle still checks before auto-installing the NDK. My setup command hid that output, so the gap only showed in Gradle.
+- Fix: install the packages explicitly, which accepts and records the licence: `yes | sdkmanager --install "ndk;27.1.12297006" "platforms;android-36" "build-tools;36.0.0" "platform-tools"` (versions from `react-native/gradle/libs.versions.toml`). Documented in `docs/APK.md`.
+- Status: FIXED
+- Verification: `sdk/licenses/android-sdk-license` exists; the rebuild finished: `BUILD SUCCESSFUL in 39m 26s` (612 tasks), APK verified with `apksigner verify`.
+- Lesson: don't send setup commands' output to /dev/null; check the file the next tool depends on.

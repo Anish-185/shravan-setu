@@ -113,3 +113,7 @@ data/raw/
 
 # Raw phone screenshots: only the chosen, renamed copies in docs/screens/ go into git
 sharess/
+
+# Release APKs are built locally (scripts/build_apk.sh) and shared directly, never committed
+*.apk
+*.aab

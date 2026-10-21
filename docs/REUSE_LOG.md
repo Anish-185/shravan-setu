@@ -456,3 +456,17 @@ recorded source) with a free image with a clear licence, or with our own SVG art
 - Decision: (c) build ourselves in react-native-svg (`src/illustrations.tsx`): Lucide glyphs inside our arch scene,
   plus our own head, earbud, equalizer and switch drawings. No image files, scales on any screen. `scripts/make_art.py`
   and its test removed.
+
+## APK build (Phase 8, 2026-10-21)
+
+### Release APK without EAS or an account
+- Need: a sideloadable APK built on the laptop, free, no Expo account; it must still sync over plain HTTP to the
+  laptop on the LAN (Android blocks cleartext traffic in release builds by default; Expo Go allows it).
+- Options: EAS Build (free tier, needs an Expo account and uploads the project; allowed only as a convenience);
+  `npx expo prebuild` + Gradle locally (JDK 17 Temurin GPL-2.0+CE and Android command-line tools under the Android
+  SDK licence, laptop-only build tools, not shipped); hand-editing the generated `android/` manifest (lost on every
+  prebuild).
+- Decision: (a) dependency `expo-build-properties` 57.0.22 (MIT, Expo's own config plugin, matches SDK 57, no network
+  call, no install script) with `android.usesCleartextTraffic = true`, plus local prebuild + Gradle in
+  `scripts/build_apk.sh`. `android.allowBackup = false` in `app.json` so Android cloud backup never copies the
+  children's records. `android/`, the keystore and `*.apk` stay out of git.
