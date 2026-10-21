@@ -78,6 +78,9 @@ npm install
 npx expo start                  # scan the QR code with Expo Go on the phone
 ```
 
+Or build a standalone APK on the laptop (JDK 17 + Android command-line tools, free, no account):
+`bash scripts/build_apk.sh`, then install it on the phone; steps and a smoke checklist in [`docs/APK.md`](docs/APK.md).
+
 In the app: log in with a demo name and PIN (kept on the phone). For sync, Settings → Backend: server
 `http://<laptop-ip>:8000` and a server login (`manage.py createsuperuser`). Screening, triage, cases and status updates work with no network; sync happens later. A step-by-step demo
 path: [`docs/DEMO_PATH.md`](docs/DEMO_PATH.md); the 2-minute video script: [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md).
@@ -105,7 +108,7 @@ or `TODO(source)`.
   (not synced).
 - SMS reminders are stubbed: the app logs what would be sent. Facilities come from a local CSV; the demo facility is
   fake.
-- Runs in Expo Go.
+- Runs in Expo Go, or as a locally built Android APK shared directly (no Play Store): [`docs/APK.md`](docs/APK.md).
 - Roadmap and the Stage 2 pilot: [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Docs
