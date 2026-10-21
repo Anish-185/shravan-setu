@@ -110,3 +110,6 @@ server/db.sqlite3
 data/raw/
 .remember/
 .pytest_cache/
+
+# Raw phone screenshots: only the chosen, renamed copies in docs/screens/ go into git
+sharess/

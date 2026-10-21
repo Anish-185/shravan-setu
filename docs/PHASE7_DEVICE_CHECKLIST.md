@@ -21,3 +21,12 @@ After `git pull` and a reload of the app. Report pass / fail and anything odd fo
    place (corridor): the quietest comes first and the corridor shows "too noisy for screening".
 3. Unplug the earphones: the measure button is disabled and the "No wired earphones detected" line shows.
 4. Telugu mode: the new lines show English with a `[TODO_TE]` marker until the Telugu is added.
+
+## Results (owner, 2026-10-21): all passed
+
+Redmi 2201117TI, Samsung wired earphones, Expo Go, fake children only.
+
+- **A** pass: the provisional-calibration line shows on the result (screenshot `docs/screens/11-result-retest-provisional.png`,
+  Telugu `28-te-result-retest.png`).
+- **B** pass: Settings → Verify audit log says OK.
+- **C** pass: the quiet-spot finder measures a room and lists it.

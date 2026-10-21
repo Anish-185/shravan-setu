@@ -194,6 +194,7 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Recheck (warning restyle, 2026-10-19 evening): `npm audit` → 57 (8 moderate, 49 high). No change.
 - Recheck (Phase 6 Step 0, 2026-10-19): `npm audit` → 57 (8 moderate, 49 high), same 5 advisories; braces 3.0.3, node-forge 1.4.0, sprintf-js 1.1.3 are still the latest releases; decode-uri-component still needs expo-router 58. No change.
 - Recheck (Phase 7 Step 0, 2026-10-20): `npm audit` → 57 (8 moderate, 49 high); braces 3.0.3, node-forge 1.4.0, sprintf-js 1.1.3 still the latest releases; decode-uri-component 0.5.0 still ESM-only. No change.
+- Recheck (Phase 8 Step 0, 2026-10-21): `npm audit` → 57 (8 moderate, 49 high); braces 3.0.3, node-forge 1.4.0, sprintf-js 1.1.3 still the latest releases; decode-uri-component 0.5.0 still ESM-only. No change.
 - Verification: `npm install` → `57 vulnerabilities`, no install-scripts warning; `npm ls uuid` → xcode uses uuid@11.1.1; `npx tsc --noEmit` exit 0; `npx expo lint` exit 0; `npx jest` 46 passed; `npx expo-doctor` 21/21; `npx expo export --platform android` exit 0.
 - Next step: at each Step 0, run `npm audit` and recheck braces/node-forge/sprintf-js for patched releases (add an override if one is semver-compatible). Move to expo-router 58 when the Play Store Expo Go supports SDK 58, which clears decode-uri-component.
 - Lesson: read `npm audit` by root advisory and by whether the package ships in the bundle; never take `audit fix --force` in an Expo project.
@@ -687,3 +688,13 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - ERR-015 (npm audit, OPEN, upstream): rechecked after this phase's installs and removals: still 57 (8 moderate,
   49 high); no safe fix. ERR-041 (web build without expo-sqlite, WORKAROUND, dev tooling) and ERR-044
   (provisional 1-4 kHz calibration, WORKAROUND, needs the quieter tone set and a phone session) unchanged.
+
+### ERR-060: screenshot conversion loop read an index file from the wrong folder
+- Phase / date: Phase 8 screenshots / 2026-10-21
+- Symptom: `index.txt: No such file or directory`, then 30× `magick: no decode delegate for this image format 'sharess/'`; no images written.
+- Where: one-off shell loop that crops and renames the chosen screenshots into `docs/screens/`
+- Root cause: the file list was saved in `scratchpad/sheets/index.txt`, but the loop read `scratchpad/index.txt`; the empty array made every input path just `sharess/`.
+- Fix: read the right path and added `set -e` plus a `test ${#files[@]} -eq 71` guard before the loop.
+- Status: FIXED
+- Verification: 30 PNGs in `docs/screens/`, each checked visually (contact sheet).
+- Lesson: assert the input list is the expected length before a batch loop.
