@@ -708,3 +708,23 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: `sdk/licenses/android-sdk-license` exists; the rebuild finished: `BUILD SUCCESSFUL in 39m 26s` (612 tasks), APK verified with `apksigner verify`.
 - Lesson: don't send setup commands' output to /dev/null; check the file the next tool depends on.
+
+### ERR-062: the README's test commands failed when followed line by line
+- Phase / date: Phase 9 fresh-clone check / 2026-10-21
+- Symptom: `server/.venv/bin/python: No such file or directory` on the last line (`eval.report`) of README "Tests and evidence".
+- Where: `README.md`, fresh clone in a temp folder
+- Root cause: the block used `cd` without subshells, so after `cd screener && npx jest` the next line ran from `screener/`, not the repo root.
+- Fix: every line now runs from the repo root (`(cd server && ...)`, `(cd screener && ...)`), with a "From the repo root:" header and a note on the NHANES download.
+- Status: FIXED
+- Verification: fresh clone, block run exactly as written: server 231, scripts 41, PARITY OK, jest 188, tsc OK, `eval.report --check` "CLAIMS.md matches" (NHANES rows skipped: data not downloaded).
+- Lesson: write README command blocks so each line works from one stated folder; test them in a fresh clone.
+
+### ERR-063: jest count reported as 189; a fresh clone runs 188
+- Phase / date: Phase 9 fresh-clone check / 2026-10-21
+- Symptom: `Tests: 188 passed, 188 total` in a fresh clone vs 189 on the laptop; 189 had been quoted in `docs/CONCEPT_NOTE_CHANGES.md` and the Phase 8 report.
+- Where: `screener/src/__tests__/routes.smoke.test.tsx` (reads every file in `src/app`)
+- Root cause: the laptop has `src/app/preview.tsx`, a web-preview stand-in kept out of git with `.git/info/exclude` (ERR-041); the route smoke test opens it too, adding one test that doesn't exist in the repo.
+- Fix: quote the committed count, 188 (`docs/CONCEPT_NOTE_CHANGES.md`). Test counts for claims come from a fresh clone from now on.
+- Status: FIXED
+- Verification: fresh clone `npx jest` → 188 passed; laptop with the stand-in → 189.
+- Lesson: local-only files must not feed numbers we publish; count tests in a clean checkout.

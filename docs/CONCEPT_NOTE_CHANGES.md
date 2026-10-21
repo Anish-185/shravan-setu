@@ -98,7 +98,7 @@ detailed test's grades are labelled "estimated", in dB re: team baseline.
 
 ## 6. Other things a judge might check
 
-- **Tests (2026-10-21):** server 231 passed, evaluation scripts 41 passed, app (jest) 189 passed; 92 shared rule
+- **Tests (2026-10-21):** server 231 passed, evaluation scripts 41 passed, app (jest) 188 passed (a fresh clone of the repo); 92 shared rule
   fixtures pass in both Python and JS (`scripts/check_rules_parity.sh`). Commands in `README.md`.
 - **Dependencies:** removed react-native-paper and victory-native (charts are react-native-svg); added
   `@noble/hashes` (MIT, audit log) and `expo-build-properties` (MIT, APK build setting). Four build-only packages with

@@ -87,13 +87,18 @@ path: [`docs/DEMO_PATH.md`](docs/DEMO_PATH.md); the 2-minute video script: [`doc
 
 ## Tests and evidence
 
+From the repo root:
+
 ```
-cd server && .venv/bin/python -m pytest            # server: referrals, sync, rules, audit log
-cd .. && server/.venv/bin/python -m pytest scripts # evaluation scripts
+(cd server && .venv/bin/python -m pytest)          # server: referrals, sync, rules, audit log
+server/.venv/bin/python -m pytest scripts          # evaluation scripts
 bash scripts/check_rules_parity.sh                 # Python and JS rules on the same shared fixtures
-cd screener && npx jest && npx tsc --noEmit        # app
-server/.venv/bin/python -m eval.report             # from the repo root: regenerates eval/results.md and CLAIMS
+(cd screener && npx jest && npx tsc --noEmit)      # app
+server/.venv/bin/python -m eval.report             # regenerates eval/results.md and the CLAIMS rows
 ```
+
+NHANES rows need the public CDC files first (`python scripts/eval_nhanes.py --download`, see
+[`eval/README.md`](eval/README.md)); without them those rows are skipped, never guessed.
 
 Every number we quote is in [`docs/CLAIMS.md`](docs/CLAIMS.md) with its condition and the script that produces it;
 `python -m eval.report --check` (run by pytest) fails if a number drifts. Simulated results are labelled SIMULATED,
