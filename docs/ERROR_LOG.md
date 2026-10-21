@@ -728,3 +728,23 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: FIXED
 - Verification: fresh clone `npx jest` → 188 passed; laptop with the stand-in → 189.
 - Lesson: local-only files must not feed numbers we publish; count tests in a clean checkout.
+
+### ERR-064: a wait loop never ended because `pgrep -f` matched the loop itself
+- Phase / date: Phase 9 fresh-clone check / 2026-10-21
+- Symptom: the "wait for NHANES reproduction" shell loop ran past its 600 s timeout although the job had finished; stopped with `pkill` (exit 144).
+- Where: one-off shell command `until ... ! pgrep -f "eval_nhanes|eval.report|uv pip"; do sleep 5; done`
+- Root cause: `pgrep -f` searches full command lines, and the loop's own `bash -c` command line contains the pattern, so the condition never became true (same family as ERR-057).
+- Fix: none needed in the repo; the job's own completion notice gave the result. For waits, check a file the job writes, or use `pgrep -f '[e]val.report'` so the pattern can't match itself.
+- Status: FIXED
+- Verification: the reproduction's output (`CLAIMS.md matches the computed results`) read directly.
+- Lesson: never `pgrep -f` for a pattern that appears in your own command line.
+
+### ERR-065: following the README's `eval.report` step without the NHANES files rewrote CLAIMS.md without those rows
+- Phase / date: Phase 9 fresh-clone check / 2026-10-21
+- Symptom: in a fresh clone, `python -m eval.report` (no data downloaded) rewrote `docs/CLAIMS.md` (6 lines removed) and `eval/results.md` (85 lines removed): the NHANES rows and device-trial tables disappear.
+- Where: `README.md` "Tests and evidence", `eval/report.py`
+- Root cause: the generator writes only the rows it can compute; the README told readers to regenerate rather than to check.
+- Fix: README now runs `eval.report --check` (changes no file; skips NHANES rows without the data) and gives the download steps before a full regeneration. `eval/report.py` unchanged (feature freeze); making it refuse to drop rows when data is missing is a later improvement.
+- Status: WORKAROUND
+- Verification: fresh clone: `--check` without data → "matches (NHANES rows skipped: data not downloaded)", tree clean; after `eval_nhanes.py --download` + pandas → "CLAIMS.md matches the computed results", tree clean.
+- Lesson: README evidence steps should be read-only by default.

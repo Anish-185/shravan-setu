@@ -94,11 +94,14 @@ From the repo root:
 server/.venv/bin/python -m pytest scripts          # evaluation scripts
 bash scripts/check_rules_parity.sh                 # Python and JS rules on the same shared fixtures
 (cd screener && npx jest && npx tsc --noEmit)      # app
-server/.venv/bin/python -m eval.report             # regenerates eval/results.md and the CLAIMS rows
+server/.venv/bin/python -m eval.report --check     # recomputes every number and compares it with docs/CLAIMS.md
 ```
 
-NHANES rows need the public CDC files first (`python scripts/eval_nhanes.py --download`, see
-[`eval/README.md`](eval/README.md)); without them those rows are skipped, never guessed.
+`--check` changes no file. Without the public NHANES files it checks every other row and skips the NHANES rows. To
+regenerate everything (`eval/results.md`, the chart and the CLAIMS rows), first download the CDC files and pandas
+(`server/.venv/bin/python scripts/eval_nhanes.py --download`, `uv pip install -p server/.venv/bin/python -r
+requirements-eval.txt`; see [`eval/README.md`](eval/README.md)), then run `server/.venv/bin/python -m eval.report`.
+Device-trial tables need the raw session files, which stay on the team laptop (`data/raw/`, gitignored).
 
 Every number we quote is in [`docs/CLAIMS.md`](docs/CLAIMS.md) with its condition and the script that produces it;
 `python -m eval.report --check` (run by pytest) fails if a number drifts. Simulated results are labelled SIMULATED,
