@@ -30,7 +30,6 @@ export type DetailedTest = { child: string; finished_at: string; points: Point[]
 
 const FREQS: number[] = v(cfg, 'detailed_test', 'frequencies_hz');
 const gradeKey = (g: string) => `ds.grade.${g}` as Key;
-const infoKey = (g: string) => `ds.info.${g}` as Key;
 
 export default function Results() {
   const t = useT();
@@ -79,7 +78,7 @@ export default function Results() {
       </View>
       {overall && (
         <Card>
-          <Text style={s.p}>{`${t('ds.rangeLine', { range: overall.formattedRange })} ${t(infoKey(overall.category))}`}</Text>
+          <Text style={s.p}>{t('ds.rangeLine', { range: overall.formattedRange })}</Text>
           {test.calibration_provisional && <Note icon="info" color={C.amber} text={t('ds.estimateLine')} />}
         </Card>
       )}

@@ -1399,36 +1399,6 @@
   "te": "సగటు వినికిడి స్థాయి {range} dB పరిధిలో ఉంది (టీమ్ బేస్‌లైన్‌తో పోలిస్తే dB).",
   "where": "Results: line under the estimated grade"
  },
- "ds.info.Normal": {
-  "en": "You can hear a whisper, rustling leaves, and ticking clocks.",
-  "te": "మీకు గుసగుసలు, ఆకుల సవ్వడి, గడియారం టిక్‌టిక్ వినిపిస్తాయి.",
-  "where": "Results: what the Normal grade usually means (original wording)"
- },
- "ds.info.Mild": {
-  "en": "You can hear a conversation in a quiet room, but may have difficulty hearing a whisper or soft sounds.",
-  "te": "నిశ్శబ్ద గదిలో మాటలు వినిపిస్తాయి, కానీ గుసగుసలు లేదా మెల్లని శబ్దాలు వినడం కష్టంగా ఉండవచ్చు.",
-  "where": "Results: what the Mild grade usually means (original wording)"
- },
- "ds.info.Moderate": {
-  "en": "You may have difficulty hearing some quieter conversations.",
-  "te": "కొన్ని మెల్లని సంభాషణలు వినడం కష్టంగా ఉండవచ్చు.",
-  "where": "Results: what the Moderate grade usually means (original wording)"
- },
- "ds.info.Moderately severe": {
-  "en": "You may have difficulty hearing a normal conversation. You may lip-read or use hearing aids to help with communication.",
-  "te": "సాధారణ సంభాషణ వినడం కష్టంగా ఉండవచ్చు. పెదవుల కదలికలు చూడటం లేదా వినికిడి యంత్రాలు మాట్లాడుకోవడానికి సహాయపడవచ్చు.",
-  "where": "Results: what the Moderately severe grade usually means (original wording)"
- },
- "ds.info.Severe": {
-  "en": "You can understand speech only if the speaker is close by.",
-  "te": "మాట్లాడేవారు దగ్గరగా ఉంటేనే మాటలు అర్థమవుతాయి.",
-  "where": "Results: what the Severe grade usually means (original wording)"
- },
- "ds.info.Profound": {
-  "en": "You may have problems understanding speech, and may not hear loud sounds such as lawn mowers or passing cars.",
-  "te": "మాటలు అర్థం చేసుకోవడంలో ఇబ్బంది ఉండవచ్చు; లాన్ మూవర్లు లేదా వెళ్ళే వాహనాల వంటి పెద్ద శబ్దాలు కూడా వినిపించకపోవచ్చు.",
-  "where": "Results: what the Profound grade usually means (original wording)"
- },
  "ds.grade.Normal": {
   "en": "Normal",
   "te": "సాధారణం",

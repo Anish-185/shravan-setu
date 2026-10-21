@@ -8,6 +8,10 @@ typed on the phone for this session, not a real child** (confirmed by the owner,
 Processing: the phone status bar (top) and gesture bar (bottom) were cropped off; images were resized to 720 px wide
 and reduced to 128 colours. Nothing inside a screen was edited.
 
+`14-results-summary.png` and `29-te-results.png` were taken before 2026-10-21, when the descriptive sentence under the
+estimated grade ("You can hear a whisper, rustling leaves, and ticking clocks.") was removed from the app; the current
+results screen shows only the estimated grade, the dB range line and the provisional-calibration line.
+
 The round grey gear button floating on most screens is Expo Go's developer-tools button, not part of our app. It
 does not appear in the APK build.
 

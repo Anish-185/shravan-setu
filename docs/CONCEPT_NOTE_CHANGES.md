@@ -94,7 +94,10 @@ detailed test's grades are labelled "estimated", in dB re: team baseline.
   line drawings by our team and CC0 Open Peeps figures (`ATTRIBUTION.md`).
 - **Android APK:** built locally with free tools (no Expo account, no Play Store), signed with our own key, shared
   directly (`docs/APK.md`). Needs the install-and-smoke check on the Redmi before the demo.
-- **Telugu:** all 383 UI strings have Telugu, each reviewed by a native speaker (`docs/TELUGU_REVIEW.md`); Telugu voice instructions recorded by the team.
+- **Detailed-test wording (2026-10-21):** the descriptive sentences under each grade ("You can hear a whisper…")
+  were removed from the results screen; the grade keeps its "Estimated" label, with the category table, audiograms and
+  the provisional-calibration line.
+- **Telugu:** all 377 UI strings have Telugu, each reviewed by a native speaker (`docs/TELUGU_REVIEW.md`); Telugu voice instructions recorded by the team.
 
 ## 6. Other things a judge might check
 

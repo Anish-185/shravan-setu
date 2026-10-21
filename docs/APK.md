@@ -57,14 +57,25 @@ The APK is a separate app with its own empty database; the children and cases in
 
 Report pass / fail for each number, and anything odd.
 
+### Results (owner, 2026-10-21): all 11 passed
+
+Build tested: the 14:55 build, SHA-256 `b2e0296df6f8bfcccec41623767e12841b843dafc9c4c07fe27467e6de1ab8a7` (arm64-v8a,
+unused permissions removed). Redmi 2201117TI, Samsung wired earphones, fake children only. Steps 1-11 passed,
+including step 8: sync to the laptop over plain HTTP on the LAN works in the release APK.
+
+The final build (`531b4695…`, build record below) differs from the tested one only by the removal of the
+descriptive sentence under the estimated grade on the results screen (same key, same 6 permissions, same manifest
+flags; the sentence and its string keys are absent from the bundle). It was not re-run through the 11 steps; a
+quick look at Your Results after installing it is enough.
+
 ## Build record: v1.0 (2026-10-21)
 
 | | |
 |---|---|
 | File | `shravan-setu-v1.0.apk` (laptop only, not in git) |
 | ABI | arm64-v8a only |
-| Size | 60,283,899 bytes (57.5 MiB) |
-| SHA-256 | `b2e0296df6f8bfcccec41623767e12841b843dafc9c4c07fe27467e6de1ab8a7` (rebuilt 2026-10-21 14:55 with unused permissions removed) |
+| Size | 60,281,615 bytes (57.5 MiB) |
+| SHA-256 | `531b46954e0c234de99e9159516c3b94d8d7bc04624f1e070fe3e7d25a1ffe06` (final, 2026-10-21 15:30: unused permissions removed, descriptive grade sentences removed) |
 | Signing certificate SHA-256 | `0725d69d23ab85af536893c2a1d88bde782ca8eb7ec9b3cdef50dd885ca5cca7` (CN=Shravan Setu demo) |
 | Package / version | `io.github.anish185.shravansetu`, versionName 1.0.0, versionCode 1; targetSdk 36, minSdk 24 |
 | Checked with | `apksigner verify` (signature OK); `aapt2 dump`: `allowBackup=false`, `usesCleartextTraffic=true`, not debuggable |
