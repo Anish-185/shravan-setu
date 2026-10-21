@@ -56,3 +56,24 @@ The APK is a separate app with its own empty database; the children and cases in
 11. Close the app from recents and reopen: still logged in, Student T1 and the result are still there.
 
 Report pass / fail for each number, and anything odd.
+
+## Build record: v1.0 (2026-10-21)
+
+| | |
+|---|---|
+| File | `shravan-setu-v1.0.apk` (laptop only, not in git) |
+| ABI | arm64-v8a only |
+| Size | 60,284,211 bytes (57.5 MiB) |
+| SHA-256 | `cdf840e8c00f0b2b5975a39e26de7b9f5e2c007895c8e2c8f65b7838125b46dc` |
+| Signing certificate SHA-256 | `0725d69d23ab85af536893c2a1d88bde782ca8eb7ec9b3cdef50dd885ca5cca7` (CN=Shravan Setu demo) |
+| Package / version | `io.github.anish185.shravansetu`, versionName 1.0.0, versionCode 1; targetSdk 36, minSdk 24 |
+| Checked with | `apksigner verify` (signature OK); `aapt2 dump`: `allowBackup=false`, `usesCleartextTraffic=true`, not debuggable |
+| Build time | first build 39 min (downloads + 4 ABIs); arm64-only rebuild with a warm cache 4.5 min |
+
+A universal build (arm64-v8a, armeabi-v7a, x86, x86_64; 130.7 MB, same key) from the first run is kept on the
+laptop as `shravan-setu-v1.0-universal.apk` for phones that aren't arm64.
+
+Permissions in the APK come from Expo and its modules, not from our code: microphone (room-noise check), internet
+and network state (sync), foreground media playback, vibrate, wake lock, storage up to Android 12 (sharing files),
+biometric (from expo-secure-store; we don't use it), and "display over other apps" (`SYSTEM_ALERT_WINDOW`, in the
+React Native template; we don't use it). Removing the unused ones (`android.blockedPermissions`) is a later clean-up.
