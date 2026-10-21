@@ -155,6 +155,11 @@ Every entry here must also appear in `docs/REUSE_LOG.md`.
 | Lucide 1.59.0 icon shapes, copied untouched from `lucide-static` (33 icons, listed in the file) | Lucide contributors (a few derive from Feather, Cole Bemis) | ISC + MIT (`screener/licenses/lucide-LICENSE.txt`) | `screener/src/icons.tsx` |
 | Open Peeps figures (peep-13, peep-standing-16, peep-sitting-14, peep-sitting-1), recoloured to Night ink and rendered to small PNGs | Pablo Stanley | CC0 1.0 | `screener/assets/images/peeps/` |
 
+### Build tools (not shipped in the app)
+
+- **caniuse-lite**: browser support data from Can I use (caniuse.com, by Alexis Deveria), packaged by the browserslist
+  project; licensed CC BY 4.0. Read by Babel's `browserslist` at build time on the laptop only. Not modified.
+
 ## Design mock-ups (`docs/design/*.png`)
 
 The two mock-up images in `docs/design/` (made for choosing a design direction, `docs/DESIGN.md`) are rendered with

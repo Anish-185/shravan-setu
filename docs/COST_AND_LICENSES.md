@@ -95,7 +95,9 @@ system Telugu font first; see `docs/REUSE_LOG.md`). Voice lines are plain MP3 re
 dependency); no network call.
 
 **Transitive packages with licences outside our allowlist** (all build or dev tooling pulled in by Expo, Babel or
-ESLint; none added by us; none is GPL-only). Pending owner approval:
+ESLint; none added by us; none is GPL-only). **Approved by the owner on 2026-10-21** as build and dev tools:
+they run on the laptop (bundler, CLI, Babel, lint) and are not shipped inside the app or the APK. node-forge is
+taken under BSD-3-Clause; caniuse-lite (CC-BY-4.0) is credited in `ATTRIBUTION.md`.
 
 | Package | Licence | Pulled in by | Assessment |
 |---|---|---|---|
