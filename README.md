@@ -35,9 +35,10 @@ for the Seva First Innovation Challenge 2026 (Theme 3, Track A) on top of the op
 </p>
 
 <p align="center">
-  <img src="docs/screens/10-child-mode-balloon.png" width="200" alt="Child mode: tap the balloon on every beep">&nbsp;
-  <img src="docs/screens/11-result-retest-provisional.png" width="200" alt="Result: RETEST with the provisional-calibration line">&nbsp;
-  <img src="docs/screens/22-case-history.png" width="200" alt="Referral case history: referred, camp, missed, rescheduled, seen">
+  <img src="docs/screens/10-child-mode-balloon.png" width="180" alt="Child mode: tap the balloon on every beep">&nbsp;
+  <img src="docs/screens/11-result-retest-provisional.png" width="180" alt="Result: RETEST with the provisional-calibration line">&nbsp;
+  <img src="docs/screens/17-audiogram-grade-bands.png" width="180" alt="Detailed test: audiogram on WHO 2021 grade bands">&nbsp;
+  <img src="docs/screens/22-case-history.png" width="180" alt="Referral case history: referred, camp, missed, rescheduled, seen">
 </p>
 
 ## The problem in 3 numbers
@@ -170,6 +171,24 @@ button is Expo Go's developer menu and does not appear in the APK. All 30, with 
 </tr>
 </table>
 
+### Detailed hearing test and results
+
+After a REFER, the teacher can run the detailed test: the original DhwaniSarathi threshold test, per ear and per
+frequency. Grades are estimates in dB re: team baseline, not dB HL.
+
+<table>
+<tr>
+<td align="center" width="33%"><img src="docs/screens/12-detailed-ear-check.png" width="200" alt="Which ear check"><br><sub>"Which ear?" check</sub></td>
+<td align="center" width="33%"><img src="docs/screens/13-detailed-tone.png" width="200" alt="Detailed tone test"><br><sub>Per-ear, per-frequency tones</sub></td>
+<td align="center" width="33%"><img src="docs/screens/14-results-summary.png" width="200" alt="Detailed results summary"><br><sub>Results summary (taken before the sentence under the grade was removed)</sub></td>
+</tr>
+<tr>
+<td align="center"><img src="docs/screens/15-ear-comparison.png" width="200" alt="Ear comparison"><br><sub>Left vs right ear</sub></td>
+<td align="center"><img src="docs/screens/16-audiogram.png" width="200" alt="Audiogram"><br><sub>Audiogram</sub></td>
+<td align="center"><img src="docs/screens/17-audiogram-grade-bands.png" width="200" alt="Audiogram on grade bands"><br><sub>Audiogram on WHO (2021) grade bands</sub></td>
+</tr>
+</table>
+
 ### Referral and follow-up
 
 <table>
@@ -185,6 +204,20 @@ button is Expo Go's developer menu and does not appear in the APK. All 30, with 
 </tr>
 </table>
 
+### Teacher view, assignments and analytics
+
+Classrooms, screening rounds (assignments) with a deadline, an outcome donut per round, and each child's tests linked
+to their referral case.
+
+<table>
+<tr>
+<td align="center" width="25%"><img src="docs/screens/03-classroom.png" width="200" alt="Classroom"><br><sub>Classroom</sub></td>
+<td align="center" width="25%"><img src="docs/screens/19-assignments.png" width="200" alt="Assignments"><br><sub>Screening rounds</sub></td>
+<td align="center" width="25%"><img src="docs/screens/20-assignment-analytics.png" width="200" alt="Assignment analytics"><br><sub>Round analytics</sub></td>
+<td align="center" width="25%"><img src="docs/screens/18-child-history.png" width="200" alt="Child history"><br><sub>One child's history</sub></td>
+</tr>
+</table>
+
 <details>
 <summary><b>Getting started</b> (login, home, add a child, device check)</summary>
 <br>
@@ -194,39 +227,6 @@ button is Expo Go's developer menu and does not appear in the APK. All 30, with 
 <td align="center" width="25%"><img src="docs/screens/02-home.png" width="200" alt="Home"><br><sub>Home</sub></td>
 <td align="center" width="25%"><img src="docs/screens/04-add-child.png" width="200" alt="Add a child"><br><sub>Add a child by pseudonym</sub></td>
 <td align="center" width="25%"><img src="docs/screens/06-device-check.png" width="200" alt="Device check"><br><sub>Device check</sub></td>
-</tr>
-</table>
-</details>
-
-<details>
-<summary><b>Detailed test and results</b> (ear check, tone test, ear comparison, audiograms)</summary>
-<br>
-<table>
-<tr>
-<td align="center" width="33%"><img src="docs/screens/12-detailed-ear-check.png" width="200" alt="Which ear check"><br><sub>"Which ear?" check</sub></td>
-<td align="center" width="33%"><img src="docs/screens/13-detailed-tone.png" width="200" alt="Detailed tone test"><br><sub>Per-ear, per-frequency tones</sub></td>
-<td align="center" width="33%"><img src="docs/screens/15-ear-comparison.png" width="200" alt="Ear comparison"><br><sub>Left vs right ear</sub></td>
-</tr>
-<tr>
-<td align="center"><img src="docs/screens/16-audiogram.png" width="200" alt="Audiogram"><br><sub>Audiogram</sub></td>
-<td align="center"><img src="docs/screens/17-audiogram-grade-bands.png" width="200" alt="Audiogram on grade bands"><br><sub>Audiogram on WHO (2021) grade bands</sub></td>
-<td></td>
-</tr>
-</table>
-
-The detailed test is the original DhwaniSarathi threshold test, kept as an optional step after a REFER. Its grades
-are estimates in dB re: team baseline, not dB HL.
-</details>
-
-<details>
-<summary><b>Teacher view and analytics</b> (classroom, assignments, analytics, child history)</summary>
-<br>
-<table>
-<tr>
-<td align="center" width="25%"><img src="docs/screens/03-classroom.png" width="200" alt="Classroom"><br><sub>Classroom</sub></td>
-<td align="center" width="25%"><img src="docs/screens/19-assignments.png" width="200" alt="Assignments"><br><sub>Screening rounds</sub></td>
-<td align="center" width="25%"><img src="docs/screens/20-assignment-analytics.png" width="200" alt="Assignment analytics"><br><sub>Round analytics</sub></td>
-<td align="center" width="25%"><img src="docs/screens/18-child-history.png" width="200" alt="Child history"><br><sub>One child's history</sub></td>
 </tr>
 </table>
 </details>
