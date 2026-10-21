@@ -63,17 +63,30 @@ Report pass / fail for each number, and anything odd.
 |---|---|
 | File | `shravan-setu-v1.0.apk` (laptop only, not in git) |
 | ABI | arm64-v8a only |
-| Size | 60,284,211 bytes (57.5 MiB) |
-| SHA-256 | `cdf840e8c00f0b2b5975a39e26de7b9f5e2c007895c8e2c8f65b7838125b46dc` |
+| Size | 60,283,899 bytes (57.5 MiB) |
+| SHA-256 | `b2e0296df6f8bfcccec41623767e12841b843dafc9c4c07fe27467e6de1ab8a7` (rebuilt 2026-10-21 14:55 with unused permissions removed) |
 | Signing certificate SHA-256 | `0725d69d23ab85af536893c2a1d88bde782ca8eb7ec9b3cdef50dd885ca5cca7` (CN=Shravan Setu demo) |
 | Package / version | `io.github.anish185.shravansetu`, versionName 1.0.0, versionCode 1; targetSdk 36, minSdk 24 |
 | Checked with | `apksigner verify` (signature OK); `aapt2 dump`: `allowBackup=false`, `usesCleartextTraffic=true`, not debuggable |
-| Build time | first build 39 min (downloads + 4 ABIs); arm64-only rebuild with a warm cache 4.5 min |
+| Build time | first build 39 min (downloads + 4 ABIs); arm64-only rebuild with a warm cache about 5-6 min |
 
-A universal build (arm64-v8a, armeabi-v7a, x86, x86_64; 130.7 MB, same key) from the first run is kept on the
-laptop as `shravan-setu-v1.0-universal.apk` for phones that aren't arm64.
+For phones that aren't arm64, build with `ABIS=arm64-v8a,armeabi-v7a,x86,x86_64` (about 2.2x the size).
 
-Permissions in the APK come from Expo and its modules, not from our code: microphone (room-noise check), internet
-and network state (sync), foreground media playback, vibrate, wake lock, storage up to Android 12 (sharing files),
-biometric (from expo-secure-store; we don't use it), and "display over other apps" (`SYSTEM_ALERT_WINDOW`, in the
-React Native template; we don't use it). Removing the unused ones (`android.blockedPermissions`) is a later clean-up.
+**Permissions (checked with `aapt2 dump badging`)**: only these six remain, each needed:
+
+| Permission | Why |
+|---|---|
+| `RECORD_AUDIO` | Room-noise check and quiet-spot finder (the temporary recording is deleted after each check; only the noise level numbers are kept) |
+| `MODIFY_AUDIO_SETTINGS` | expo-audio: audio routing for tone playback through the wired earphones |
+| `INTERNET` | Sync, login and the camp PDF, to the team's laptop on the LAN only |
+| `ACCESS_NETWORK_STATE` | Required by the networking and image libraries (React Native, expo-image) |
+| `WAKE_LOCK` | Required by the media player library (androidx.media3, used by expo-audio) during playback |
+| `…DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` | Internal to androidx.core (signature-level, protects the app's own receivers); not a user permission |
+
+Removed in `screener/app.json` (none is used by our code): `SYSTEM_ALERT_WINDOW` (display over other apps, React
+Native template), `USE_BIOMETRIC` and `USE_FINGERPRINT` (androidx.biometric via expo-secure-store; we never ask for
+biometric unlock), `VIBRATE`, `READ_EXTERNAL_STORAGE` and `WRITE_EXTERNAL_STORAGE` (we only use the app's private
+cache and documents folders) via `android.blockedPermissions`; and `FOREGROUND_SERVICE` /
+`FOREGROUND_SERVICE_MEDIA_PLAYBACK` with expo-audio's background-playback service, via the expo-audio plugin option
+`enableBackgroundPlayback: false` (tones only play while the test screen is open). These settings only affect the
+APK; Expo Go keeps its own permissions.

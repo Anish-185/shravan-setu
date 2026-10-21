@@ -1,7 +1,8 @@
 # App screenshots
 
 Taken on 2026-10-21 on the team phone (Redmi 2201117TI, Samsung wired earphones), running the app in Expo Go.
-Fake children only ("student C2", "Student A1", and "RAVI", a test entry typed for this session); the school is
+Fake children only: "student C2", "Student A1" and others are seed-style pseudonyms, and **"RAVI" is a test entry
+typed on the phone for this session, not a real child** (confirmed by the owner, 2026-10-21). The school is
 "Demo School (FAKE)" and the facility "SAMPLE-DEIC-1 (fake demo facility)".
 
 Processing: the phone status bar (top) and gesture bar (bottom) were cropped off; images were resized to 720 px wide

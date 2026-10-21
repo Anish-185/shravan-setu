@@ -60,6 +60,7 @@ no Expo account needed for local development.
 | expo-constants, expo-font, expo-image, expo-linking, expo-splash-screen, expo-status-bar, expo-symbols, expo-system-ui, expo-web-browser, expo-glass-effect, @expo/ui | 57.x | MIT | 0 | None (template defaults; unused ones may be removed later) |
 | react / react-dom | 19.2.3 | MIT | 0 | None |
 | react-native | 0.86.3 | MIT | 0 | None |
+| react-native-screens, react-native-safe-area-context, react-native-gesture-handler, react-native-reanimated, react-native-worklets, react-native-web (navigation and animation, Expo template) | 4.26.2 / 5.7.0 / 2.32.0 / 4.5.1 / 0.10.1 / 0.21.4 | MIT | 0 | None |
 | react-native-gesture-handler, -reanimated, -worklets, -safe-area-context, -screens, -web | template | MIT | 0 | None |
 | typescript (dev) | 6.0.3 | Apache-2.0 | 0 | None |
 | eslint, eslint-config-expo (dev) | 9.39.5 / 57.0.2 | MIT | 0 | None |
@@ -90,7 +91,7 @@ quiet-spot finder added none. No new network calls.
 The design pass (Direction B v2) added one dependency, `react-native-svg` (in Expo Go). fontTools was used once on
 the laptop to make the Baloo SemiBold instance and is not shipped.
 
-Phase 5 added **no new dependency**. Not added, on purpose: `expo-print` (the camp request PDF is made by the server),
+Phase 5 added **no new dependency**. Not added, on purpose: `expo-print` (the camp request PDF is made by the server; expo-print was added later, on 2026-10-20, only for the results PDF, see the table),
 i18next / react-i18next (a ~40-line helper covers two languages), `@expo-google-fonts/noto-sans-telugu` (Android's
 system Telugu font first; see `docs/REUSE_LOG.md`). Voice lines are plain MP3 recordings played by `expo-audio` (already a
 dependency); no network call.
