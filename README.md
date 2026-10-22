@@ -13,7 +13,7 @@
   <a href="docs/APK.md"><img src="https://img.shields.io/badge/platform-Android-1D1A4E" alt="Platform: Android"></a>
   <a href="#how-it-works"><img src="https://img.shields.io/badge/offline--first-yes-006B7A" alt="Offline-first"></a>
   <a href="docs/TELUGU_REVIEW.md"><img src="https://img.shields.io/badge/UI-Telugu%20%2B%20English-F4A300" alt="Telugu and English"></a>
-  <a href="#run-it-yourself"><img src="https://img.shields.io/badge/tests-460%20passed-006B7A" alt="Tests: 460 passed"></a>
+  <a href="#run-it-yourself"><img src="https://img.shields.io/badge/tests-486%20passed-006B7A" alt="Tests: 486 passed"></a>
   <a href="https://github.com/Anish-185/shravan-setu/releases/tag/v1.0-sfic"><img src="https://img.shields.io/badge/release-v1.0--sfic-1D1A4E" alt="Release v1.0-sfic"></a>
 </p>
 
@@ -379,7 +379,7 @@ bash scripts/check_rules_parity.sh                 # Python and JS rules on the 
 server/.venv/bin/python -m eval.report --check     # recomputes every number and compares it with docs/CLAIMS.md
 ```
 
-On a fresh clone (2026-10-21): server 231, scripts 41 and app 188 tests passed, rules parity OK, CLAIMS check OK.
+On a fresh clone (2026-10-22): server 232, scripts 41 and app 213 tests passed, rules parity OK, CLAIMS check OK.
 `--check` changes no file; without the public NHANES files it skips the NHANES rows. To regenerate everything, see
 [`eval/README.md`](eval/README.md).
 </details>
