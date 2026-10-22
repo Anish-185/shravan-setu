@@ -68,14 +68,28 @@ descriptive sentence under the estimated grade on the results screen (same key, 
 flags; the sentence and its string keys are absent from the bundle). It was not re-run through the 11 steps; a
 quick look at Your Results after installing it is enough.
 
-## Build record: v1.0 (2026-10-21)
+### Rebuild 2026-10-22: offline school name (ERR-066)
+
+Same key, package, version, permissions and manifest flags; only the app code changed (school name typed on the
+phone, pre-filled "Demo Government School, Hyderabad"). Not yet re-run through the 11 steps. Quick check on the
+Redmi, offline, after installing over the old APK (or on a fresh install for a), b)):
+
+a) Fresh install, log in, Home → New classroom: a "School name" box shows, pre-filled; create a classroom → it is
+   listed on Home and the school shows under the welcome.
+b) Children → Add a child works with no server login.
+c) Settings → School: rename it → "School set: …". Then, with the laptop running `seed_demo`, log in, Sync now: no
+   errors, the typed school appears on the server.
+d) Optional: on another fresh install, type a school, add a child, then log in and pick "Demo Government School,
+   Hyderabad" from the server list before syncing: the child is still on the phone; Sync now has no errors.
+
+## Build record: v1.0 (2026-10-21; rebuilt 2026-10-22)
 
 | | |
 |---|---|
 | File | `shravan-setu-v1.0.apk` (laptop only, not in git) |
 | ABI | arm64-v8a only |
-| Size | 60,281,615 bytes (57.5 MiB) |
-| SHA-256 | `531b46954e0c234de99e9159516c3b94d8d7bc04624f1e070fe3e7d25a1ffe06` (final, 2026-10-21 15:30: unused permissions removed, descriptive grade sentences removed) |
+| Size | 60,286,831 bytes (57.5 MiB) |
+| SHA-256 | `c3963c35e6235dabbd074483cb79a32f8f3ddd49c01dbaa59fe0cc5ff5c5fd5b` (2026-10-22: offline school name, ERR-066). Before: `531b46954e0c234de99e9159516c3b94d8d7bc04624f1e070fe3e7d25a1ffe06` (2026-10-21 15:30) |
 | Signing certificate SHA-256 | `0725d69d23ab85af536893c2a1d88bde782ca8eb7ec9b3cdef50dd885ca5cca7` (CN=Shravan Setu demo) |
 | Package / version | `io.github.anish185.shravansetu`, versionName 1.0.0, versionCode 1; targetSdk 36, minSdk 24 |
 | Checked with | `apksigner verify` (signature OK); `aapt2 dump`: `allowBackup=false`, `usesCleartextTraffic=true`, not debuggable |
