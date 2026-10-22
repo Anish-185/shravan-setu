@@ -1,5 +1,5 @@
-// Settings tab: the logged-in teacher and Logout (demo login, src/auth.tsx); one-time phone setup: backend URL, server
-// login (token kept in expo-secure-store), school, standard device. Audit-log verify button. Developer screens (audio
+// Settings tab: the logged-in teacher and Logout (demo login, src/auth.tsx); one-time phone setup: school (typed, works
+// offline; or picked from the server), backend URL, server login (token kept in expo-secure-store), standard device. Audit-log verify button. Developer screens (audio
 // spike, calibration) sit at the bottom.
 import * as SecureStore from 'expo-secure-store';
 import { router, type Href } from 'expo-router';
@@ -13,11 +13,10 @@ import { useAuth } from '@/auth';
 import { db } from '@/db';
 import { kvGet, kvSet, verifyAuditLog } from '@/db/store';
 import { saveFacilities } from '@/cases';
+import { DEMO_SCHOOL, pickSchool, SchoolInput, typeSchool, type ServerSchool } from '@/school';
 import { useT, type Key } from '@/i18n';
 import { Icon, type IconName } from '@/icons';
 import { Btn, C, Card, F, P, s, Tile } from '@/ui';
-
-type School = { id: string; name: string; mandal: string };
 
 export default function Settings() {
   const t = useT();
@@ -26,8 +25,9 @@ export default function Settings() {
   const [url, setUrl] = useState(() => kvGet(db, 'server_url') ?? 'http://192.168.1.10:8000');
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
-  const [schools, setSchools] = useState<School[]>([]);
+  const [schools, setSchools] = useState<ServerSchool[]>([]);
   const [school, setSchool] = useState(() => kvGet(db, 'school_name') ?? '');
+  const [typed, setTyped] = useState(school || DEMO_SCHOOL);
   const [earphone, setEarphone] = useState(() => kvGet(db, 'earphone_model') ?? '');
   const [volume, setVolume] = useState(() => kvGet(db, 'volume_setting') ?? '');
   const [msg, setMsg] = useState('');
@@ -60,13 +60,21 @@ export default function Settings() {
     }
   }
 
-  function pickSchool(sc: School) {
-    kvSet(db, 'school_id', sc.id);
-    kvSet(db, 'school_name', sc.name);
-    kvSet(db, 'school_mandal', sc.mandal ?? ''); // "nearest" facility = same mandal
-    setSchool(sc.name);
+  function setSchoolTo(name: string) {
+    setSchool(name);
+    setTyped(name);
     setSchools([]);
-    setMsg(t('settings.schoolSet', { name: sc.name })); // replaces "Logged in. Pick your school."
+    setMsg(t('settings.schoolSet', { name })); // replaces "Logged in. Pick your school."
+  }
+
+  function saveTyped() {
+    typeSchool(db, typed.trim());
+    setSchoolTo(typed.trim());
+  }
+
+  function pick(sc: ServerSchool) {
+    pickSchool(db, sc);
+    setSchoolTo(sc.name);
   }
 
   function saveDevice() {
@@ -91,13 +99,19 @@ export default function Settings() {
           <Btn kind="plain" icon="log-out" title={t('settings.logout')} onPress={() => { logout(); router.replace('/login'); }} />
         </Section>
 
+        <Section icon="school" tint={C.indigoTint} title={t('settings.schoolH')}>
+          <SchoolInput value={typed} onChange={setTyped} />
+          <Btn title={t('school.save')} onPress={saveTyped} disabled={!typed.trim() || typed.trim() === school} />
+          <Text style={s.muted}>{t('settings.schoolOr')}</Text>
+        </Section>
+
         <Section icon="server" tint={C.indigoTint} title={t('settings.backendH')}>
           <Text style={s.muted}>{t('settings.backendP')}</Text>
           <TextInput style={s.input} value={url} onChangeText={setUrl} autoCapitalize="none" placeholder="http://laptop-ip:8000" />
           <TextInput style={s.input} value={user} onChangeText={setUser} autoCapitalize="none" placeholder={t('settings.username')} />
           <TextInput style={s.input} value={password} onChangeText={setPassword} secureTextEntry placeholder={t('settings.password')} />
           <Btn title={t('settings.login')} onPress={login} disabled={!user || !password} />
-          {schools.map((sc) => <Btn key={sc.id} kind="plain" title={sc.name} onPress={() => pickSchool(sc)} />)}
+          {schools.map((sc) => <Btn key={sc.id} kind="plain" title={sc.name} onPress={() => pick(sc)} />)}
           <P>{t('settings.school', { name: school || t('common.notSet') })}</P>
         </Section>
 

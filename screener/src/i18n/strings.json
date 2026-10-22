@@ -219,6 +219,31 @@
   "te": "పాఠశాల: {name}",
   "where": "Settings"
  },
+ "settings.schoolH": {
+  "en": "School",
+  "te": "TODO_TE",
+  "where": "Settings heading"
+ },
+ "school.label": {
+  "en": "School name",
+  "te": "TODO_TE",
+  "where": "Settings, Create classroom and Add a child: school name box label"
+ },
+ "school.hint": {
+  "en": "Saved on this phone and works offline. The next sync adds it to the server.",
+  "te": "TODO_TE",
+  "where": "Under the school name box"
+ },
+ "school.save": {
+  "en": "Save school name",
+  "te": "TODO_TE",
+  "where": "Settings button"
+ },
+ "settings.schoolOr": {
+  "en": "Or log in to the server below and pick your school from its list.",
+  "te": "TODO_TE",
+  "where": "Settings, under the school name box"
+ },
  "settings.deviceH": {
   "en": "Standard device",
   "te": "ప్రామాణిక పరికరం",

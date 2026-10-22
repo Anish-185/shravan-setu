@@ -15,7 +15,7 @@ from rest_framework.authtoken.models import Token
 from referrals import models
 from referrals.state import LOST, transition
 
-SCHOOL_NAME = "Demo School (FAKE)"
+SCHOOL_NAME = "Demo Government School, Hyderabad"  # same as the phone's pre-filled name (screener/src/school.tsx)
 FREQS = ["1000", "2000", "4000"]
 # (outcome, case path) per REFER child. Paths walk the real state machine.
 REFER_PATHS = [

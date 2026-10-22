@@ -1,12 +1,14 @@
 // Every route in src/app opens with sample data (a teacher, a classroom, an assignment, children with screening and
-// detailed results) and logs no console error or warning. Routes come from the files, so a new screen is covered
+// detailed results) and logs no console error or warning, both with a school set and before one is set (a new teacher). Routes come from the files, so a new screen is covered
 // without editing this test. expo-router/testing-library renders the real app directory and its layouts.
 /* eslint-disable @typescript-eslint/no-require-imports -- jest.mock factories must require */
+import { randomUUID as mockRandomUUID } from 'crypto'; // first: jest.mock below is hoisted above the imports
 import * as fs from 'fs';
 import * as path from 'path';
 import { act, fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 
 jest.mock('@/db', () => ({ db: require('@/db/memDb').memDb() }));
+jest.mock('expo-crypto', () => ({ randomUUID: () => mockRandomUUID() })); // no native module in jest
 jest.mock('@/audio/useScreeningAudio', () => {
   const port = { play: jest.fn(), stop: jest.fn() };
   const audio = {
@@ -36,7 +38,7 @@ void renderRouter;
 Object.assign(jest.requireMock('react-native-reanimated'), { useReducedMotion: () => false });
 
 const { db } = jest.requireMock('@/db');
-const { kvSet, put } = jest.requireActual('@/db/store');
+const { kvGet, kvSet, put } = jest.requireActual('@/db/store');
 
 const ID = {
   child: '00000000-0000-4000-8000-000000000001', child2: '00000000-0000-4000-8000-000000000002',
@@ -95,12 +97,45 @@ afterEach(() => jest.restoreAllMocks());
 
 test('the route list is not empty', () => expect(routes.length).toBeGreaterThan(15));
 
-test.each(routes)('%s renders with no console error', async (url) => {
-  const r = renderRouter('./src/app', { initialUrl: url });
-  await act(async () => {}); // let focus effects and font loading settle
-  // Logged in, /login is not a route any more (Stack.Protected) and lands on Home; every other URL stays put.
-  expect(r.getPathname()).toBe(url === '/login' ? '/' : url.split('?')[0]);
-  expect(screen.queryByText(/not found|Unmatched Route/i)).toBeNull();
+describe.each([['with a school', 'school-1'], ['before a school is set', '']])('%s', (_, schoolId) => {
+  beforeAll(() => kvSet(db, 'school_id', schoolId));
+  afterAll(() => kvSet(db, 'school_id', 'school-1'));
+
+  test.each(routes)('%s renders with no console error', async (url) => {
+    const r = renderRouter('./src/app', { initialUrl: url });
+    await act(async () => {}); // let focus effects and font loading settle
+    // Logged in, /login is not a route any more (Stack.Protected) and lands on Home; every other URL stays put.
+    expect(r.getPathname()).toBe(url === '/login' ? '/' : url.split('?')[0]);
+    expect(screen.queryByText(/not found|Unmatched Route/i)).toBeNull();
+    expect(logged).toEqual([]);
+  });
+});
+
+test('a new teacher with no school creates a classroom: the school name is asked right there, pre-filled', async () => {
+  kvSet(db, 'school_id', '');
+  kvSet(db, 'school_name', '');
+  const kids = renderRouter('./src/app', { initialUrl: '/children' }); // Add a child asks for it too
+  await act(async () => {});
+  expect(screen.getByLabelText('School name').props.value).toBe('Demo Government School, Hyderabad');
+  kids.unmount();
+  const r = renderRouter('./src/app', { initialUrl: '/' });
+  await act(async () => {});
+  await act(async () => { fireEvent.press(screen.getByText('New classroom')); });
+  expect(r.getPathname()).toBe('/teacher/create');
+  expect(screen.getByLabelText('School name').props.value).toBe('Demo Government School, Hyderabad');
+  fireEvent.changeText(screen.getByLabelText('Classroom Name'), '6C');
+  fireEvent.changeText(screen.getByLabelText('Classroom Strength'), '25');
+  await act(async () => { fireEvent.press(screen.getAllByText('Create Classroom').at(-1)!); });
+  expect(r.getPathname()).toBe('/');
+  expect([kvGet(db, 'school_name'), kvGet(db, 'school_local')]).toEqual(['Demo Government School, Hyderabad', '1']);
+  expect(screen.getByText('6C')).toBeTruthy(); // Home lists it under the new school
+  expect(db.all("SELECT type FROM outbox WHERE type = 'school'").length).toBe(1); // queued for the next sync
+
+  await act(async () => { fireEvent.press(screen.getAllByRole('tab')[4]); }); // Settings: same school, editable offline
+  fireEvent.changeText(screen.getByLabelText('School name'), 'Demo Government School, Hyderabad (2)');
+  await act(async () => { fireEvent.press(screen.getByText('Save school name')); });
+  expect(screen.getByText('School set: Demo Government School, Hyderabad (2).')).toBeTruthy();
+  expect(kvGet(db, 'school_name')).toBe('Demo Government School, Hyderabad (2)');
   expect(logged).toEqual([]);
 });
 

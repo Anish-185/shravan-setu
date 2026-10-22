@@ -470,3 +470,19 @@ recorded source) with a free image with a clear licence, or with our own SVG art
   call, no install script) with `android.usesCleartextTraffic = true`, plus local prebuild + Gradle in
   `scripts/build_apk.sh`. `android.allowBackup = false` in `app.json` so Android cloud backup never copies the
   children's records. `android/`, the keystore and `*.apk` stay out of git.
+
+## Offline school name (bugfix, 2026-10-22)
+
+### Typed school that syncs later, and moving its records to a server school
+- Need: a teacher with no server login sets the school on the phone; the next sync creates it on the server; if the
+  teacher later picks a server school instead, the phone's unsent records move to it.
+- Queries (GitHub, `gh search repos`): "offline first sync remap local id to server id", "react native sqlite outbox
+  id remapping", "expo offline sync temporary id reconcile" (no results); "offline first sync", "react-native offline
+  sync sqlite", "watermelondb"; npm: "offline sync id remap" (only unrelated source-map packages).
+- Candidates: Nozbe/WatermelonDB (MIT, last commit 2026-10-22): a full local database with its own sync protocol,
+  would replace our store and outbox; sqliteai/sqlite-sync (Apache-2.0, 2026-10-21): CRDT SQLite extension, native
+  build and its own sync server, also an architecture change; Etoile-Bleu/ZamSync (MIT, 2026-09-21) and
+  Arsenoal/syncforge (Apache-2.0, 2026-09-14): small, young, own sync model.
+- Decision: (c) build ourselves (about 60 lines: `screener/src/school.tsx`, `moveSchool` in
+  `screener/src/db/store.ts`). The server already upserts `school` records by client UUID (`/api/sync/`), so the
+  phone only had to queue them; every candidate would replace a core part of the architecture.

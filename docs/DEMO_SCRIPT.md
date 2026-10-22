@@ -1,7 +1,8 @@
 # Demo video script (2 minutes)
 
-Screening and referral tool, not a diagnostic device. Fake children only (pseudonyms like "Student D1"), "Demo School
-(FAKE)" and the fake facility from `seed_demo`. Say nothing that isn't on screen or in `docs/CLAIMS.md`.
+Screening and referral tool, not a diagnostic device. Fake children only (pseudonyms like "Student D1"), "Demo
+Government School, Hyderabad" (a made-up demo school) and the fake facility from `seed_demo`. Say nothing that isn't
+on screen or in `docs/CLAIMS.md`.
 
 ## Setup (before recording)
 

@@ -24,7 +24,10 @@ cd ~/sfic/server
 
 `server/.env` must list the laptop's LAN IP in `DJANGO_ALLOWED_HOSTS` (`ip -4 addr show scope global`).
 Phone: `cd ~/sfic/screener && npx expo start`, open in Expo Go. Settings: server `http://<laptop-ip>:8000`, log in
-(loads schools **and the facility list**), pick "Demo School (FAKE)", enter the earphone model and media volume.
+(loads schools **and the facility list**), pick "Demo Government School, Hyderabad", enter the earphone model and media
+volume. Without the laptop, the school name can be typed instead (Settings, or the box on Create Classroom / Add a
+child, pre-filled with the same demo name); the next sync creates it on the server, and picking the server school after
+login moves the phone's unsent records onto it.
 
 ## Script (about 10 minutes)
 

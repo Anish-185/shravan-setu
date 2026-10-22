@@ -12,7 +12,7 @@ export type Db = {
 // Order of first sync matters only within one batch, and the outbox keeps insertion order (camp_request is queued
 // before its cases' camp_scheduled events).
 export const SYNCED_TYPES = [
-  'child', 'consent', 'screening_session', 'screening_result', 'case', 'case_event', 'camp_request',
+  'school', 'child', 'consent', 'screening_session', 'screening_result', 'case', 'case_event', 'camp_request',
 ] as const;
 // Local only: session_log (full engine log), facility (pulled at login), reminder (stub log; the server logs its own),
 // room_reading (quiet-spot finder), assignment and classroom (teacher view), detailed_test (optional threshold test).
@@ -47,12 +47,38 @@ export function put(db: Db, type: RecordType, id: string, data: object) {
     if ((SYNCED_TYPES as readonly string[]).includes(type)) {
       db.run('INSERT INTO outbox (type, id, data, created_at) VALUES (?, ?, ?, ?)', type, id, json, nowIso());
     }
-    if (AUDITED.includes(type)) {
-      const last = db.all<AuditEntry>('SELECT seq, hash FROM audit ORDER BY seq DESC LIMIT 1')[0] ?? null;
-      const e = nextEntry(last, nowIso(), type, id, json);
-      db.run('INSERT INTO audit (seq, at, kind, record_id, data, prev, hash) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        e.seq, e.at, e.kind, e.record_id, e.data, e.prev, e.hash);
+    if (AUDITED.includes(type)) audit(db, type, id, json);
+  });
+}
+
+function audit(db: Db, type: string, id: string, json: string) {
+  const last = db.all<AuditEntry>('SELECT seq, hash FROM audit ORDER BY seq DESC LIMIT 1')[0] ?? null;
+  const e = nextEntry(last, nowIso(), type, id, json);
+  db.run('INSERT INTO audit (seq, at, kind, record_id, data, prev, hash) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    e.seq, e.at, e.kind, e.record_id, e.data, e.prev, e.hash);
+}
+
+/** Re-point every record of school `from` to school `to`, in place: unsent outbox rows keep their order (a case_event
+ *  still follows its case), and the school `from` is dropped. Only for a school that never reached the server, so
+ *  none of its records did either. Audited records get a new audit entry; the old ones stay (append-only). */
+export function moveSchool(db: Db, from: string, to: string) {
+  const moved = (json: string) => {
+    const d = JSON.parse(json);
+    return d.school === from ? JSON.stringify({ ...d, school: to }) : null;
+  };
+  db.tx(() => {
+    for (const r of db.all<{ type: string; id: string; data: string }>('SELECT type, id, data FROM records')) {
+      const json = moved(r.data);
+      if (!json) continue;
+      db.run('UPDATE records SET data = ?, updated_at = ? WHERE type = ? AND id = ?', json, nowIso(), r.type, r.id);
+      if (AUDITED.includes(r.type)) audit(db, r.type, r.id, json);
     }
+    for (const r of db.all<{ seq: number; data: string }>("SELECT seq, data FROM outbox WHERE status != 'synced'")) {
+      const json = moved(r.data);
+      if (json) db.run("UPDATE outbox SET data = ?, status = 'pending', error = NULL WHERE seq = ?", json, r.seq);
+    }
+    db.run("DELETE FROM records WHERE type = 'school' AND id = ?", from);
+    db.run("DELETE FROM outbox WHERE type = 'school' AND id = ?", from);
   });
 }
 

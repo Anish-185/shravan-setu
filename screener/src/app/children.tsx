@@ -12,8 +12,9 @@ import { db } from '@/db';
 import { kvGet, list, put } from '@/db/store';
 import { useT, type Key } from '@/i18n';
 import { Icon } from '@/icons';
+import { DEMO_SCHOOL, SchoolInput, typeSchool } from '@/school';
 import { latestOutcomes, type Child } from '@/teacher/data';
-import { Btn, C, Card, Chips, F, OUTCOME, P, PostRow, s, SectionH, StatusPill } from '@/ui';
+import { Btn, C, Card, Chips, F, OUTCOME, PostRow, s, SectionH, StatusPill } from '@/ui';
 
 const AGE_BANDS = ['6-8', '9-11', '12-14', '15-18'] as const;
 
@@ -27,7 +28,8 @@ function load() {
 export default function Children() {
   const t = useT();
   const insets = useSafeAreaInsets();
-  const school = kvGet(db, 'school_id');
+  // No school yet: ask for its name in the form (pre-filled for demos) instead of sending the teacher to Settings.
+  const [school, setSchool] = useState(() => (kvGet(db, 'school_id') ? null : DEMO_SCHOOL)); // null: already set
   const [children, setChildren] = useState(load);
   // Back from a test or a case: a new outcome or status may exist.
   useFocusEffect(useCallback(() => setChildren(load()), []));
@@ -38,7 +40,11 @@ export default function Children() {
   const shown = children.filter((c) => `${c.display_name} ${c.class_label ?? ''}`.toLowerCase().includes(query.trim().toLowerCase()));
 
   function add() {
-    put(db, 'child', Crypto.randomUUID(), { school, display_name: name.trim(), age_band: age, class_label: label.trim() });
+    if (school !== null) {
+      typeSchool(db, school.trim());
+      setSchool(null);
+    }
+    put(db, 'child', Crypto.randomUUID(), { school: kvGet(db, 'school_id'), display_name: name.trim(), age_band: age, class_label: label.trim() });
     setName('');
     setAge(null);
     setChildren(load());
@@ -49,15 +55,15 @@ export default function Children() {
       <Band top={insets.top} title={t('title.children')} sub={t('children.sub', { n: children.length })}
         figure={{ source: require('../../assets/images/peeps/test-intro.png'), w: 56, h: 118 }} />
       <View style={[s.screen, { paddingTop: 16 }]}>
-        {!school && <P>{t('children.pickSchool')}</P>}
         <Card>
           <Text style={st.formH}>{t('children.addH')}</Text>
+          {school !== null && <SchoolInput value={school} onChange={setSchool} />}
           <TextInput style={s.input} value={name} onChangeText={setName} placeholder={t('children.namePlaceholder')}
             placeholderTextColor={C.dusk} accessibilityLabel={t('children.namePlaceholder')} />
           <Chips options={AGE_BANDS} value={age} onChange={setAge} />
           <TextInput style={s.input} value={label} onChangeText={setLabel} maxLength={20} autoCapitalize="characters"
             placeholder={t('children.classPlaceholder')} placeholderTextColor={C.dusk} accessibilityLabel={t('children.classPlaceholder')} />
-          <Btn icon="user-plus" title={t('children.add')} onPress={add} disabled={!school || !name.trim() || !age} />
+          <Btn icon="user-plus" title={t('children.add')} onPress={add} disabled={school?.trim() === '' || !name.trim() || !age} />
         </Card>
 
         <SectionH title={t('children.listH')} />

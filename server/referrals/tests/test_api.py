@@ -160,6 +160,20 @@ def test_sync_rejects_consent_for_other_child(api, school, make_case):
     assert res[3]["status"] == "error"
 
 
+def test_sync_creates_a_school_typed_on_the_phone_then_its_records(api, db):
+    """Offline setup: the phone makes the school (client UUID, name only) and queues it before anything that uses it."""
+    sid, child = str(uuid.uuid4()), str(uuid.uuid4())
+    body = {"records": [
+        {"type": "school", "id": sid, "data": {"name": "Demo Government School, Hyderabad"}},
+        {"type": "child", "id": child, "data": {"school": sid, "display_name": "Student S9", "age_band": "9-11"}},
+    ]}
+    assert [x["status"] for x in api.post("/api/sync/", body, format="json").json()["results"]] == ["created", "created"]
+    assert models.Child.objects.get(pk=child).school.name == "Demo Government School, Hyderabad"
+    body["records"][0]["data"]["name"] = "Demo Government School, Hyderabad (renamed)"  # renamed on the phone
+    assert [x["status"] for x in api.post("/api/sync/", body, format="json").json()["results"]] == ["updated", "updated"]
+    assert models.School.objects.get(pk=sid).name.endswith("(renamed)") and models.School.objects.count() == 1
+
+
 def test_sync_rejects_non_list(api):
     assert api.post("/api/sync/", {"records": "x"}, format="json").status_code == 400
 
@@ -262,7 +276,7 @@ def test_camp_export_pdf(api, camp):
 
 def test_seed_demo(db, capsys):
     call_command("seed_demo")
-    school = models.School.objects.get(name="Demo School (FAKE)")
+    school = models.School.objects.get(name="Demo Government School, Hyderabad")
     assert school.children.count() == 30
     assert all(c.display_name.startswith("Student ") for c in school.children.all())
     statuses = set(models.Case.objects.values_list("status", flat=True))

@@ -748,3 +748,55 @@ positive) and did not detect the Clarifai token or the Django key, which is why 
 - Status: WORKAROUND
 - Verification: fresh clone: `--check` without data → "matches (NHANES rows skipped: data not downloaded)", tree clean; after `eval_nhanes.py --download` + pandas → "CLAIMS.md matches the computed results", tree clean.
 - Lesson: README evidence steps should be read-only by default.
+
+### ERR-066: a new teacher can't create a classroom or add a child without first logging in to the server
+- Phase / date: post-v1.0 bugfix (owner report from the APK) / 2026-10-22
+- Symptom: Create Classroom / Home / Children say "Pick your school in Settings first.", but Settings only offers
+  schools from the server after "Log in and load schools". Offline or before login there is no way to set one; a
+  classroom created anyway is saved with `school: null` and never shown, and "Add" on Children stays disabled.
+- Where: `screener/src/app/settings.tsx`, `screener/src/app/teacher/create.tsx`, `screener/src/app/children.tsx`
+- Root cause: the school id only ever came from the server list; the phone never made `school` records, although
+  `/api/sync/` already upserts them by client UUID.
+- Fix: `screener/src/school.tsx`: `typeSchool` makes a `school` record with a client UUID (queued first, so the
+  next sync creates it on the server; renaming updates the same record); `pickSchool` (server list) moves the
+  phone's records off a typed school that never synced (`moveSchool` in `screener/src/db/store.ts`: records and
+  unsent outbox rows rewritten in place, order kept; audited records get a new audit entry). `school` added to
+  `SYNCED_TYPES`. Settings has a "School name" box (works offline); Create Classroom and Add a child show the same box
+  when no school is set, pre-filled with "Demo Government School, Hyderabad" (also the `seed_demo` school now).
+- Status: FIXED (Telugu for the 5 new strings: TODO_TE until the owner sends them)
+- Verification: `screener/src/__tests__/school.test.ts` (sync order, rename, move to server school, synced school
+  kept, demo name = seed_demo); `routes.smoke.test.tsx` renders every route with and without a school and walks the
+  new-teacher flow; `server/referrals/tests/test_api.py::test_sync_creates_a_school_typed_on_the_phone_then_its_records`.
+- Lesson: every "set this up first" message must point to something that works offline.
+
+### ERR-067: smoke test: "Provided value cannot be bound to SQLite parameter 2"
+- Phase / date: post-v1.0 bugfix / 2026-10-22
+- Symptom: `TypeError: Provided value cannot be bound to SQLite parameter 2` from `put()` when the new-teacher test
+  pressed Create Classroom.
+- Where: `screener/src/__tests__/routes.smoke.test.tsx`
+- Root cause: expo-crypto's `randomUUID` has no native module under jest and returns undefined; the smoke test had
+  never created a record before. Not an app bug (the phone uses the native module, as for children since Phase 4).
+- Fix: mock expo-crypto with Node's `crypto.randomUUID` in the smoke test, as the other tests already do.
+- Status: FIXED
+- Verification: `npx jest src/__tests__/routes.smoke.test.tsx` passes.
+- Lesson: a test that writes records needs the expo-crypto mock.
+
+### ERR-068: smoke test: "The action 'PUSH' ... was not handled by any navigator"
+- Phase / date: post-v1.0 bugfix / 2026-10-22
+- Symptom: `The action 'PUSH' with payload {"name":"teacher/create"} was not handled by any navigator.`
+- Where: `screener/src/__tests__/routes.smoke.test.tsx` (new-teacher test)
+- Root cause: the test rendered `/children` and then `/`, so two routers were mounted; the push went to the first.
+- Fix: unmount the first render before the second.
+- Status: FIXED
+- Verification: full `npx jest` passes (215).
+- Lesson: one mounted router per check; unmount before rendering another.
+
+### ERR-069: scripts test failed: `docs/TELUGU_STRINGS.md` out of date
+- Phase / date: post-v1.0 bugfix / 2026-10-22
+- Symptom: `assert ts.main(["--check"]) == 0, "run: python scripts/telugu_strings.py"` in the scripts suite.
+- Where: `scripts/test_telugu_strings.py`
+- Root cause: 5 new keys in `strings.json`; the generated list wasn't regenerated.
+- Fix: ran `python scripts/telugu_strings.py` (writes `docs/TELUGU_STRINGS.md`, 5 rows needing Telugu).
+- Status: FIXED
+- Verification: `scripts/check_rules_parity.sh`: scripts 41 passed.
+- Lesson: regenerate the Telugu list after any strings.json edit (the test is the reminder, working as intended).
